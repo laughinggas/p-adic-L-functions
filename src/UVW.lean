@@ -189,8 +189,8 @@ end
 open clopen_from
 
 lemma helper_289 {n : ℕ} (hn : 1 < n) (a : (zmod d)ˣ × (zmod (p^n))ˣ) :
-  loc_const_ind_fn (locally_constant.char_fn R (clopen_from.is_clopen_units a)) =
-  locally_constant.char_fn R (@clopen_from.is_clopen p _ d n (↑(((units.chinese_remainder
+  loc_const_ind_fn (_root_.char_fn R (clopen_from.is_clopen_units a)) =
+  _root_.char_fn R (@clopen_from.is_clopen p _ d n (↑(((units.chinese_remainder
   (nat.coprime.pow_right n hd)).symm) a))) :=
 begin
   ext,
@@ -200,7 +200,7 @@ begin
   { by_cases hx : x ∈ clopen_from ↑(((units.chinese_remainder
       (nat.coprime.pow_right n hd)).symm) a),
     { rw ind_fn.map_ind_fn_eq_fn,
-      rw (locally_constant.char_fn_one R x _).1 hx, rw ← locally_constant.char_fn_one R _ _,
+      rw (char_fn_one R x _).1 hx, rw ← char_fn_one R _ _,
       rw set.mem_prod, rw set.mem_preimage, rw set.mem_singleton_iff, rw set.mem_singleton_iff,
       rw units.ext_iff, rw units.ext_iff, rw is_unit.unit_spec, rw units.coe_map,
       rw is_unit.unit_spec, rw clopen_from.mem_clopen_from at hx, rw hx.1, rw ring_hom.to_monoid_hom_eq_coe,
@@ -213,8 +213,8 @@ begin
         apply padic_int.is_unit_to_zmod_pow_of_is_unit p n hn x.snd, rw ←hx.2,
         simp only [units.is_unit], }, },
     { rw map_ind_fn_eq_fn _ h',
-      rw (locally_constant.char_fn_zero R x _).1 hx,
-      rw (locally_constant.char_fn_zero R _ _).1 _,
+      rw (char_fn_zero R x _).1 hx,
+      rw (char_fn_zero R _ _).1 _,
       -- simp,
       -- rw is_unit.unit_spec,
       intro h', apply hx,
@@ -233,7 +233,7 @@ begin
       rw h'.2, rw units.chinese_remainder_symm_apply_fst,
       rw units.chinese_remainder_symm_apply_snd, refine ⟨rfl, rfl⟩, -/ }, },
   { -- same as above
-    rw map_ind_fn_eq_zero _ h', rw (locally_constant.char_fn_zero R _ _).1 _,
+    rw map_ind_fn_eq_zero _ h', rw (char_fn_zero R _ _).1 _,
     intro hx, apply h',
     rw mem_clopen_from at hx, rw units.chinese_remainder_symm_apply_fst at hx,
     rw units.chinese_remainder_symm_apply_snd at hx,
@@ -270,7 +270,7 @@ open eventually_constant_seq clopen_from
 
 lemma bernoulli_measure'_eval_char_fn [algebra ℚ R] [norm_one_class R] (n : ℕ) (hn : 1 < n)
   (a : (zmod d)ˣ × (zmod (p^n))ˣ) :
-  (bernoulli_measure' R hc hc' hd na).val (locally_constant.char_fn R
+  (bernoulli_measure' R hc hc' hd na).val (_root_.char_fn R
   (clopen_from.is_clopen_units a)) =
   (algebra_map ℚ_[p] R (E_c p d c n ((zmod.chinese_remainder (nat.coprime.pow_right n hd)).inv_fun
   ((a.1 : zmod d), (a.2 : zmod (p^n))))) ) :=
@@ -288,7 +288,7 @@ begin
       rw loc_const_ind_fn, simp only [ring_equiv.inv_fun_eq_symm, locally_constant.coe_mk],
       --rw ind_fn_def, simp only, rw dif_pos _,
       rw map_ind_fn_eq_fn,
-      { symmetry, rw ← locally_constant.char_fn_one, rw set.mem_prod,
+      { symmetry, rw ← char_fn_one, rw set.mem_prod,
         simp only [prod.fst_zmod_cast, prod.snd_zmod_cast, set.mem_singleton_iff,
           ring_hom.to_monoid_hom_eq_coe, set.mem_preimage],
         rw units.ext_iff, rw units.ext_iff,
@@ -307,7 +307,7 @@ begin
       --rw smul_eq_zero, left,
       --rw mul_eq_zero_of_left _,
       rw helper_289 p d R hd hn a,
-      rw (locally_constant.char_fn_zero R _ _).1 _, rw zero_smul,
+      rw (char_fn_zero R _ _).1 _, rw zero_smul,
       rw mem_clopen_from, intro h, apply hb,
       rw units.chinese_remainder_symm_apply_snd at h,
       rw units.chinese_remainder_symm_apply_fst at h,

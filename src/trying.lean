@@ -281,7 +281,7 @@ by { rw units_chinese_remainder_comp_pls_help p d hd x a, }
 
 lemma helper_256 (n : ℕ) (hn : 1 < n) : (λ y : ℕ, ((∑ (a : (zmod (d * p ^ y))ˣ),
   ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑a *
-  ↑((a : zmod (d * p^y)).val) ^ (n - 1)) • locally_constant.char_fn R (clopen_from.is_clopen_units
+  ↑((a : zmod (d * p^y)).val) ^ (n - 1)) • _root_.char_fn R (clopen_from.is_clopen_units
   ((units.chinese_remainder (nat.coprime.pow_right y hd)) a)) : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) : C((zmod d)ˣ × ℤ_[p]ˣ, R))) =ᶠ[at_top]
   (λ y : ℕ, (⟨λ x, ((χ.mul (teichmuller_character_mod_p' p R)).change_level (helper_idk p d R m χ)
   ((pls_help p d hd m) x) : R),
@@ -306,7 +306,7 @@ begin
     have h1 : is_unit ((pls_help p d hd x a) : zmod (d * p^m)),
     { apply coe_map_of_dvd, apply mul_dvd_mul_left d (pow_dvd_pow p (le_of_lt hx)), },
     rw finset.sum_eq_single_of_mem (pls_help p d hd x a),
-    { rw (locally_constant.char_fn_one R _ _).1, rw smul_eq_mul, rw mul_one,
+    { rw (char_fn_one R _ _).1, rw smul_eq_mul, rw mul_one,
       conv_rhs { rw mul_comm, rw mul_assoc, rw mul_comm, },
       rw zmod.nat_cast_val, congr, rw ← to_fun_eq_coe, rw ← to_fun_eq_coe, simp only,
       rw ← units.coe_mul,
@@ -339,7 +339,7 @@ begin
         simp only [eq_self_iff_true, ring_hom.to_monoid_hom_eq_coe, and_self], }, },
     { apply finset.mem_univ, },
     { intros b h' hb, clear h',
-      rw (locally_constant.char_fn_zero R _ _).1 _,
+      rw (char_fn_zero R _ _).1 _,
       { rw smul_zero, },
       { intro h,
         rw set.mem_prod at h, rw set.mem_preimage at h, rw set.mem_singleton_iff at h,
@@ -616,7 +616,7 @@ begin
   swap 3, { apply filter.at_top_ne_bot, },
   convert (tendsto_congr' _).2 (trying p d R hd hc hc' na _
     (λ j : ℕ, ∑ (a : (zmod (d * p^j))ˣ), (((asso_dirichlet_character (χ.mul ((teichmuller_character_mod_p' p R)^n)) a : R) *
-    ((((a : zmod (d * p^j))).val)^(n - 1) : R))) • (locally_constant.char_fn R (clopen_from.is_clopen_units
+    ((((a : zmod (d * p^j))).val)^(n - 1) : R))) • (_root_.char_fn R (clopen_from.is_clopen_units
      ((units.chinese_remainder (nat.coprime.pow_right j hd)) a)))) _),
   { rw eventually_eq_iff_exists_mem,
     set s : set ℕ := {x : ℕ | 1 < x} with hs,
