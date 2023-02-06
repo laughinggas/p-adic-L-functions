@@ -1,8 +1,8 @@
 [package]
 name = "p-adic-L-functions"
 version = "0.1"
-lean_version = "leanprover-community/lean:3.50.3"
+lean_version = "leanprover-community/lean:3.42.1"
 path = "src"
 
 [dependencies]
-mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "4c19a16e4b705bf135cf9a80ac18fcc99c438514"}
+mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "5cf7a1c5d86f8b2f7629a97a8ebf9fce8931ebef"}
