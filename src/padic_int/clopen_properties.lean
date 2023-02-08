@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
 
-import padic_int_properties
+import padic_int.properties
 import topology.discrete_quotient
 
 /-!

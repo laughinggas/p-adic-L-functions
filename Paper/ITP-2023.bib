@@ -1,3 +1,71 @@
+@article{DBLP:journals/cacm/Knuth74,
+  author    = {Donald E. Knuth},
+  title     = {{Computer Programming as an Art}},
+  journal   = {Commun. {ACM}},
+  volume    = {17},
+  number    = {12},
+  pages     = {667--673},
+  year      = {1974},
+  doi       = {10.1145/361604.361612},
+  timestamp = {Tue, 07 Jun 2011 16:50:57 +0200},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/cacm/Knuth74},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@article{DBLP:journals/cacm/Dijkstra68a,
+  author    = {Edsger W. Dijkstra},
+  title     = {Letters to the editor: go to statement considered harmful},
+  journal   = {Commun. {ACM}},
+  volume    = {11},
+  number    = {3},
+  pages     = {147--148},
+  year      = {1968},
+  doi       = {10.1145/362929.362947},
+  timestamp = {Thu, 09 Feb 2006 13:19:49 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/cacm/Dijkstra68a},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@book{DBLP:books/mk/GrayR93,
+  author    = {Jim Gray and
+               Andreas Reuter},
+  title     = {Transaction Processing: Concepts and Techniques},
+  publisher = {Morgan Kaufmann},
+  year      = {1993},
+  isbn      = {1-55860-190-2},
+  timestamp = {Thu, 05 Nov 2015 19:53:28 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/books/mk/GrayR93},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+
+
+@inproceedings{DBLP:conf/focs/HopcroftPV75,
+  author    = {{John E.} Hopcroft and
+               {Wolfgang J.} Paul and
+               {Leslie G.} Valiant},
+  title     = {On Time versus Space and Related Problems},
+  booktitle = {16th Annual Symposium on Foundations of Computer Science, Berkeley,
+               California, USA, October 13-15, 1975},
+  pages     = {57--64},
+  year      = {1975},
+  crossref  = {DBLP:conf/focs/FOCS16},
+  doi       = {10.1109/SFCS.1975.23},
+  timestamp = {Tue, 16 Dec 2014 09:57:24 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/focs/HopcroftPV75},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
+@proceedings{DBLP:conf/focs/FOCS16,
+  title     = {16th Annual Symposium on Foundations of Computer Science, Berkeley,
+               California, USA, October 13-15, 1975},
+  publisher = {{IEEE} Computer Society},
+  year      = {1975},
+  timestamp = {Mon, 15 Dec 2014 18:48:44 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/conf/focs/FOCS16},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
+}
+
 @book {cyc,
     AUTHOR = {Washington, Lawrence C.},
      TITLE = {Introduction to cyclotomic fields},
@@ -32,8 +100,11 @@ MRREVIEWER = {T. Mets\"{a}nkyl\"{a}},
 MRREVIEWER = {D. J. Lewis},
 }
 
-@misc{TPIL, title={Theorem Proving in Lean}, url={https://kilthub.cmu.edu/articles/journal_contribution/Theorem_Proving_in_Lean/6492902/1}, DOI={10.1184/R1/6492902.v1}, abstractNote={
-Formal verification involves the use of logical and computational methods to establish claims that are expressed in precise mathematical terms. These can include ordinary mathematical theorems, as well as claims that pieces of hardware or software, network protocols, and mechanical and hybrid systems meet their specifications. In practice, there is not a sharp distinction between verifying a piece of mathematics and verifying the correctness of a system: formal verification requires describing hardware and software systems in mathematical terms, at which point establishing claims as to their correctness becomes a form of theorem proving. Conversely, the proof of a mathematical theorem may require a lengthy computation, in which case verifying the truth of the theorem requires verifying that the computation does what it is supposed to do.
+@misc{TPIL, 
+  TITLE={Theorem Proving in Lean}, 
+  URL={https://kilthub.cmu.edu/articles/journal_contribution/Theorem_Proving_in_Lean/6492902/1}, 
+  DOI={10.1184/R1/6492902.v1}, 
+  ABSTRACTNOTE={Formal verification involves the use of logical and computational methods to establish claims that are expressed in precise mathematical terms. These can include ordinary mathematical theorems, as well as claims that pieces of hardware or software, network protocols, and mechanical and hybrid systems meet their specifications. In practice, there is not a sharp distinction between verifying a piece of mathematics and verifying the correctness of a system: formal verification requires describing hardware and software systems in mathematical terms, at which point establishing claims as to their correctness becomes a form of theorem proving. Conversely, the proof of a mathematical theorem may require a lengthy computation, in which case verifying the truth of the theorem requires verifying that the computation does what it is supposed to do.
 
 The gold standard for supporting a mathematical claim is to provide a proof, and twentieth-century developments in logic show most if not all conventional proof methods can be reduced to a small set of axioms and rules in any of a number of foundational systems. With this reduction, there are two ways that a computer can help establish a claim: it can help find a proof in the first place, and it can help verify that a purported proof is correct.
 
@@ -41,9 +112,12 @@ Automated theorem proving focuses on the “finding” aspect. Resolution theore
 
 Automated reasoning systems strive for power and efficiency, often at the expense of guaranteed soundness. Such systems can have bugs, and it can be difficult to ensure that the results they deliver are correct. In contrast, interactive theorem proving focuses on the “verification” aspect of theorem proving, requiring that every claim is supported by a proof in a suitable axiomatic foundation. This sets a very high standard: every rule of inference and every step of a calculation has to be justified by appealing to prior definitions and theorems, all the way down to basic axioms and rules. In fact, most such systems provide fully elaborated “proof objects” that can be communicated to other systems and checked independently. Constructing such proofs typically requires much more input and interaction from users, but it allows us to obtain deeper and more complex proofs.
 
-The Lean Theorem Prover aims to bridge the gap between interactive and automated theorem proving, by situating automated tools and methods in a framework that supports user interaction and the construction of fully specified axiomatic proofs. The goal is to support both mathematical reasoning and reasoning about complex systems, and to verify claims in both domains.
-
-}, publisher={Carnegie Mellon University}, author={Avigad, Jeremy and de Moura, Leonardo and Kong, Soonho}, year={2018}, month={Jun} } 
+The Lean Theorem Prover aims to bridge the gap between interactive and automated theorem proving, by situating automated tools and methods in a framework that supports user interaction and the construction of fully specified axiomatic proofs. The goal is to support both mathematical reasoning and reasoning about complex systems, and to verify claims in both domains. },
+  PUBLISHER={Carnegie Mellon University}, 
+  AUTHOR={Avigad, Jeremy and de Moura, Leonardo and Kong, Soonho}, 
+  YEAR={2018}, 
+  MONTH={Jun}
+}
 
 @inproceedings{mathlib,
 author = {{The mathlib Community}},
@@ -77,4 +151,3 @@ issn={1573-0670},
 doi={10.1007/s10817-022-09644-0},
 url={https://doi.org/10.1007/s10817-022-09644-0}
 }
-

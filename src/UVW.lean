@@ -1,4 +1,4 @@
-import general_bernoulli_number_properties_three
+import general_bernoulli_number.general_bernoulli_number_properties_three
 import bernoulli_measure.bernoulli_measure_seven
 import topology.algebra.nonarchimedean.bases
 

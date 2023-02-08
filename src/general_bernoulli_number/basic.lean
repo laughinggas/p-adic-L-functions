@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
 import number_theory.bernoulli_polynomials
-import dirichlet_character
+import dirichlet_character.basic
 
 /-!
 # General Bernoulli Numbers

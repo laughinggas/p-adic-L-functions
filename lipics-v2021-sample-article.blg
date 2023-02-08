@@ -1,53 +1,53 @@
 This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: Paper.aux
+The top-level auxiliary file: lipics-v2021-sample-article.aux
 Reallocating 'name_of_file' (item size: 1) to 9 items.
 The style file: plainurl.bst
-Reallocating 'name_of_file' (item size: 1) to 11 items.
+Reallocating 'name_of_file' (item size: 1) to 28 items.
 Reallocating 'glb_str_end' (item size: 4) to 20 items.
 Reallocating 'glb_str_ptr' (item size: 4) to 20 items.
 Reallocating 'global_strs' (item size: 1) to 4000000 items.
 Reallocating 'singl_function' (item size: 4) to 100 items.
 Reallocating 'singl_function' (item size: 4) to 100 items.
-Database file #1: ESAbib.bib
-You've used 5 entries,
+Database file #1: lipics-v2021-sample-article.bib
+You've used 4 entries,
             2882 wiz_defined-function locations,
-            670 strings with 6112 characters,
-and the built_in function-call counts, 2471 in all, are:
-= -- 260
-> -- 83
-< -- 2
-+ -- 31
-- -- 24
-* -- 146
-:= -- 355
-add.period$ -- 19
-call.type$ -- 5
-change.case$ -- 26
+            656 strings with 5887 characters,
+and the built_in function-call counts, 1885 in all, are:
+= -- 202
+> -- 51
+< -- 1
++ -- 18
+- -- 14
+* -- 108
+:= -- 281
+add.period$ -- 16
+call.type$ -- 4
+change.case$ -- 18
 chr.to.int$ -- 0
-cite$ -- 5
-duplicate$ -- 77
-empty$ -- 229
-format.name$ -- 24
-if$ -- 642
+cite$ -- 4
+duplicate$ -- 55
+empty$ -- 185
+format.name$ -- 14
+if$ -- 487
 int.to.chr$ -- 0
-int.to.str$ -- 5
+int.to.str$ -- 4
 missing$ -- 5
-newline$ -- 31
-num.names$ -- 12
-pop$ -- 52
+newline$ -- 26
+num.names$ -- 8
+pop$ -- 38
 preamble$ -- 1
-purify$ -- 21
+purify$ -- 15
 quote$ -- 0
-skip$ -- 184
+skip$ -- 131
 stack$ -- 0
-substring$ -- 91
-swap$ -- 35
-text.length$ -- 2
+substring$ -- 94
+swap$ -- 18
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 18
+type$ -- 14
 warning$ -- 0
 while$ -- 15
-width$ -- 6
-write$ -- 65
+width$ -- 5
+write$ -- 52

@@ -1,7 +1,72 @@
-\documentclass[11pt]{article}
+\documentclass[a4paper,UKenglish,cleveref, autoref, thm-restate]{lipics-v2021}
+%This is a template for producing LIPIcs articles. 
+%See lipics-v2021-authors-guidelines.pdf for further information.
+%for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
+%for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
+%for section-numbered lemmas etc., use "numberwithinsect"
+%for enabling cleveref support, use "cleveref"
+%for enabling autoref support, use "autoref"
+%for anonymousing the authors (e.g. for double-blind review), add "anonymous"
+%for enabling thm-restate support, use "thm-restate"
+%for enabling a two-column layout for the author/affilation part (only applicable for > 6 authors), use "authorcolumns"
+%for producing a PDF according the PDF/A standard, add "pdfa"
 
-%%\usepackage{geometry}
-%%\usepackage[a4paper, total={6in, 8in}, margin=0.5in]{geometry}
+%\pdfoutput=1 %uncomment to ensure pdflatex processing (mandatatory e.g. to submit to arXiv)
+%\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
+
+%\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
+
+\bibliographystyle{plainurl}% the mandatory bibstyle
+
+\title{Formalisation of $p$-adic $L$-functions in Lean 3} %TODO Please add
+
+\titlerunning{$p$-adic $L$-functions} %TODO optional, please use if title is longer than one line
+
+\author{Ashvni Narayanan}{London School of Geometry and Number Theory}{a.narayanan20@imperial.ac.uk}{https://orcid.org/0000-0003-2777-4228}{EPSRC Grant EP/S021590/1 (UK)}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional. Use additional curly braces to indicate the correct name splitting when the last name consists of multiple name parts.
+
+%\author{Joan R. Public\footnote{Optional footnote, e.g. to mark corresponding author}}{Department of Informatics, Dummy College, [optional: Address], Country}{joanrpublic@dummycollege.org}{[orcid]}{[funding]}
+
+\authorrunning{A. Narayanan} %TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
+
+\Copyright{Ashvni Narayanan} %TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+
+\ccsdesc[500]{Mathematics of computing~Mathematical software} %TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm 
+\ccsdesc[300]{Theory of computation~Formal languages and automata theory}
+
+\keywords{formal math, algebraic number theory, Lean, mathlib} %TODO mandatory; please add comma-separated list of keywords
+
+%\category{} %optional, e.g. invited paper
+
+%\relatedversion{} %optional, e.g. full version hosted on arXiv, HAL, or other respository/website
+%\relatedversiondetails[linktext={opt. text shown instead of the URL}, cite=DBLP:books/mk/GrayR93]{Classification (e.g. Full Version, Extended Version, Previous Version}{URL to related version} %linktext and cite are optional
+
+\supplement{Copies of the source files relevant to this paper are available in a separate repository.}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
+\supplementdetails[swhid={}]{Software}{https://github.com/laughinggas/p-adic-L-functions} %linktext, cite, and subcategory are optional
+
+%\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
+
+\acknowledgements{The author is supported by EPSRC. The author would like to thank her PhD supervisor Prof Kevin Buzzard for several helpful insights. 
+She would also like to thank Dr Filippo A. E. Nuccio for helpful conversations that helped give shape to the project. She is very grateful 
+to the entire Lean community for their timely help and consistent support.}%optional
+
+%\nolinenumbers %uncomment to disable line numbering
+
+
+
+%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\EventEditors{John Q. Open and Joan R. Access}
+\EventNoEds{2}
+\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
+\EventShortTitle{CVIT 2016}
+\EventAcronym{CVIT}
+\EventYear{2016}
+\EventDate{December 24--27, 2016}
+\EventLocation{Little Whinging, United Kingdom}
+\EventLogo{}
+\SeriesVolume{42}
+\ArticleNo{23}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -14,7 +79,7 @@
 %\usepackage{minted}
 \def\lstlanguagefiles{lstlean.tex}
 \lstset{language=lean}
-\bibliographystyle{plainurl}
+%\bibliographystyle{plainurl}
 
 \addtolength{\oddsidemargin}{-.875in}
 \addtolength{\evensidemargin}{-.875in}
@@ -76,30 +141,35 @@
 
 \renewcommand\UrlFont{\color{blue}\rmfamily}
 
-\title{Formalization of $p$-adic $L$-functions}
-\author{Ashvni Narayanan}
-
 \begin{document}
-\maketitle
-\tableofcontents
 
-\setlength{\parindent}{0pt}
+\maketitle
+
+%TODO mandatory: add short abstract of the document
+\begin{abstract}
+This paper decribes formalisation of $p$-adic $L$-functions in an interactive theorem prover Lean 3. $p$-adic 
+$L$-functions are fundamental number theoretic objects. These special functions emerge from the special 
+values they take at negative integers in terms of generalized Bernoulli polynomials. We formalise their 
+definition in terms of a $p$-adic integral with respect to the Bernoulli measure, and prove that they 
+take the required values at negative integers.
+\end{abstract}
+
 \section{Introduction}
-I am working on formalizing mathematics in an interactive theorem prover called Lean. 
+I am working on formalising mathematics in an interactive theorem prover called Lean. 
 Formal verification involves the use of logical and computational methods to establish 
-claims that are expressed in precise mathematical terms, \cite{TPIL}. Lean is a powerful tool 
-that facilitates formalization of a system of mathematics supported by a basic set of axioms. There is a large mathematical library of theorems verified by Lean called \texttt{mathlib}, maintained by a community of mathematicians and computer scientists. One can then 
-formally verify proofs of new theorems dependent on preexisting theorems in \texttt{mathlib}. 
-\texttt{mathlib} currently contains 100579 theorems(as of early October 2022). It would be impossible to construct 
+claims that are expressed in precise mathematical terms \cite{TPIL}. Lean is a powerful tool 
+that facilitates formalisation of a system of mathematics supported by a basic set of axioms. There is a large mathematical library of theorems verified by Lean called \lean{mathlib}, maintained by a community of computer scientists and mathematicians. One can then 
+formally verify proofs of new theorems dependent on preexisting theorems in \lean{mathlib}. 
+\lean{mathlib} currently contains 100579 theorems(as of early October 2022). It would be impossible to construct 
 such a vast library without a highly collaborative spirit and a communal decentralized effort, one of 
 Lean's best features. \\
 %% explain more about how mathlib works
-I am working towards formalizing the statement of the Iwasawa Main Conjecture.
+I am working towards formalising the statement of the Iwasawa Main Conjecture.
 The statement unifies an ``algebraic side", coming from characteristic polynomials,
 with an ``analytic side", coming from $p$-adic $L$-functions. This article focuses on the 
-formalization of $p$-adic $L$-functions in Lean. This has never been done before in any 
+formalisation of $p$-adic $L$-functions in Lean. This has never been done before in any 
 theorem prover. As a result, one needs to build a lot of background (in the maximum possible generality) 
-before embarking on the main goal. The project is a work in progress. \\
+before embarking on the main goal. The project is complete. \\
 
 $p$-adic $L$-functions are a very well studied number theoretic object. They were initially constructed 
 by Kubota and Leopoldt in \cite{KL}. Their motivation was to construct a meromorphic function that helps study 
@@ -121,10 +191,10 @@ I introduce these, and then define the $p$-adic $L$-function, finishing with a s
 accomplished and what will be. \\
 
 All the code discussed in this article can be found on the branch $p$-adic\footnote{\url{https://github.com/leanprover-community/mathlib/tree/p-adic}}. 
-The most current version of \texttt{mathlib} (which is not the one I am using) is \cite{mathlib}.
+The most current version of \lean{mathlib} (which is not the one I am using) is \cite{mathlib}.
 
 \subsection{Mathematical overview}
-We shall give a brief overview of the mathematics formalized in this project. 
+We shall give a brief overview of the mathematics formalised in this project. 
 $L$-functions are a fundamental object, appearing almost everywhere in modern 
 number theory. There are several types of $L$-functions. The $L$-function attached 
 to an elliptic curve gives information about its rank. The Dirichlet $L$-function 
@@ -143,8 +213,8 @@ $L_p(1 - n, \chi) := (1 - \chi (p) p^{n - 1}) L(1 - n, \chi)$ to the $p$-adic in
 $\mathbb{Z}_p$. In fact, $L_p(s, 1)$ is analytic except for a pole at $s = 1$ with residue 
 $1 - \frac{1}{p}$ (Theorem 5.11, Washington). \\
 
-Due to several reasons explained in the following sections, formalization of the $p$-adic 
-$L$-functions via analytic continuation would be hard. Thus, we chose to formalize it in 
+Due to several reasons explained in the following sections, formalisation of the $p$-adic 
+$L$-functions via analytic continuation would be hard. Thus, we chose to formalise it in 
 as a measure theoretic object. Following Washington, we define it in terms of a 
 "$p$-adic integral" with respect to the Bernoulli measure. We shall explain these terms below. \\
 
@@ -183,7 +253,7 @@ analytic continuation, this would follow directly. However, when defined as a $p
 needed to prove this. The equivalence of these two definitions is proved in Theorem 12.2 of Washington. The same theorem 
 also helps show the independence of the theorem from the additional variable $c$.
 
-In this paper, we formalize this definition of the $p$-adic $L$-function and prove its values at negative integers in terms of 
+In this paper, we formalise this definition of the $p$-adic $L$-function and prove its values at negative integers in terms of 
 the generalized Bernoulli numbers. Moreover, this is done in generality, taking values in a normed complete $\mathbb{Q}_p$-algebra, 
 instead of just $\mathbb{C}_p$.
 \subsection{Lean and \lean{mathlib}}
@@ -194,9 +264,9 @@ introduction to Lean, see for instance . \\
 This project is based on Lean’s mathematical library mathlib, which is characterized by
 its decentralized nature with over 300 contributors. Due to the distributed organization of
 mathlib, it is impossible to cite every author who contributed a piece of code that we used.
-However, we remark that our formalization makes extensive use of the theory of Dedekind
+However, we remark that our formalisation makes extensive use of the theory of Dedekind
 domains and of the theory of uniform spaces and completions, originally developed in the
-perfectoid space formalization project. \\
+perfectoid space formalisation project. \\
 
 In Lean’s core library and mathlib, type classes are used to handle mathematical
 structures on types. For example, the type class ring packages two operations, addition and
@@ -380,11 +450,11 @@ valuation. It has the following properties :
 \end{itemize}
 
 These properties characterize the $p$-adic integers, and are integral to this work. While some preexisted in 
-\texttt{mathlib}, about 40 additional lemmas have been proved in \lean{padic\_int\_properties.lean}. 
+\lean{mathlib}, about 40 additional lemmas have been proved in \lean{padic\_int\_properties.lean}. 
 Moreover, lots of facts regarding the clopen basis given above have been utilized and proved in \lean{padic\_int\_clopen\_properties.lean}. (add links)
 
 \subsection{Dirichlet characters and the Teichmüller character}
-An important task was to formalize Dirichlet characters and its properties. They are an integral part of the definition of the $p$-adic $L$-function. 
+An important task was to formalise Dirichlet characters and its properties. They are an integral part of the definition of the $p$-adic $L$-function. 
 The Teichmüller character, especially, plays a significant role. This is novel, in the sense that Dirichlet characters are often not found to be defined 
 in this technical manner in most texts. Another addition is the definition of Dirichlet characters of level and conducor 0. We also generalize the 
 definition from group homomorphisms to $\mathbb{C}$ to monoid homomorphisms on any \lean{comm\_monoid\_with\_zero}. 
@@ -396,12 +466,12 @@ characters for certain values of $n$. \\
 
 For any two monoids $M$ and $M'$, \lean{M →* M'} denotes the type of monoid homomorphisms from $M$ to $M'$. Thus, making a separate 
 \lean{def} for Dirichlet characters does not make sense. Instead, we use :
-%\begin{lstlisting}
-%  abbreviation dirichlet_character (R : Type*) [monoid R] (n : ℕ) := 
-%    units (zmod n) →* units R
-%  abbreviation lev {R : Type*} [monoid R] {n : ℕ} (χ : dirichlet_character R n) : 
-%    ℕ := n
-%\end{lstlisting}
+\begin{lstlisting}
+  abbreviation dirichlet_character (R : Type*) [monoid R] (n : ℕ) := 
+    units (zmod n) →* units R
+  abbreviation lev {R : Type*} [monoid R] {n : ℕ} (χ : dirichlet_character R n) : 
+    ℕ := n
+\end{lstlisting}
 
 In other words, given a monoid $R$, the space of Dirichlet characters of level $n$ is the space of monoid homomorphisms from 
 $(\mathbb{Z}/n \mathbb{Z})*$ to $R*$. Given a Dirichlet character $\chi : (\mathbb{Z}/n \mathbb{Z})* \to R*$, \lean{χ.lev} 
@@ -537,9 +607,9 @@ These are all the ingredients we needed. Let us now define a special Dirichlet c
 % $b \in \mathbb{Z}_p$ such that $a \equiv b \text{(mod p)}$.
 % This gives us the Teichmüller character
 % $\omega : \mathbb{Z}_p^{\times} \xrightarrow[]{} \mathbb{Z}_p^{\times}$. \\
-The initial effort was to formalize the definition of the Teichmüller character directly. 
+The initial effort was to formalise the definition of the Teichmüller character directly. 
 However, it was discovered that Witt vectors, and in particular Teichmüller lifts had previously 
-been added to \texttt{mathlib}. This was used and was very helpful. It reiterates the importance 
+been added to \lean{mathlib}. This was used and was very helpful. It reiterates the importance 
 of the collaborative spirit of Lean, and of making definitions in the correct generality. \\
 
 It is beyond the scope of this text to define Witt vectors and do it justice. For a commutative ring
@@ -617,7 +687,7 @@ The difference between these two is : $B_n' = (-1)^n B_n$, with $B_1 = - \frac{1
 On using the Taylor series expansion for $e^t$ and equating coefficients, one gets,
 $$ B_n = 1 - \sum_{k = 0}^{n - 1} {n \choose k} \frac{B_k}{n - k + 1} $$
 
-In \texttt{mathlib}, $B_n$ was already defined (by Johan Commelin) as :
+In \lean{mathlib}, $B_n$ was already defined (by Johan Commelin) as :
 \begin{lstlisting}
   bernoulli' n = 1 - ∑ k : fin n, n.choose k / (n - k + 1) * bernoulli' k
 \end{lstlisting}
@@ -704,7 +774,7 @@ theorem bernoulli_eval_mul' (m : ℕ) {k : ℕ} (hk : k ≠ 0) (x : ℚ) :
 \end{lstlisting}
 
 There were several different approaches to the proof. Induction on any of the 3 variables did not work 
-out either. We did end up with a proof using Faulhaber's theorem (the proof has been formalized in Lean) 
+out either. We did end up with a proof using Faulhaber's theorem (the proof has been formalised in Lean) 
 for \lean{x:ℕ}, which could not be easily generalized to \lean{x:ℚ}. Finally, we used the generating function 
 equality, which makes the proof calculation heavy. That is, it suffices to show that 
 $$ \sum_n \sum_{i = 0}^{k - 1} \frac{k^{n - 1}}{n!} B_n \bigg(x + \frac{i}{k} \bigg) = (e^{kx} - 1) \sum_n \frac{B_n (kx)}{n!} $$
@@ -719,7 +789,7 @@ $$ \sum_{n = 0}^{\infty} B_{n,\chi} \frac{t^n}{n!} = \sum_{a = 1}^f \frac{\chi(a
 For any multiple $F$ of $f$, Proposition 4.1 of \cite{cyc} gives us : 
 $$ B_{n, \chi} = F^{n - 1} \sum_{a = 1}^{F} \chi (a) B_n \bigg( \frac{a}{F} \bigg) $$
 
-This is much easier to work with, modulo a dependency on the argument $F$. Taking $F = f$, we chose to formalize this 
+This is much easier to work with, modulo a dependency on the argument $F$. Taking $F = f$, we chose to formalise this 
 to be our definition in Lean :
 \begin{lstlisting}
 def general_bernoulli_number {S : Type*} [comm_semiring S] [algebra ℚ S] {n : ℕ} 
@@ -778,8 +848,8 @@ We shall discuss its proof in Section 4 (link).
 
 \subsection{Filters and convergence}
 None of the mathematical proofs require filters on paper, however, we find that working with them makes 
-formalizing these proofs significantly less cumbersome. We shall not delve into the details of what a 
-filter is, but instead explain how we use them to formalize convergence and limits. \\
+formalising these proofs significantly less cumbersome. We shall not delve into the details of what a 
+filter is, but instead explain how we use them to formalise convergence and limits. \\
 
 Often, we have expressions of the form $\lim_{n \to \infty} f_n(x) = a$ for a sequence of functions $(f_n)_n$. 
 This is represented in Lean as :
@@ -837,7 +907,7 @@ function $g(x) := \sum_{j = 1}^m f(a_j) \chi_{C_j}(x)$, where $\chi_U$ is the ch
 (locally constant) function taking value 1 on every element of U and 0 otherwise. It then follows
 that $|| f - g || = sup_{x \in X} ||f(x) - g(x)|| < \epsilon$, as required. \\
 
-Formalizing this took about 500 lines of code. Let us show that locally compact Hausdorff
+formalising this took about 500 lines of code. Let us show that locally compact Hausdorff
 totally disconnected spaces have a clopen basis :
 
 \begin{lstlisting}
@@ -860,7 +930,7 @@ Since $V$ is closed in $s$(compact, hence closed), $V$ is closed in $H$. Since
 $V \subseteq \text{(interior s)}$ is open in $s$, hence in (interior $s$), $V$ is open in $H$, thus
 we are done. \\
 
-This turned out to be harder to formalize than expected. Lean gives a subset $V$ of s \newline (\lean{compact\_space s ↔ is\_compact (s:set H)}) 
+This turned out to be harder to formalise than expected. Lean gives a subset $V$ of s \newline (\lean{compact\_space s ↔ is\_compact (s:set H)}) 
 the type \lean{V:set s}; however, Lean does not recognize $V$ as a subset of $H$. As a result, I must construct \lean{V':set H} 
 to be the image of $V$ under the closed embedding \lean{coe:s → H}. This process must be repeated each time a subset of $H$, 
 which is also a topological subspace, is considered. Finally, it must be shown that all these coercions match up in the big 
@@ -950,7 +1020,7 @@ gives 3 equivalent definitions of a distribution :
   \item A finitely additive function from the compact open sets of $X$ to $G$.
 \end{enumerate}
 
-Since switching between definitions is cumbersome, and(at that point of time), \texttt{mathlib}
+Since switching between definitions is cumbersome, and(at that point of time), \lean{mathlib}
 had no notion of thinking about profinite sets as inverse limits of finite sets, we chose to work
 with the second definition. However, this is already a Type, hence there is no need to redefine it.
 
@@ -1284,11 +1354,11 @@ This is the term in angular brackets \lean{⟨\_, \_⟩}, the former is the inte
 \end{lstlisting}
 
 What remains to be proved is that $f$ is invariant with respect to $c$. 
-Once these are proved, we can formalize properties of $p$-adic $L$-functions. One of the most
+Once these are proved, we can formalise properties of $p$-adic $L$-functions. One of the most
 important properties is, for an integer $n$ with $n \ge 1$,
 $$ L_p (1 - n, \chi) = -(1 - \chi \omega^{-n}(p)p^{n - 1}) \frac{B_{n, \chi \omega^{-n}}}{n} $$
 Recall that the function corresponding to $1 - n$ is $<a>^{1 - n}$. One must show that $<a>^{1 - n}$ is 
-an element of the weight space. Formalizing the first definition would have made showing this result a 
+an element of the weight space. formalising the first definition would have made showing this result a 
 lot tougher, since showing the analytic continuation of these functions is nontrivial, even on paper.
 
 \section{Evaluation at negative integers}
@@ -1359,7 +1429,7 @@ is also (respectively) locally constant or continuous. Some other difficulties i
 Each of these sums are then evaluated separately in \lean{UVW.lean}. This is dependent on the following lemma : 
 $$ \lim_{j \to \infty} \frac{1}{d p^j} \sum_{i \in \mathbb{Z}/ d p^j \mathbb{Z}} \chi \omega^{-n} (i) i^n = B_{n, \chi \omega^{-n}} $$ 
 for $n > 1$. There were two options for the \lean{finset} used in \lean{finset.sum} : \lean{finset.range} or \lean{zmod (d * p\textasciicircum j)}. 
-We chose the former since it was easier to deal with, as some required lemmas regarding it had been previously formalized. This lemma is 
+We chose the former since it was easier to deal with, as some required lemmas regarding it had been previously formalised. This lemma is 
 formulated in Lean as :
 \begin{lstlisting}
   tendsto (λ (n : ℕ), (1 / ↑(d * p ^ n)) • ∑ (i : ℕ) in finset.range (d * p ^ n),
@@ -1453,7 +1523,7 @@ Working with Dirichlet characters was challenging. This is because, given $a, b 
 Another workaround was to define and use \lean{dirichlet\_character R a ≃ dirichlet\_character R b}. However, this would slow down the compilation a lot, sometimes also leading to 
 deterministic timeouts. 
 
-\subsection*{Statistics}
+\subsection{Statistics}
 When initially completed, this project consisted of around 18,000 lines of code. A major refactor was then done, keeping in mind several of the points mentioned above, specifically 
 using properties of filters instead of metric space calculations wherever possible. All properties regarding particular types (such as Dirichlet characters) were also compiled together 
 in separate files wherever possible. Keeping in mind the spirit of \lean{mathlib}, these properties have been made in the greatest generality as much as possible. 
@@ -1462,19 +1532,276 @@ After the refactor, there are about 15000 lines of code, put into 10 files (chec
 While most properties regarding Bernoulli numbers and polynomials have been put into \lean{mathlib}, the rest of the work is on a private repository. The author hopes to push the 
 work directly to Lean 4, once the required port is complete.
 
-\subsection*{Related and future work} % some error occurs if I remove the *
-There are several projects that require Dirichlet characters and properties of the $p$-adic integers. These include the project on the formalization of Fermat's last theorem (link). 
-There is also an effort by Prof David Loeffler which involves formalization of the classical Dirichlet $L$-function, that is somewhat dependent on this work. \\
+\subsection{Related and future work} % some error occurs if I remove the *
+There are several projects that require Dirichlet characters and properties of the $p$-adic integers. These include the project on the formalisation of Fermat's last theorem (link). 
+There is also an effort by Prof David Loeffler which involves formalisation of the classical Dirichlet $L$-function, that is somewhat dependent on this work. \\
 
-In the future, the author hopes to be able to work on Iwasawa theory, for which the $p$-adic $L$-function is a key ingredient. She also hopes to formalize more properties of Bernoulli numbers, 
+In the future, the author hopes to be able to work on Iwasawa theory, for which the $p$-adic $L$-function is a key ingredient. She also hopes to formalise more properties of Bernoulli numbers, 
 that are a fundamental component of number theory.
 
-\subsection{Acknowledgements}
-The author is supported by EPSRC. The author would like to thank her supervisor, Prof Kevin Buzzard for several helpful insights. 
-She would also like to thank Dr Filippo A. E. Nuccio for helpful conversations that helped give shape to the project. She is very grateful 
-to the entire Lean community for their timely help and consistent support. Finally, she would like to 
-thank Shubham Gupta and her parents, whose persistent motivation has helped her complete the project.
+\bibliography{ITP-2023}
 
-\bibliography{ESAbib.bib}
+\section{Typesetting instructions -- Summary}
+\label{sec:typesetting-summary}
+
+LIPIcs is a series of open access high-quality conference proceedings across all fields in informatics established in cooperation with Schloss Dagstuhl. 
+In order to do justice to the high scientific quality of the conferences that publish their proceedings in the LIPIcs series, which is ensured by the thorough review process of the respective events, we believe that LIPIcs proceedings must have an attractive and consistent layout matching the standard of the series.
+Moreover, the quality of the metadata, the typesetting and the layout must also meet the requirements of other external parties such as indexing service, DOI registry, funding agencies, among others. The guidelines contained in this document serve as the baseline for the authors, editors, and the publisher to create documents that meet as many different requirements as possible. 
+
+Please comply with the following instructions when preparing your article for a LIPIcs proceedings volume. 
+\paragraph*{Minimum requirements}
+
+\begin{itemize}
+\item Use pdflatex and an up-to-date \LaTeX{} system.
+\item Use further \LaTeX{} packages and custom made macros carefully and only if required.
+\item Use the provided sectioning macros: \verb+\section+, \verb+\subsection+, \verb+\subsubsection+, \linebreak \verb+\paragraph+, \verb+\paragraph*+, and \verb+\subparagraph*+.
+\item Provide suitable graphics of at least 300dpi (preferably in PDF format).
+\item Use BibTeX and keep the standard style (\verb+plainurl+) for the bibliography.
+\item Please try to keep the warnings log as small as possible. Avoid overfull \verb+\hboxes+ and any kind of warnings/errors with the referenced BibTeX entries.
+\item Use a spellchecker to correct typos.
+\end{itemize}
+
+\paragraph*{Mandatory metadata macros}
+Please set the values of the metadata macros carefully since the information parsed from these macros will be passed to publication servers, catalogues and search engines.
+Avoid placing macros inside the metadata macros. The following metadata macros/environments are mandatory:
+\begin{itemize}
+\item \verb+\title+ and, in case of long titles, \verb+\titlerunning+.
+\item \verb+\author+, one for each author, even if two or more authors have the same affiliation.
+\item \verb+\authorrunning+ and \verb+\Copyright+ (concatenated author names)\\
+The \verb+\author+ macros and the \verb+\Copyright+ macro should contain full author names (especially with regard to the first name), while \verb+\authorrunning+ should contain abbreviated first names.
+\item \verb+\ccsdesc+ (ACM classification, see \url{https://www.acm.org/publications/class-2012}).
+\item \verb+\keywords+ (a comma-separated list of keywords).
+\item \verb+\relatedversion+ (if there is a related version, typically the ``full version''); please make sure to provide a persistent URL, e.\,g., at arXiv.
+\item \verb+\begin{abstract}...\end{abstract}+ .
+\end{itemize}
+
+\paragraph*{Please do not \ldots} %Do not override the \texttt{\seriesstyle}-defaults}
+Generally speaking, please do not override the \texttt{lipics-v2021}-style defaults. To be more specific, a short checklist also used by Dagstuhl Publishing during the final typesetting is given below.
+In case of \textbf{non-compliance} with these rules Dagstuhl Publishing will remove the corresponding parts of \LaTeX{} code and \textbf{replace it with the \texttt{lipics-v2021} defaults}. In serious cases, we may reject the LaTeX-source and expect the corresponding author to revise the relevant parts.
+\begin{itemize}
+\item Do not use a different main font. (For example, the \texttt{times} package is forbidden.)
+\item Do not alter the spacing of the \texttt{lipics-v2021.cls} style file.
+\item Do not use \verb+enumitem+ and \verb+paralist+. (The \texttt{enumerate} package is preloaded, so you can use
+ \verb+\begin{enumerate}[(a)]+ or the like.)
+\item Do not use ``self-made'' sectioning commands (e.\,g., \verb+\noindent{\bf My+ \verb+Paragraph}+).
+\item Do not hide large text blocks using comments or \verb+\iffalse+ $\ldots$ \verb+\fi+ constructions. 
+\item Do not use conditional structures to include/exclude content. Instead, please provide only the content that should be published -- in one file -- and nothing else.
+\item Do not wrap figures and tables with text. In particular, the package \texttt{wrapfig} is not supported.
+\item Do not change the bibliography style. In particular, do not use author-year citations. (The
+\texttt{natbib} package is not supported.)
+\end{itemize}
+
+\enlargethispage{\baselineskip}
+
+This is only a summary containing the most relevant details. Please read the complete document ``LIPIcs: Instructions for Authors and the \texttt{lipics-v2021} Class'' for all details and don't hesitate to contact Dagstuhl Publishing (\url{mailto:publishing@dagstuhl.de}) in case of questions or comments:
+\href{http://drops.dagstuhl.de/styles/lipics-v2021/lipics-v2021-authors/lipics-v2021-authors-guidelines.pdf}{\texttt{http://drops.dagstuhl.de/styles/lipics-v2021/\newline lipics-v2021-authors/lipics-v2021-authors-guidelines.pdf}}
+
+\section{Lorem ipsum dolor sit amet}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit \cite{DBLP:journals/cacm/Knuth74}. Praesent convallis orci arcu, eu mollis dolor. Aliquam eleifend suscipit lacinia. Maecenas quam mi, porta ut lacinia sed, convallis ac dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Donec eget odio et magna ullamcorper vehicula ut vitae libero. Maecenas lectus nulla, auctor nec varius ac, ultricies et turpis. Pellentesque id ante erat. In hac habitasse platea dictumst. Curabitur a scelerisque odio. Pellentesque elit risus, posuere quis elementum at, pellentesque ut diam. Quisque aliquam libero id mi imperdiet quis convallis turpis eleifend. 
+
+\begin{lemma}[Lorem ipsum]
+\label{lemma:lorem}
+Vestibulum sodales dolor et dui cursus iaculis. Nullam ullamcorper purus vel turpis lobortis eu tempus lorem semper. Proin facilisis gravida rutrum. Etiam sed sollicitudin lorem. Proin pellentesque risus at elit hendrerit pharetra. Integer at turpis varius libero rhoncus fermentum vitae vitae metus.
+\end{lemma}
+
+\begin{proof}
+Cras purus lorem, pulvinar et fermentum sagittis, suscipit quis magna.
+
+
+\proofsubparagraph*{Just some paragraph within the proof.}
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+\begin{claim}
+content...
+\end{claim}
+\begin{claimproof}
+content...
+    \begin{enumerate}
+        \item abc abc abc \claimqedhere{}
+    \end{enumerate}
+\end{claimproof}
+
+\end{proof}
+
+\begin{corollary}[Curabitur pulvinar, \cite{DBLP:books/mk/GrayR93}]
+\label{lemma:curabitur}
+Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+\end{corollary}
+
+\begin{proposition}\label{prop1}
+This is a proposition
+\end{proposition}
+
+\autoref{prop1} and \cref{prop1} \ldots
+
+\subsection{Curabitur dictum felis id sapien}
+
+Curabitur dictum \cref{lemma:curabitur} felis id sapien \autoref{lemma:curabitur} mollis ut venenatis tortor feugiat. Curabitur sed velit diam. Integer aliquam, nunc ac egestas lacinia, nibh est vehicula nibh, ac auctor velit tellus non arcu. Vestibulum lacinia ipsum vitae nisi ultrices eget gravida turpis laoreet. Duis rutrum dapibus ornare. Nulla vehicula vulputate iaculis. Proin a consequat neque. Donec ut rutrum urna. Morbi scelerisque turpis sed elit sagittis eu scelerisque quam condimentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aenean nec faucibus leo. Cras ut nisl odio, non tincidunt lorem. Integer purus ligula, venenatis et convallis lacinia, scelerisque at erat. Fusce risus libero, convallis at fermentum in, dignissim sed sem. Ut dapibus orci vitae nisl viverra nec adipiscing tortor condimentum \cite{DBLP:journals/cacm/Dijkstra68a}. Donec non suscipit lorem. Nam sit amet enim vitae nisl accumsan pretium. 
+
+\begin{lstlisting}[caption={Useless code.},label=list:8-6,captionpos=t,float,abovecaptionskip=-\medskipamount]
+for i:=maxint to 0 do 
+begin 
+    j:=square(root(i));
+end;
+\end{lstlisting}
+
+\subsection{Proin ac fermentum augue}
+
+Proin ac fermentum augue. Nullam bibendum enim sollicitudin tellus egestas lacinia euismod orci mollis. Nulla facilisi. Vivamus volutpat venenatis sapien, vitae feugiat arcu fringilla ac. Mauris sapien tortor, sagittis eget auctor at, vulputate pharetra magna. Sed congue, dui nec vulputate convallis, sem nunc adipiscing dui, vel venenatis mauris sem in dui. Praesent a pretium quam. Mauris non mauris sit amet eros rutrum aliquam id ut sapien. Nulla aliquet fringilla sagittis. Pellentesque eu metus posuere nunc tincidunt dignissim in tempor dolor. Nulla cursus aliquet enim. Cras sapien risus, accumsan eu cursus ut, commodo vel velit. Praesent aliquet consectetur ligula, vitae iaculis ligula interdum vel. Integer faucibus faucibus felis. 
+
+\begin{itemize}
+\item Ut vitae diam augue. 
+\item Integer lacus ante, pellentesque sed sollicitudin et, pulvinar adipiscing sem. 
+\item Maecenas facilisis, leo quis tincidunt egestas, magna ipsum condimentum orci, vitae facilisis nibh turpis et elit. 
+\end{itemize}
+
+\begin{remark}
+content...
+\end{remark}
+
+\section{Pellentesque quis tortor}
+
+Nec urna malesuada sollicitudin. Nulla facilisi. Vivamus aliquam tempus ligula eget ornare. Praesent eget magna ut turpis mattis cursus. Aliquam vel condimentum orci. Nunc congue, libero in gravida convallis \cite{DBLP:conf/focs/HopcroftPV75}, orci nibh sodales quam, id egestas felis mi nec nisi. Suspendisse tincidunt, est ac vestibulum posuere, justo odio bibendum urna, rutrum bibendum dolor sem nec tellus. 
+
+\begin{lemma} [Quisque blandit tempus nunc]
+Sed interdum nisl pretium non. Mauris sodales consequat risus vel consectetur. Aliquam erat volutpat. Nunc sed sapien ligula. Proin faucibus sapien luctus nisl feugiat convallis faucibus elit cursus. Nunc vestibulum nunc ac massa pretium pharetra. Nulla facilisis turpis id augue venenatis blandit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+\end{lemma}
+
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+
+\section{Morbi eros magna}
+
+Morbi eros magna, vestibulum non posuere non, porta eu quam. Maecenas vitae orci risus, eget imperdiet mauris. Donec massa mauris, pellentesque vel lobortis eu, molestie ac turpis. Sed condimentum convallis dolor, a dignissim est ultrices eu. Donec consectetur volutpat eros, et ornare dui ultricies id. Vivamus eu augue eget dolor euismod ultrices et sit amet nisi. Vivamus malesuada leo ac leo ullamcorper tempor. Donec justo mi, tempor vitae aliquet non, faucibus eu lacus. Donec dictum gravida neque, non porta turpis imperdiet eget. Curabitur quis euismod ligula. 
+
+
+%%
+%% Bibliography
+%%
+
+%% Please use bibtex, 
+
+\appendix
+
+\section{Styles of lists, enumerations, and descriptions}\label{sec:itemStyles}
+
+List of different predefined enumeration styles:
+
+\begin{itemize}
+\item \verb|\begin{itemize}...\end{itemize}|
+\item \dots
+\item \dots
+%\item \dots
+\end{itemize}
+
+\begin{enumerate}
+\item \verb|\begin{enumerate}...\end{enumerate}|
+\item \dots
+\item \dots
+%\item \dots
+\end{enumerate}
+
+\begin{alphaenumerate}
+\item \verb|\begin{alphaenumerate}...\end{alphaenumerate}|
+\item \dots
+\item \dots
+%\item \dots
+\end{alphaenumerate}
+
+\begin{romanenumerate}
+\item \verb|\begin{romanenumerate}...\end{romanenumerate}|
+\item \dots
+\item \dots
+%\item \dots
+\end{romanenumerate}
+
+\begin{bracketenumerate}
+\item \verb|\begin{bracketenumerate}...\end{bracketenumerate}|
+\item \dots
+\item \dots
+%\item \dots
+\end{bracketenumerate}
+
+\begin{description}
+\item[Description 1] \verb|\begin{description} \item[Description 1]  ...\end{description}|
+\item[Description 2] Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\item[Description 3]  \dots
+%\item \dots
+\end{description}
+
+\cref{testenv-proposition} and \autoref{testenv-proposition} ...
+
+\section{Theorem-like environments}\label{sec:theorem-environments}
+
+List of different predefined enumeration styles:
+
+\begin{theorem}\label{testenv-theorem}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{theorem}
+
+\begin{lemma}\label{testenv-lemma}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{lemma}
+
+\begin{corollary}\label{testenv-corollary}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{corollary}
+
+\begin{proposition}\label{testenv-proposition}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{proposition}
+
+\begin{conjecture}\label{testenv-conjecture}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{conjecture}
+
+\begin{observation}\label{testenv-observation}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{observation}
+
+\begin{exercise}\label{testenv-exercise}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{exercise}
+
+\begin{definition}\label{testenv-definition}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{definition}
+
+\begin{example}\label{testenv-example}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{example}
+
+\begin{note}\label{testenv-note}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{note}
+
+\begin{note*}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{note*}
+
+\begin{remark}\label{testenv-remark}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{remark}
+
+\begin{remark*}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{remark*}
+
+\begin{claim}\label{testenv-claim}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{claim}
+
+\begin{claim*}\label{testenv-claim2}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{claim*}
+
+\begin{proof}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{proof}
+
+\begin{claimproof}
+Fusce eu leo nisi. Cras eget orci neque, eleifend dapibus felis. Duis et leo dui. Nam vulputate, velit et laoreet porttitor, quam arcu facilisis dui, sed malesuada risus massa sit amet neque.
+\end{claimproof}
+
+%\bibliography{ESAbib.bib}
 
 \end{document}

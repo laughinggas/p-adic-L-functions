@@ -1,4 +1,4 @@
-import dirichlet_character
+import dirichlet_character.basic
 import zmod_properties
 import analysis.normed_space.basic
 import topology.algebra.group

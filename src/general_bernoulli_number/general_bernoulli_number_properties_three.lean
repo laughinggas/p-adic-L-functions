@@ -1,6 +1,6 @@
-import general_bernoulli_number_properties_two
+import general_bernoulli_number.general_bernoulli_number_properties_two
 import number_theory.bernoulli_polynomials
-import general_bernoulli_number
+import general_bernoulli_number.basic
 
 variables {p d : nat} (m : nat) [fact (0 < d)] [fact (nat.prime p)]
   {R : Type*} [normed_comm_ring R] {χ : dirichlet_character R (d * p^m)}

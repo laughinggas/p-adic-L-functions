@@ -5,8 +5,8 @@ Authors: Ashvni Narayanan
 -/
 import ring_theory.witt_vector.teichmuller
 import ring_theory.witt_vector.compare
-import padic_int_properties
-import dirichlet_character_properties
+import padic_int.properties
+import dirichlet_character.properties
 --import data.nat.modeq
 --import topology.discrete_quotient
 --import data.set.prod

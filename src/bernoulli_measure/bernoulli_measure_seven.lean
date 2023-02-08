@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
 import bernoulli_measure.bernoulli_measure_six
-import teichmuller_character
+import dirichlet_character.teichmuller_character
 import topology.algebra.continuous_monoid_hom
 
 /-!

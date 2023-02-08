@@ -1,4 +1,4 @@
-import dirichlet_character_properties
+import dirichlet_character.properties
 import bernoulli_measure.bernoulli_measure_seven
 
 -- `mul_eval_coprime` replaced with `mul_eval_of_coprime`
