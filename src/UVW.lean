@@ -688,12 +688,6 @@ begin
       { rw asso_dirichlet_character_eq_zero _ this, rw zero_mul, },
       { rw asso_dirichlet_character_eq_zero _ this, rw mul_zero, }, }, },
 end-/
-
-lemma mul_change_level {n m : ℕ} (χ ψ : dirichlet_character R n) (h : n ∣ m) :
-  (χ * ψ).change_level h = χ.change_level h * ψ.change_level h :=
-begin
-  simp_rw change_level, rw monoid_hom.mul_comp,
-end
 .
 variable (hd)
 

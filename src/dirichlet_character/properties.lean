@@ -4,10 +4,15 @@ import analysis.normed_space.basic
 import topology.algebra.group
 import topology.continuous_function.compact
 
-/-- Making `zmod` a discrete topological space. -/
-def zmod.topological_space' (d : ℕ) : topological_space (zmod d) := ⊥
+/-!
+# Dirichlet characters
+This file defines properties of Dirichlet characters.
 
-local attribute [instance] zmod.topological_space'
+## Tags
+p-adic, L-function, Bernoulli measure, Dirichlet character
+-/
+
+local attribute [instance] zmod.topological_space
 open_locale big_operators
 
 namespace nat

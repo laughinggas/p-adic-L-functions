@@ -6,6 +6,7 @@ Authors: Ashvni Narayanan
 
 import data.zmod.quotient
 import ring_theory.roots_of_unity
+import zmod_properties
 
 /-!
 # Dirichlet characters
@@ -15,12 +16,9 @@ to multiplicative homomorphisms over ℤ/nℤ for any n divisible by the conduct
 
 ## Main definitions
  * `dirichlet_character`
-
-## Implementation notes
-TODO (optional)
-
-## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
+ * `asso_dirichlet_character`
+ * `change_level`
+ * `conductor`
 
 ## Tags
 p-adic, L-function, Bernoulli measure, Dirichlet character
@@ -124,27 +122,27 @@ begin
 end
 
 /-- Extends the Dirichlet character χ of level n to level m, where n ∣ m. -/
-def change_level {m : ℕ} (hm : n ∣ m) : dirichlet_character R m :=
-χ.comp (units.map (zmod.cast_hom hm (zmod n)))
---χ.comp (zmod.cast_hom hm (zmod n))
+def change_level {m : ℕ} (hm : n ∣ m) : dirichlet_character R n →* dirichlet_character R m :=
+{ to_fun := λ ψ, ψ.comp (units.map (zmod.cast_hom hm (zmod n))),
+  map_one' := by simp,
+  map_mul' := λ ψ₁ ψ₂, monoid_hom.mul_comp _ _ _, }
 
-lemma change_level_self : χ.change_level (dvd_refl n) = χ :=
-by { convert monoid_hom.comp_id _, apply congr_arg2 _ rfl, ext, simp, }
+lemma change_level_def {m : ℕ} (hm : n ∣ m) : change_level hm χ = χ.comp (units.map (zmod.cast_hom hm (zmod n))) := rfl
 
-lemma change_level_dvd {m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) :
-  χ.change_level (dvd_trans hm hd) = (χ.change_level hm).change_level hd :=
+namespace change_level
+lemma self : change_level (dvd_refl n) χ = χ := by { rw change_level_def, simp, }
+
+lemma dvd {m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) :
+  change_level (dvd_trans hm hd) χ = change_level hd (change_level hm χ) :=
 begin
-  repeat { rw change_level, },
-  rw monoid_hom.comp_assoc,
-  congr,
-  rw ←units.map_comp,
-  congr,
-  change _ = ↑((zmod.cast_hom hm (zmod n)).comp (zmod.cast_hom hd (zmod m))),
+  repeat { rw change_level_def, }, 
+  rw [monoid_hom.comp_assoc, ←units.map_comp], 
+  change _ = χ.comp (units.map ↑((zmod.cast_hom hm (zmod n)).comp (zmod.cast_hom hd (zmod m)))),
   congr,
 end
 
-lemma change_level_asso_dirichlet_character_eq {m : ℕ} (hm : n ∣ m) (a : units (zmod m)) :
-  asso_dirichlet_character (χ.change_level hm) a = asso_dirichlet_character χ a :=
+lemma asso_dirichlet_character_eq {m : ℕ} (hm : n ∣ m) (a : units (zmod m)) :
+  asso_dirichlet_character (change_level hm χ) a = asso_dirichlet_character χ a :=
 begin
   rw asso_dirichlet_character_eq_char' _,
   swap, { apply (units.is_unit a), },
@@ -155,85 +153,61 @@ begin
       swap, { assumption, },
       rw [←ring_hom.coe_monoid_hom, ←units.coe_map _ _],
       apply units.is_unit, },
-    { rw [units.eq_iff, change_level],
+    { rw [units.eq_iff, change_level_def],
       simp only [function.comp_app, monoid_hom.coe_comp, coe_coe], congr,
       rw [←units.eq_iff, units.coe_map, is_unit.unit_spec _, is_unit.unit_spec _], refl, }, },
 end
 
-lemma change_level_asso_dirichlet_character_eq' {m : ℕ} (hm : n ∣ m) {a : zmod m}
-  (ha : is_unit a) : asso_dirichlet_character (χ.change_level hm) a =
+lemma asso_dirichlet_character_eq' {m : ℕ} (hm : n ∣ m) {a : zmod m}
+  (ha : is_unit a) : asso_dirichlet_character (change_level hm χ) a =
   asso_dirichlet_character χ a :=
 begin
-  rw [←is_unit.unit_spec ha, change_level_asso_dirichlet_character_eq], congr,
+  rw [←is_unit.unit_spec ha, asso_dirichlet_character_eq], congr,
 end
+end change_level
 
 /-- χ₀ of level d factors through χ of level n if d ∣ n and χ₀ = χ ∘ (zmod n → zmod d). -/
 structure factors_through (d : ℕ) : Prop :=
 (dvd : d ∣ n)
-(ind_char : ∃ χ₀ : dirichlet_character R d, χ = χ₀.change_level dvd)
+(ind_char : ∃ χ₀ : dirichlet_character R d, χ = change_level dvd χ₀)
 
-/-lemma factors_through_dvd (hd : factors_through χ hd) :
-  d ∣ n := -/
-
-lemma factors_through_spec {d : ℕ} (h : factors_through χ d) :
-  χ = (classical.some (h.ind_char)).change_level h.1 := classical.some_spec (h.ind_char)
+namespace factors_through
+lemma spec {d : ℕ} (h : factors_through χ d) :
+  χ = change_level h.1 (classical.some (h.ind_char)) := classical.some_spec (h.ind_char)
+end factors_through
 
 /-- The set of natural numbers for which a Dirichlet character is periodic. -/
-def conductor_set : set ℕ :=
-  {x : ℕ | χ.factors_through x}
+def conductor_set : set ℕ := {x : ℕ | χ.factors_through x}
 
 lemma mem_conductor_set_iff {x : ℕ} : x ∈ χ.conductor_set ↔ χ.factors_through x := iff.refl _
 
-lemma level_mem_conductor_set : n ∈ conductor_set χ :=
-(mem_conductor_set_iff _).2
-  { dvd := dvd_rfl,
-    ind_char := ⟨χ, (χ.change_level_self).symm⟩, }
---⟨dvd_rfl, λ _, ⟨χ, (χ.change_level_self).symm⟩⟩
+lemma level_mem_conductor_set : n ∈ conductor_set χ := (mem_conductor_set_iff _).2
+{ dvd := dvd_rfl,
+  ind_char := ⟨χ, (change_level.self χ).symm⟩, }
 
 lemma mem_conductor_set_dvd {x : ℕ} (hx : x ∈ χ.conductor_set) : x ∣ n := hx.1
 
-lemma mem_conductor_set_factors_through {x : ℕ} (hx : x ∈ χ.conductor_set) :
-  χ.factors_through x := hx
-
-/-lemma mem_dvd {d m : ℕ} (h₁ : d ∣ m) (h₂ : m ∣ n)
-  (mem : d ∈ conductor_set χ) : m ∈ conductor_set χ :=
-begin
-  have mem' := mem,
-  change factors_through χ d at mem',
-  change factors_through χ m,
-  have := factors_through_spec d χ mem',
-  rcases mem with ⟨h₃, χ₁, h⟩,
-  refine ⟨h₂, change_level χ₁ h₁, λ a, _⟩,
-  --have h1 : m ∈ χ₁.conductor_set, sorry,
-  --convert change_level_asso_dirichlet_character_eq χ₁ h₁ _,
-  have u1 : is_unit (a : zmod m), sorry,
-  have u2 : is_unit (a : zmod d), sorry,
-  convert h a,
-  convert asso_dirichlet_character_eq_char _ u1.unit,
-  convert asso_dirichlet_character_eq_char _ u2.unit,
-  rw change_level, simp,
-  congr,
-  sorry,
-/-  change asso_dirichlet_character χ₁ ((a : zmod m) : zmod d) = _,
-  apply congr_arg,
-  rw zmod.cast_int_cast h₁, apply_instance,-/
-end-/
+lemma mem_conductor_set_factors_through {x : ℕ} (hx : x ∈ χ.conductor_set) : χ.factors_through x := hx
 
 /-- The minimum natural number n for which a Dirichlet character is periodic.
   The Dirichlet character χ can then alternatively be reformulated on ℤ/nℤ. -/
 noncomputable def conductor : ℕ := Inf (conductor_set χ)
 
-lemma mem_conductor : conductor χ ∈ conductor_set χ :=
-Inf_mem (set.nonempty_of_mem χ.level_mem_conductor_set)
+lemma nat.le_one {n : ℕ} (h : n ≤ 1) : n = 0 ∨ n = 1 :=
+by { cases n, { left, refl, },
+  { right, rw nat.succ_le_succ_iff at h, rw nat.le_zero_iff at h, rw h, }, }
 
-lemma conductor_dvd : χ.conductor ∣ n := χ.mem_conductor.1
+namespace conductor
+lemma mem_conductor_set : conductor χ ∈ conductor_set χ := Inf_mem (set.nonempty_of_mem χ.level_mem_conductor_set)
 
-lemma factors_through_conductor : χ.factors_through χ.conductor := χ.mem_conductor
+lemma dvd_lev : χ.conductor ∣ n := (mem_conductor_set χ).1
 
-lemma conductor_eq_one (hχ : χ.conductor = 1) : χ = 1 :=
+lemma factors_through : χ.factors_through χ.conductor := mem_conductor_set χ
+
+lemma eq_one (hχ : χ.conductor = 1) : χ = 1 :=
 begin
-  obtain ⟨h', χ₀, h⟩ := factors_through_conductor χ,
-  rw h, ext, rw units.eq_iff, rw change_level,
+  obtain ⟨h', χ₀, h⟩ := factors_through χ,
+  rw h, ext, rw units.eq_iff, rw change_level_def,
   simp only [function.comp_app, monoid_hom.one_apply, monoid_hom.coe_comp],
   convert χ₀.map_one',
   apply subsingleton.elim _ _,
@@ -242,45 +216,41 @@ begin
   rw [zmod.card_units_eq_totient _, nat.totient_one], exact succ_pos'' 0,
 end
 
-lemma nat.le_one {n : ℕ} (h : n ≤ 1) : n = 0 ∨ n = 1 :=
-by { cases n, { left, refl, },
-  { right, rw nat.succ_le_succ_iff at h, rw nat.le_zero_iff at h, rw h, }, }
-
-lemma conductor_one (hn : 0 < n) : (1 : dirichlet_character R n).conductor = 1 :=
+lemma one (hn : 0 < n) : (1 : dirichlet_character R n).conductor = 1 :=
 begin
   suffices : (1 : dirichlet_character R n).conductor ≤ 1,
   { cases nat.le_one this,
     { rw h, exfalso,
-      have := factors_through.dvd (1 : dirichlet_character R n).factors_through_conductor,
-      rw h at this, rw zero_dvd_iff at this, rw this at hn, apply lt_irrefl _ hn, },
+      have := factors_through.dvd (factors_through (1 : dirichlet_character R n)),
+      rw [h, zero_dvd_iff] at this, 
+      rw this at hn, 
+      apply lt_irrefl _ hn, },
     { exact h, }, },
-  { apply nat.Inf_le,
-    refine ⟨one_dvd _, 1, _⟩,
-    ext, rw units.eq_iff, rw change_level, simp only [monoid_hom.one_comp], },
+  { refine nat.Inf_le ⟨one_dvd _, 1, _⟩,
+    ext, 
+    rw [units.eq_iff, change_level_def], 
+    simp only [monoid_hom.one_comp], },
 end
 
-lemma conductor_eq_one_iff (hn : 0 < n) : χ = 1 ↔ χ.conductor = 1 :=
-⟨λ h, by { rw h, rw conductor_one hn, }, λ h, by {rw χ.conductor_eq_one h,}⟩
+variable {χ}
+lemma eq_one_iff (hn : 0 < n) : χ = 1 ↔ χ.conductor = 1 :=
+⟨λ h, by { rw [h, one hn], }, λ h, by {rw eq_one χ h}⟩
 
-/-lemma asso_dirichlet_character_eval_add_conductor (m k : ℕ) :
-  asso_dirichlet_character χ (m + k * χ.conductor : zmod n) = asso_dirichlet_character χ m :=
-begin
-  by_cases is_unit (m : zmod n),
-  { rw asso_dirichlet_character_eq_char' χ h, },
-end -/
+lemma eq_zero_iff_level_eq_zero : χ.conductor = 0 ↔ n = 0 :=
+⟨λ h, by {rw ←zero_dvd_iff, convert dvd_lev χ, rw h, },
+  λ h, by {rw [conductor, nat.Inf_eq_zero], left, refine ⟨zero_dvd_iff.2 h,
+  ⟨change_level (by {rw h}) χ, by { rw [←change_level.dvd _ _ _, change_level.self _], }⟩, ⟩, }⟩
+end conductor
 
 /-- A character is primitive if its level is equal to its conductor. -/
 def is_primitive : Prop := χ.conductor = n
 
 lemma is_primitive_def : χ.is_primitive ↔ χ.conductor = n := ⟨λ h, h, λ h, h⟩
 
-lemma one_is_primitive : is_primitive (1 : dirichlet_character R 1) :=
-nat.dvd_one.1 (conductor_dvd _)
+namespace is_primitive
+lemma one : is_primitive (1 : dirichlet_character R 1) := nat.dvd_one.1 (conductor.dvd_lev _)
 
-lemma conductor_one_dvd_nat (n : ℕ) : conductor (1 : dirichlet_character R 1) ∣ n :=
-by { rw (is_primitive_def _).1 one_is_primitive, apply one_dvd _, }
-
-lemma conductor_zero_eq : (1 : dirichlet_character R 0).is_primitive :=
+lemma one_lev_zero : (1 : dirichlet_character R 0).is_primitive :=
 begin
   rw [is_primitive_def, conductor, nat.Inf_eq_zero],
   left, rw conductor_set,
@@ -288,166 +258,64 @@ begin
   simp only [true_and, zmod.cast_id', id.def, monoid_hom.coe_mk, dvd_zero, coe_coe],
   refine ⟨1, rfl⟩,
 end
+end is_primitive
+
+lemma conductor_one_dvd (n : ℕ) : conductor (1 : dirichlet_character R 1) ∣ n :=
+by { rw (is_primitive_def _).1 is_primitive.one, apply one_dvd _, }
 
 /-- If m = n are positive natural numbers, then zmod m ≃ zmod n. -/
 def zmod.mul_equiv {a b : ℕ} (h : a = b) : zmod a ≃* zmod b :=
-begin
-  rw h,
-/-  by_cases h' : b = 0,
-  { rw h' at h, rw h, rw h', }, rw h,
-  { haveI : fact (0 < b), { apply fact_iff.2 (nat.pos_of_ne_zero h'), },
-    haveI : char_p (zmod b) a, { rw h, exact zmod.char_p b, },
-    convert (zmod.ring_equiv (zmod b) (by { convert h.symm, rw zmod.card, })).to_mul_equiv, }, -/
-end
+by { rw h }
 
 /-- If m = n are positive natural numbers, then their Dirichlet character spaces are the same. -/
-def equiv {a b : ℕ} (h : a = b) :
-  dirichlet_character R a ≃* dirichlet_character R b := by { rw h, }
---mul_equiv.monoid_hom_congr (units.map_equiv (zmod.mul_equiv h)) (mul_equiv.refl _)
-
-lemma conductor_eq_zero_iff_level_eq_zero : χ.conductor = 0 ↔ n = 0 :=
-⟨λ h, by {rw ←zero_dvd_iff, convert χ.conductor_dvd, rw h, },
-  λ h, by {rw [conductor, nat.Inf_eq_zero], left, refine ⟨zero_dvd_iff.2 h,
-  begin
-    refine ⟨χ.change_level _, _⟩,
-    { rw h, },
-    { rw ←change_level_dvd _ _ _,
-      rw change_level_self _, }, end⟩, }⟩
-
-lemma zmod_one_mul_hom_subsingleton {R : Type*} [monoid R] {ψ : dirichlet_character R 1} : ψ = 1 :=
-begin
-  rw monoid_hom.ext_iff, intro x,
-  have : x = 1, { rw ←units.eq_iff, exact subsingleton.elim ↑x ↑1, },
-  simp only [this, monoid_hom.map_one],
-end
-
-/-lemma conductor_eq_one [nontrivial (zmod n)] (hχ : χ.conductor = 1) : (0 : R) = 1 :=
-begin
-  have mem := χ.factors_through_conductor,
-  rw hχ at mem,
-  rcases mem with ⟨h1, h'⟩,
-  obtain ⟨ψ, h2⟩ := h' h1,
-  rw asso_dirichlet_character_eq_iff at h2, rw monoid_hom.ext_iff at h2,
-  specialize h2 0,
---  rw eq_comm at h2,
-  rw asso_dirichlet_character_eq_zero _ _ at h2,
-  { rw h2,
-    have unit_zero : is_unit (0 : zmod 1),
-    { simp only [fin.zero_eq_one_iff, is_unit_zero_iff], },
-    have asso_eq_one : asso_dirichlet_character ψ 0 = 1,
-    { convert asso_dirichlet_character_eq_char' ψ (by { convert unit_zero, }),
-      have : ψ = 1 := zmod_one_mul_hom_subsingleton,
-      rw this,
-      simp only [units.coe_one, monoid_hom.one_apply], },
-    have : (0 : zmod 1) = ((0 : zmod n) : zmod 1),
-    { simp only [eq_iff_true_of_subsingleton], },
-    rw this at asso_eq_one,
-    rw asso_eq_one at h2, exact h2, },
-  { exact not_is_unit_zero, },
-end-/
-
-/-lemma conductor_eq [nontrivial R] : (1 : dirichlet_character R n).is_primitive :=
-begin
-  rw is_primitive_def,
-  induction n with d hd,
-  { refine conductor_zero_eq, },
-  rw eq_iff_le_not_lt,
-  refine ⟨nat.le_of_dvd (nat.succ_pos _) (conductor_dvd _), λ h, _⟩,
-  have f1 : asso_dirichlet_character (1 : dirichlet_character R d.succ)
-    (1 : dirichlet_character R d.succ).conductor = 0,
-  { apply asso_dirichlet_character_eq_zero,
-    intro h1,
-    have h2 : (1 : dirichlet_character R d.succ).conductor.coprime d.succ,
-    convert ((zmod.units_equiv_coprime).to_fun h1.unit).prop,
-    { sorry, },
---    convert (1 : dirichlet_character R d.succ).conductor.coprime d.scc at h2,
-    have h3 := nat.coprime.eq_one_of_dvd h2 (1 : dirichlet_character R d.succ).conductor_dvd,
-    sorry, },
-  have f2 : asso_dirichlet_character (1 : dirichlet_character R n)
-    (1 : dirichlet_character R n).conductor = 1,
-  { sorry, },
-  rw f1 at f2,
-  apply zero_ne_one f2,
-end-/
+def equiv {a b : ℕ} (h : a = b) : dirichlet_character R a ≃* dirichlet_character R b := by { rw h, }
 
 /-- The primitive character associated to a Dirichlet character. -/
 noncomputable def asso_primitive_character : dirichlet_character R χ.conductor :=
-  classical.some (χ.factors_through_conductor).ind_char
-
-/-lemma change_level_conductor_eq_conductor {m : ℕ} (hm :n ∣ m) :
-  (χ.change_level hm).conductor = χ.conductor :=
-begin
-  suffices : (χ.change_level hm).conductor_set = χ.conductor_set,
-  { rw conductor, rw this, refl, },
-  ext,
-  refine ⟨λ h, _, λ h, ⟨dvd_trans h.1 hm, ⟨(h.2).some, _⟩⟩⟩,
-  { rw mem_conductor_set_iff at *,
-    cases h,
-    split,
-    --simp at h,
-    sorry, sorry, },
-  { rw change_level_dvd _ h.1 hm,
-    congr,
-    convert h.2.some_spec, },
-  sorry,
-  { by_cases is_unit a,
-    { sorry, },
-    { rw asso_dirichlet_character_eq_zero _ h,
-      rw asso_dirichlet_character_eq_zero _ _,
-      contrapose h, rw not_not at *,
-      rw zmod.uni }, },
-end-/
+  classical.some (conductor.factors_through χ).ind_char
 
 lemma mem_conductor_set_eq_conductor {d : ℕ} (hd : d ∈ χ.conductor_set) :
   χ.conductor ≤ (classical.some hd.2).conductor :=
 begin
   apply nat.Inf_le,
   rw conductor_set, simp only [set.mem_set_of_eq, monoid_hom.coe_mk],
-  refine ⟨dvd_trans (conductor_dvd _) hd.1,
-    (classical.some hd.2).factors_through_conductor.2.some, _⟩,
-  convert factors_through_spec χ hd using 1,
-  have : (zmod.cast_hom (dvd_trans (conductor_dvd hd.2.some) hd.1)
+  refine ⟨dvd_trans (conductor.dvd_lev _) hd.1, (conductor.factors_through (classical.some hd.2)).2.some, _⟩,
+  convert factors_through.spec χ hd using 1,
+  have : (zmod.cast_hom (dvd_trans (conductor.dvd_lev hd.2.some) hd.1)
     (zmod (classical.some hd.2).conductor) : monoid_hom (zmod n)
-    (zmod (classical.some hd.2).conductor)) = ((zmod.cast_hom (conductor_dvd hd.2.some)
+    (zmod (classical.some hd.2).conductor)) = ((zmod.cast_hom (conductor.dvd_lev hd.2.some)
     (zmod (classical.some hd.2).conductor)) : monoid_hom (zmod d)
     (zmod (classical.some hd.2).conductor)).comp (zmod.cast_hom hd.1
     (zmod d) : monoid_hom (zmod n) (zmod d)),
-  { suffices : (zmod.cast_hom (dvd_trans (conductor_dvd hd.2.some) hd.1)
-    (zmod (classical.some hd.2).conductor)) = ((zmod.cast_hom (conductor_dvd hd.2.some)
+  { suffices : (zmod.cast_hom (dvd_trans (conductor.dvd_lev hd.2.some) hd.1)
+    (zmod (classical.some hd.2).conductor)) = ((zmod.cast_hom (conductor.dvd_lev hd.2.some)
     (zmod (classical.some hd.2).conductor))).comp (zmod.cast_hom hd.1
     (zmod d)),
     { rw this, refl, },
     { convert ring_hom.ext_zmod _ _, }, },
-  rw [change_level, this, units.map_comp, ←monoid_hom.comp_assoc],
+  rw [change_level_def, this, units.map_comp, ←monoid_hom.comp_assoc],
   congr,
   change change_level _ _ = _,
-  convert (factors_through_spec _ _).symm,
+  convert (factors_through.spec _ _).symm,
 end
 
-lemma asso_primitive_character_is_primitive :
-  (χ.asso_primitive_character).is_primitive :=
+lemma asso_primitive_character_is_primitive : (χ.asso_primitive_character).is_primitive :=
 begin
   by_cases χ.conductor = 0,
   { rw is_primitive_def, conv_rhs { rw h, },
-    rw conductor_eq_zero_iff_level_eq_zero, rw h, },
-  refine le_antisymm (nat.le_of_dvd (nat.pos_of_ne_zero h) (conductor_dvd _))
-  (mem_conductor_set_eq_conductor _ (mem_conductor _)),
+    rw conductor.eq_zero_iff_level_eq_zero, rw h, },
+  refine le_antisymm (nat.le_of_dvd (nat.pos_of_ne_zero h) (conductor.dvd_lev _))
+  (mem_conductor_set_eq_conductor _ (conductor.mem_conductor_set _)),
 end
 
 lemma asso_primitive_character_one (hn : 0 < n) :
   (1 : dirichlet_character R n).asso_primitive_character = 1 :=
 begin
-  rw conductor_eq_one_iff _ _,
+  rw conductor.eq_one_iff _,
   { convert (1 : dirichlet_character R n).asso_primitive_character_is_primitive,
-    rw conductor_one hn, },
-  { rw conductor_one hn, apply nat.one_pos, },
+    rw conductor.one hn, },
+  { rw conductor.one hn, apply nat.one_pos, },
 end
-
-/-def primitive_dirichlet_character_n (S : Type*) [comm_monoid_with_zero S] (m : ℕ) :
-set (dirichlet_character S m) := { χ : dirichlet_character S m | χ.is_primitive}-/
-
---def primitive_dirichlet_character := ⋃ n : ℕ, (primitive_dirichlet_character_n R n)
---def primitive_dirichlet_character : set.range (λ n : ℕ, primitive_dirichlet_character_n R n)
 
 lemma asso_dirichlet_character_mul (ψ : dirichlet_character R n) :
   asso_dirichlet_character (χ * ψ) = (asso_dirichlet_character χ) * (asso_dirichlet_character ψ) :=
@@ -460,79 +328,18 @@ begin
   { repeat { rw asso_dirichlet_character_eq_zero _ h, }, rw zero_mul, },
 end
 
-/-/-- Multiplication of primitive Dirichlet characters χ₁ of level m and χ₂ of level n is the
-  primitive character associated to χ₁ * χ₂ of level lcm n m. -/
-noncomputable def mul {m : ℕ} {χ₁ : dirichlet_character R n} (h1 : is_primitive χ₁)
-  {χ₂ : dirichlet_character R m} (h2 : is_primitive χ₂) :=
-asso_primitive_character (change_level χ₁ (dvd_lcm_left n m) * change_level χ₂ (dvd_lcm_right n m))
---can we define this for characters which are not primitive? -/
-
 /-- Similar to multiplication of Dirichlet characters, without needing the characters to be
   primitive. -/
 noncomputable def mul {m : ℕ} (χ₁ : dirichlet_character R n) (χ₂ : dirichlet_character R m) :=
-asso_primitive_character (change_level χ₁ (dvd_lcm_left n m) * change_level χ₂ (dvd_lcm_right n m))
+asso_primitive_character (change_level (dvd_lcm_left n m) χ₁ * change_level (dvd_lcm_right n m) χ₂)
 
-lemma is_primitive_mul {m : ℕ} (ψ : dirichlet_character R m) : (mul χ ψ).is_primitive :=
+namespace mul
+lemma mul {m : ℕ} (ψ : dirichlet_character R m) : (mul χ ψ).is_primitive :=
 asso_primitive_character_is_primitive _
+end mul
 
 /-- Composition of a Dirichlet character with a multiplicative homomorphism of units. -/
-abbreviation comp {S : Type*} [comm_monoid_with_zero S] (f : units R →* units S) :
-  dirichlet_character S n := f.comp χ
-
-/-lemma asso_primitive_dir_char_mul (hχ : χ.is_primitive) (a : zmod n) :
-  asso_dirichlet_character (mul hχ hχ) a =
-  asso_dirichlet_character (χ.asso_primitive_character * χ.asso_primitive_character) a :=
-begin
-
-end-/
-
-/-inductive pow {m : ℕ} (hm : 0 < m) (hχ : χ.is_primitive) : ℕ → _
-| zero
---| one := χ
-| succ := -/
-
-/-lemma is_primitive_pow (hχ : χ.is_primitive) {m : ℕ} (hm : 0 < m) : (χ^m).is_primitive :=
-begin
-  induction m with d hd,
-  { exfalso, simp only [not_lt_zero'] at hm, exact hm, },
-  { by_cases d = 0,
-    { simp only [hχ, h, pow_one], },
-    { rw pow_succ, apply is_primitive_mul, }, },
-  sorry,
-end-/
-
-/-/-- Reformulating a Dirichlet character modulo an element of the `conductor_set`. -/
-abbreviation dirichlet_character_to_zmod {m : ℕ} (mem : m ∈ conductor_set χ) : mul_hom (zmod m) R :=
-{ to_fun := λ x, χ.to_monoid_hom (x : ℤ),
-  map_mul' := map_mul' χ, }-/
-
-/-/-- Using a multiplicative homomorphism ℤ/mℤ to construct a Dirichlet character having modulus m. -/
-abbreviation zmod_to_dirichlet_character {m : ℕ} (χ : mul_hom (zmod m) R) : dirichlet_character R :=
-{ to_monoid_hom := mul_hom.comp χ (int.cast_ring_hom (zmod m)).to_monoid_hom,
-  periodic := ⟨m, λ a, by simp only [int.coe_cast_ring_hom, int.cast_coe_nat,
-    monoid_hom.coe_eq_to_mul_hom, add_zero, int.cast_add, ring_hom.coe_monoid_hom,
-    ring_hom.to_monoid_hom_eq_coe, function.comp_app, zmod.nat_cast_self,
-    monoid_hom.to_mul_hom_coe, mul_hom.coe_comp]⟩, }-/
-
-/-lemma mem_zmod_to_dirichlet_character {m : ℕ} (χ : mul_hom (zmod m) R) :
-  m ∈ conductor_set (zmod_to_dirichlet_character χ) := sorry-/
-
-/-noncomputable instance {R : Type*} [comm_semigroup R] : has_mul (dirichlet_character R) :=
-⟨λ f g, begin
-    apply zmod_to_dirichlet_character _,
-    { exact lcm (conductor f) (conductor g), },
-    have : (lcm (conductor f) (conductor g)) ∈ conductor_set g,
-    { convert mem_lcm g (conductor f) using 1, rw lcm_comm, },
-    refine ⟨λ x, dirichlet_character_to_zmod f (mem_lcm f (conductor g)) x *
-      dirichlet_character_to_zmod g this x,
-      λ x y, by {rw [mul_hom.map_mul, mul_hom.map_mul, mul_mul_mul_comm]}⟩,
-  end,⟩
---should I find an equiv similar to zmod.lift?-/
-
---open_locale big_operators
-/-lemma sum_dirichlet_character {n : ℕ} {S : Type*} [comm_semiring S] --[has_mul S]
-  (ψ : dirichlet_character S n) :
-  ∑ i in finset.range (conductor ψ).succ, asso_dirichlet_character ψ i = 0 := sorry -/
+--abbreviation comp {S : Type*} [comm_monoid_with_zero S] (f : units R →* units S) : dirichlet_character S n := f.comp χ
 
 variables {S : Type*} [comm_ring S] {m : ℕ} (ψ : dirichlet_character S m)
 

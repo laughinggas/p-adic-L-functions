@@ -363,6 +363,11 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr6.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmtt.fd
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmtt.fd
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ts1-lmtt10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr12.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmi12.tfm
@@ -371,18 +376,14 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy10.tf
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmtt.fd
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmtt.fd
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ts1-lmtt10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmbx7.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmbx5.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmib7.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmib5.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmbsy7.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmbsy5.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
 INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.bbl
 INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.bbl
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt9.tfm
@@ -453,6 +454,8 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt8.p
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt8.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt9.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt9.pfb
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msam10.pfb
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msam10.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm10.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\symbols\msbm7.pfb

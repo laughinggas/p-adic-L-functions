@@ -3,41 +3,14 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
---import number_theory.L_functions
---import ring_theory.witt_vector.teichmuller
 import zmod_properties
---import data.nat.modeq
---import topology.discrete_quotient
---import data.set.prod
---import algebra.order.sub
---import algebra.pointwise
---import data.real.basic
---import topology.algebra.continuous_monoid_hom
 
 /-!
-# Bernoulli measure and the p-adic L-function
-
-This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems is that
-this p-adic distribution is indeed a p-adic measure. As a consequence, we are also able to define
-the p-adic L-function in terms of a p-adic integral.
-
-## Main definitions
- * `bernoulli_measure`
-
-## Implementation notes
-Removed `weight_space` since `continuous_monoid_hom` now exists. Fixing the convention to be
-  `d.coprime p` instead of `d.gcd p = 1`.
-
-## TODO
-* Separate into different files : `padic_int_properties`, `zmod_properties`,
-  `dirichlet_char_properties`, and `teich_char_properties`
-* Delete `pri_dir_char_extend'` and replace with `dirichlet_char_extend`
-
-## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
+# Properties of p-adic integers
+This file adds some properties of `ℤ_[p]`.
 
 ## Tags
-p-adic, L-function, Bernoulli measure
+p-adic
 -/
 
 local attribute [instance] zmod.topological_space

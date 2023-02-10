@@ -8,27 +8,16 @@ import padic_int.properties
 import topology.discrete_quotient
 
 /-!
-# Bernoulli measure and the p-adic L-function
+# Properties of clopen sets of p-adic integers
 
-This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems is that
-this p-adic distribution is indeed a p-adic measure. As a consequence, we are also able to define
-the p-adic L-function in terms of a p-adic integral.
-
-## Main definitions
- * `bernoulli_measure`
-
-## Implementation notes
-Removed `weight_space` since `continuous_monoid_hom` now exists. Fixing the convention to be
-  `d.coprime p` instead of `d.gcd p = 1`.
+This file describes some properties of the clopen sets of `ℤ_[p]`. In particular, 
+we show that clopen sets of the form `a + p^n ℤ_[p]` form a topological basis for `ℤ_[p]`.
 
 ## TODO
-* Move first two lemmas to right place
-
-## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
+* Move first few lemmas to right place
 
 ## Tags
-p-adic, L-function, Bernoulli measure
+p-adic, clopen
 -/
 
 section char_fn -- move elsewhere

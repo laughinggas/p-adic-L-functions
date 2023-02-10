@@ -2,24 +2,25 @@ import data.zmod.basic
 import ring_theory.witt_vector.compare
 
 /-!
-# Bernoulli measure and the p-adic L-function
+# Properties of ℤ/nℤ
 
-This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems is that
-this p-adic distribution is indeed a p-adic measure. As a consequence, we are also able to define
-the p-adic L-function in terms of a p-adic integral.
+This file defines a topological structure (the discrete topology) on `zmod n` for all `n`. 
+We also enlist several properties that are helpful with modular arithmetic.
 
-## Main definitions
- * `bernoulli_measure_of_measure`
- * `p_adic_L_function`
+## Main definitions and theorems
+ * `zmod.topological_space`
+ * `proj_fst`, `proj_snd`, `inv_fst`, `inv_snd` : lemmas regarding CRT
+ * `cast_hom_apply'` : a version of `cast_hom_apply` where `R` is explicit
+ * `induced_top_cont_inv` : Inverse function on the units is continuous
+ * `disc_top_units` : giving discrete topology to `units (zmod n)`
 
 ## Implementation notes
 TODO (optional)
 
 ## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
 
 ## Tags
-p-adic, L-function, Bernoulli measure
+zmod
 -/
 
 /-- Making `zmod` a discrete topological space. -/
@@ -329,4 +330,12 @@ begin
     simp only [prod.mk.inj_iff, opposite.op_inj_iff, monoid_hom.coe_mk] at h,
     rw [units.ext_iff, h.1], },
 end
+
+@[simp]
+lemma cast_hom_self {n : ℕ} : zmod.cast_hom dvd_rfl (zmod n) = ring_hom.id (zmod n) := by simp
+
+@[simp]
+lemma zmod.cast_hom_comp {n m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) : 
+  (zmod.cast_hom hm (zmod n)).comp (zmod.cast_hom hd (zmod m)) = zmod.cast_hom (dvd_trans hm hd) (zmod n) := 
+ring_hom.ext_zmod _ _
 end zmod
