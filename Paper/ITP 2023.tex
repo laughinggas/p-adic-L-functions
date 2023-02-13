@@ -147,7 +147,7 @@ to the entire Lean community for their timely help and consistent support.}%opti
 
 %TODO mandatory: add short abstract of the document
 \begin{abstract}
-This paper decribes formalisation of $p$-adic $L$-functions in an interactive theorem prover Lean 3. $p$-adic 
+This paper decribes formalisation of $p$-adic $L$-functions in an interactive theorem prover Lean 3. Kubota-Leopoldt $p$-adic 
 $L$-functions are fundamental number theoretic objects. These special functions emerge from the special 
 values they take at negative integers in terms of generalized Bernoulli polynomials. We formalise their 
 definition in terms of a $p$-adic integral with respect to the Bernoulli measure, and prove that they 
@@ -281,6 +281,7 @@ lemma filter.tendsto_congr' {α : Type} {β : Type u_1} {f₁ f₂ : α → β} 
 We aim to use these lemmas as much as possible in order to avoid messy calculations with inequalities on norms. 
 The last lemma is particularly useful. it shows that sequences that are the same after finitely many 
 elements have the same limit. Given \lean{f₁ f₂ :ℕ → R}, \lean{f₁ =ᶠ[at\_top] f₂ ↔ ∃ (a : ℕ), ∀ (b : ℕ), b ≥ a, f₁ b = f₂ b}. 
+
 \subsection{Modular arithmetic and $\mathbb{Z}_p$}
 Some fundamental objects with which we shall work throughout are the finite spaces $\mathbb{Z}/n \mathbb{Z}$. Given $n \in \mathbb{N}$, 
 $\mathbb{Z}/n \mathbb{Z}$ is the same as \lean{fin n}, the set of natural numbers upto $n$. This has a natural group structure, and is given the discrete topology, 
@@ -289,7 +290,7 @@ and \lean{cast\_hom:zmod n → R}, a coercion to a ring, obtained by composing t
 dividing \lean{n}, the map is a ring homomorphism. Given coprime natural numbers $m$ and $n$, an important equivalence is : 
 \lean{chinese\_remainder:zmod (m * n) ≃+* zmod m × zmod n}. About 30 additional lemmas were required, which have been put in a separate file, 
 \href[]{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/zmod_properties.lean}{\lean{zmod\_properties.lean}}. 
-
+Note : proving stuff for zmod n also proves them for any finite abelian group.
 %%The \textit{$p$-adic valuation} is a function $\nu_p : \mathbb{Z} \xrightarrow[]{} \mathbb{R}$, such that
 %%$\nu_p (p^k) = k$, and for $gcd(a,p) = 1$, $\nu_p (a) = 0$. By convention,$\nu_p (0) = \infty$, however, in Lean, \lean{valuation 0 = 0 }.
 We assume $p$ is a prime and $d$ is a positive natural with 
@@ -475,7 +476,8 @@ lemma teichmuller_character_mod_p_two : teichmuller_character_mod_p 2 = 1
 % \end{lstlisting}
 % The first two lines of the definition define the function, while the rest proves that it is a
 % monoid homomorphism, since it is a composition of monoid homomorphisms.
-
+ Mention dangerous instance problem - first made p an implicit variable, then linter said it is a metavariable, so changed it to lemma instead, but it should be an instance.
+ 
 \subsection{Bernoulli polynomials and the generalized Bernoulli number}
 The Bernoulli numbers $B_n$ are generating functions given by $\sum B_n\frac{t^n}{n!}=\frac{t}{e^{t} - 1}$. 
 Note that several authors think of Bernoulli numbers $B_n'$ to be defined as $\sum B_n'\frac{t^n}{n!}=\frac{t}{1-e^{-t}}$. 

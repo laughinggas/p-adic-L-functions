@@ -5,6 +5,7 @@ Authors: Ashvni Narayanan
 -/
 import number_theory.bernoulli_polynomials
 import dirichlet_character.basic
+import general_bernoulli_number.bernoulli_polynomial_mul
 
 /-!
 # General Bernoulli Numbers
@@ -49,7 +50,7 @@ lemma general_bernoulli_number_def (m : ℕ) : general_bernoulli_number ψ m =
 lemma general_bernoulli_number_one_eval {n : ℕ} :
   general_bernoulli_number (1 : dirichlet_character S 1) n = algebra_map ℚ S (bernoulli' n) :=
 begin
-  rw general_bernoulli_number_def, simp_rw [conductor_one nat.one_pos],
+  rw general_bernoulli_number_def, simp_rw [conductor.one nat.one_pos],
   simp only [one_pow, one_mul, nat.cast_zero, polynomial.bernoulli_eval_one,
     nat.cast_one, div_one, finset.sum_singleton, finset.range_one, monoid_hom.coe_mk],
   rw extend_eq_char _ is_unit_one,
@@ -62,7 +63,7 @@ end
 lemma general_bernoulli_number_one_eval_one :
 general_bernoulli_number (1 : dirichlet_character S 1) 1 = algebra_map ℚ S (1/2 : ℚ) :=
 begin
-  rw general_bernoulli_number_def, simp_rw [conductor_one nat.one_pos],
+  rw general_bernoulli_number_def, simp_rw [conductor.one nat.one_pos],
   simp only [one_div, one_pow, one_mul, bernoulli'_one, nat.cast_zero,
     polynomial.bernoulli_eval_one, nat.cast_one, div_one, finset.sum_singleton,
     finset.range_one, monoid_hom.coe_mk],

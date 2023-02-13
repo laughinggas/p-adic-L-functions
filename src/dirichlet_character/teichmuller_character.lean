@@ -9,11 +9,12 @@ import padic_int.properties
 import dirichlet_character.properties
 
 /-!
-# Bernoulli measure and the p-adic L-function
+# Teichmuller character
 This file defines the Teichmuller character and its properties.
 
 ## Main definitions
  * `teichmuller_character`
+ * `teichmuller_character_mod_p`
 
 ## Tags
 p-adic, Dirichlet character, Teichmuller character
@@ -93,8 +94,7 @@ noncomputable abbreviation teichmuller_character_mod_p' [algebra ℚ_[p] R] :
 ((units.map ((algebra_map ℚ_[p] R).comp (padic_int.coe.ring_hom)).to_monoid_hom).comp
 (teichmuller_character_mod_p p) : dirichlet_character R p)⁻¹
 
-instance char_zero_of_nontrivial_of_normed_algebra [nontrivial R] [algebra ℚ_[p] R] :
-  char_zero R :=
+lemma char_zero_of_nontrivial_of_normed_algebra [nontrivial R] [algebra ℚ_[p] R] : char_zero R :=
 (ring_hom.char_zero_iff ((algebra_map ℚ_[p] R).injective)).1 infer_instance
 
 variables {p R}
@@ -110,7 +110,7 @@ begin
       rw [teichmuller_character.eval_neg_one hp, ←units.eq_iff, units.coe_map] at this,
       simp only [ring_hom.to_monoid_hom_eq_coe, units.coe_neg_one, ring_hom.coe_monoid_hom,
         map_neg, map_one, units.coe_one] at this,
-      apply @nat.cast_add_one_ne_zero R _ _ _ 1,
+      apply @nat.cast_add_one_ne_zero R _ _ (char_zero_of_nontrivial_of_normed_algebra p R) 1,
       rw [←eq_neg_iff_add_eq_zero, nat.cast_one, this], },
     { convert h, }, },
 end
@@ -124,3 +124,4 @@ begin
   rw [dirichlet_character.pow_apply, this, change_level_eval_neg_one' hp],
   any_goals { apply_instance, },
 end
+#lint

@@ -57,7 +57,7 @@ begin
       rw [teichmuller_character.eval_neg_one hp, ←units.eq_iff, units.coe_map] at this,
       simp only [ring_hom.to_monoid_hom_eq_coe, units.coe_neg_one, ring_hom.coe_monoid_hom,
         map_neg, map_one, units.coe_one] at this,
-      apply @nat.cast_add_one_ne_zero R _ _ _ 1,
+      apply @nat.cast_add_one_ne_zero R _ _ (char_zero_of_nontrivial_of_normed_algebra p R) 1,
       rw [←eq_neg_iff_add_eq_zero, nat.cast_one, this], },
     { convert h,
       simp only [units.map, monoid_hom.mk'_apply, ring_hom.coe_monoid_hom, units.coe_neg_one,
@@ -88,8 +88,7 @@ variables (p R) {χ}
 variables {p R}
 --set_option pp.proofs true
 
-lemma helper_4 (m : ℕ) [fact (0 < m)] :
-  lcm (d * p^m) p = d * p^m :=
+lemma helper_4 (m : ℕ) [fact (0 < m)] : lcm (d * p^m) p = d * p^m :=
 begin
   rw lcm_eq_left_iff _ _ _,
   apply dvd_mul_of_dvd_right (dvd_pow_self p (nat.ne_zero_of_lt' 0)) d,
@@ -231,6 +230,7 @@ begin
     refine le_trans (add_le_add (le_refl _) (norm_mul_le _ _)) (le_trans (add_le_add (le_refl _)
       ((mul_le_mul_left _).2 (le_of_lt (dirichlet_character.lt_bound _ _)))) _),
     { haveI : algebra ℚ_[p] R, apply_instance, -- needed for char_zero
+      haveI : char_zero R := char_zero_of_nontrivial_of_normed_algebra p R,
       refine lt_iff_le_and_ne.2 ⟨norm_nonneg _, λ h, _⟩,
       rw [eq_comm, norm_eq_zero, mul_eq_zero] at h,
       cases h,

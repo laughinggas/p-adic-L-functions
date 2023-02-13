@@ -66,10 +66,10 @@ variables (p d R)
 /-- Returns ω⁻¹ : ℤ/(d * p^m)ℤ* →* R*. -/
 noncomputable abbreviation teichmuller_character_mod_p_change_level [algebra ℚ_[p] R]
   [fact (0 < m)] : dirichlet_character R (d * p^m) :=
-dirichlet_character.change_level (((units.map ((algebra_map ℚ_[p] R).comp
+dirichlet_character.change_level (dvd_mul_of_dvd_right (dvd_pow_self p (ne_of_gt (fact.out _))) d) 
+(((units.map ((algebra_map ℚ_[p] R).comp
 (padic_int.coe.ring_hom)).to_monoid_hom).comp
 (teichmuller_character_mod_p p) : dirichlet_character R p)⁻¹)
-(dvd_mul_of_dvd_right (dvd_pow_self p (ne_of_gt (fact.out _))) d)
 
 /-- Given a natural number s, defines the monoid homomorphism <a>^s taking a ∈ ℤ/dℤ* × ℤₚ* to
   (a * ω⁻¹ (a.2 (mod p)))^s in R. -/

@@ -3,7 +3,8 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import bernoulli_measure.bernoulli_measure_five
+import bernoulli_measure.ind_fn
+import bernoulli_measure.loc_const_properties
 
 /-!
 # Bernoulli measure and the p-adic L-function
@@ -87,7 +88,54 @@ begin
       (algebra_map ℚ_[p] R) (E_c p d c n ↑y) = _,
     { simp_rw [sum_coe_to_finset, zmod.cast_id], },
     { apply finset.sum_congr (finset.ext_iff.2 (λ y, _)) (λ x hx, rfl),
-      { simp only [set.mem_to_finset, finset.mem_singleton, mem_equi_class, zmod.cast_id], }, }, },
+      { simp only [set.mem_to_finset, finset.mem_singleton, equi_class.mem, zmod.cast_id], }, }, },
+end
+
+open discrete_quotient_of_to_zmod_pow clopen_from
+
+lemma exists_mul_inv_val_eq [fact (0 < d)] (hc' : c.coprime d) (hc : c.coprime p) (k : ℕ) :
+  ∃ z : ℕ, c * ((c : zmod (d * p^(2 * k)))⁻¹.val) = dite (1 < d * p^(2 * k))
+  (λ h, 1 + z * (d * p^(2 * k))) (λ h, 0) :=
+begin
+  by_cases eq_one : (d * p^(2 * k)) = 1,
+  { have k_zero : ¬ 1 < d * p^(2 * k) := by { rw [eq_one, nat.lt_one_iff], apply nat.one_ne_zero, },
+    refine ⟨1, _⟩,
+    rw [dif_neg k_zero, eq_one],
+    simp only [nat.mul_eq_zero, zmod.val_eq_zero, eq_iff_true_of_subsingleton, or_true], },
+  have h : (1 : zmod (d * p^(2 * k))).val = 1,
+  { have : ((1 : ℕ) : zmod (d * p^(2 * k))) = 1 := nat.cast_one,
+    rw [←this, zmod.val_cast_of_lt (nat.one_lt_mul_pow_of_ne_one eq_one)], },
+  simp_rw dif_pos (nat.one_lt_mul_pow_of_ne_one eq_one),
+  conv { congr, funext, find 1 {rw ← h}, rw mul_comm z _, },
+  apply (nat_coe_zmod_eq_iff (d * p^(2 * k)) _ _).1 _,
+  { rw [nat.cast_mul, nat_cast_val, cast_inv (coprime.mul_pow _ hc' hc) dvd_rfl,
+      @cast_nat_cast _ (zmod (d * p ^ (2 * k))) _ _ (zmod.char_p _) dvd_rfl c],
+    apply coe_mul_inv_eq_one _ (coprime.mul_pow _ hc' hc), },
+end
+.
+open nat
+lemma helper_meas_E_c [fact (0 < d)] {n : ℕ} (a : zmod (d * p^n)) (hc' : c.coprime d)
+  (hc : c.coprime p) : ∃ z : ℤ, int.fract ((a.val : ℚ) / (↑d * ↑p ^ n)) -
+  ↑c * int.fract (↑((c : zmod (d * p^(2 * n)))⁻¹.val) * (a : ℚ) / (↑d * ↑p ^ n)) = z :=
+begin
+  obtain ⟨z, hz⟩ := int.fract_mul_nat ((↑((c : zmod (d * p^(2 * n)))⁻¹.val) *
+    (a : ℚ) / (↑d * ↑p ^ n))) c,
+  obtain ⟨z', hz'⟩ := exists_mul_inv_val_eq hc' hc n,
+  rw [mul_comm, mul_comm _ (c : ℚ), ←mul_div, ←mul_assoc, ←nat.cast_mul] at hz,
+  by_cases pos : 1 < d * p^(2 * n),
+  { refine ⟨-z, _⟩,
+    rw dif_pos pos at hz',
+    rw [hz', nat.cast_add, nat.cast_one, one_add_mul] at hz,
+    conv at hz { congr, congr, skip, congr, congr, skip, congr, rw [pow_mul', pow_succ, pow_one], },
+    rw [←mul_assoc d (p^n), mul_comm (d * p^n) (p^n), ←mul_assoc z' _ _, nat.cast_mul,
+      mul_comm _ (↑(d * p ^ n)), mul_assoc, mul_div (↑(z' * p ^ n)) _ _, ←nat.cast_pow,
+      ←nat.cast_mul, mul_div_cancel', ←nat_cast_val, ←nat.cast_mul,
+      ←int.cast_coe_nat (z' * p ^ n * a.val), int.fract_add_int] at hz,
+    { rw [int.cast_neg, ←hz, neg_sub, nat_cast_val a, nat.cast_mul d _, nat.cast_pow, mul_div], },
+    { norm_cast, apply ne_zero_of_lt' 0, apply_instance, }, },
+  { simp_rw [←nat.cast_pow, ←nat_cast_val a, ←nat.cast_mul,
+      mul_pow_eq_one_of_mul_pow_sq_not_one_lt pos, nat.cast_one, div_one, ←int.cast_coe_nat],
+    refine ⟨0, by { simp_rw [int.cast_zero, int.fract_coe, mul_zero, sub_zero] }⟩, },
 end
 
 lemma meas_E_c' [normed_algebra ℚ_[p] R] [norm_one_class R] {n : ℕ} {a : zmod (d * p^n)}

@@ -3,7 +3,7 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import bernoulli_measure.bernoulli_measure_four
+import bernoulli_measure.from_loc_const
 import topology.algebra.group
 
 /-!
@@ -42,6 +42,28 @@ variables {p : ℕ} [fact p.prime] {d : ℕ} (R : Type*) [normed_comm_ring R] (m
 open_locale big_operators
 
 open padic_int zmod nat locally_constant
+
+namespace nat
+lemma ne_zero_of_lt' (b : ℕ) {a : ℕ} [fact (b < a)] : a ≠ 0 := @ne_zero_of_lt _ _ b _ (fact.out _)
+
+lemma one_lt_mul_pow_of_ne_one [fact (0 < d)] {k : ℕ} (h : d * p^k ≠ 1) : 1 < d * p^k :=
+nat.one_lt_iff_ne_zero_and_ne_one.2 ⟨nat.mul_ne_zero (ne_zero_of_lt' 0)
+  (pow_ne_zero _ (nat.prime.ne_zero (fact.out _))), h⟩
+
+lemma mul_pow_eq_one_of_mul_pow_sq_not_one_lt [fact (0 < d)] {n : ℕ} (h : ¬ 1 < d * p^(2 * n)) :
+  d * p^n = 1 :=
+begin
+  rw [not_lt_iff_eq_or_lt, lt_one_iff, nat.mul_eq_zero] at h,
+  cases h,
+  { have h' := h.symm,
+    rw [nat.mul_eq_one_iff, pow_mul', pow_succ, pow_one, nat.mul_eq_one_iff] at h',
+    rw [h'.1, h'.2.1, one_mul], },
+  { have p2 : p^(2 * n) ≠ 0 := pow_ne_zero _ (nat.prime.ne_zero (fact.out _)),
+    simp only [ne_zero_of_lt' 0, p2, or_self] at h,
+    exfalso,
+    exact h, },
+end
+end nat
 
 /-- Given a function from `(zmod d)ˣ × ℤ_[p]ˣ)` to `A`, this gives the induced
   function on `(zmod d) × ℤ_[p]`, which is 0 everywhere else. -/
@@ -115,8 +137,7 @@ begin
     refine hs hz, },
 end
 
-lemma preimage_zero_of_loc_const (f : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) A) :
-  (ind_fn f)⁻¹' {0} =
+lemma preimage_zero_of_loc_const (f : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) A) : (ind_fn f)⁻¹' {0} =
   (prod.map (coe : units (zmod d) → zmod d) (coe : units ℤ_[p] → ℤ_[p]))'' (f⁻¹' {0}) ∪
   (set.range (prod.map (coe : units (zmod d) → zmod d) (coe : units ℤ_[p] → ℤ_[p])))ᶜ :=
 begin
@@ -194,121 +215,3 @@ by { ext, simp [mul R f g], }
 lemma smul (m : R) (f : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) :
   loc_const_ind_fn (m • f) = m • (loc_const_ind_fn f) := by { ext, simp [smul R m f], }
 end loc_const_ind_fn
-
-instance {α : Type*} [topological_space α] [discrete_topology α] : discrete_topology αᵐᵒᵖ :=
-discrete_topology_induced mul_opposite.unop_injective
-
-instance {k : ℕ} : discrete_topology (zmod k)ˣ :=
-discrete_topology_induced (units.embed_product_injective _)
-
-namespace locally_constant
-@[to_additive] lemma prod_apply {B C : Type*} [topological_space B] [comm_monoid C]
-  (n : ℕ) (f : ℕ → (locally_constant B C)) {x : B} :
-  (∏ i in finset.range n, (f i)) x = ∏ i in finset.range n, ((f i) x) :=
-begin
-  induction n with d hd,
-  { simp only [locally_constant.coe_one, finset.range_zero, finset.prod_empty, pi.one_apply], },
-  { rw [finset.prod_range_succ, locally_constant.mul_apply, hd, finset.prod_range_succ], },
-end
-
-lemma smul_eq_mul' {α β : Type*} [topological_space α] [ring β] (f : locally_constant α β)
-  (b : β) : b • f = (locally_constant.const α b) * f := by { ext, simp }
-end locally_constant
-
-open discrete_quotient_of_to_zmod_pow clopen_from
-
-lemma loc_const_eq_sum_char_fn [nontrivial R] [fact(0 < d)]
-  (f : locally_constant ((zmod d) × ℤ_[p]) R) (hd : d.coprime p) : ∃ n : ℕ,
-  f = ∑ a in (finset.range (d * p^n)), f(a) •
-  _root_.char_fn R (clopen_from.is_clopen (a : zmod (d * p^n))) :=
-begin
-  set n := (le hd f).some with hn,
-  refine ⟨n, locally_constant.ext (λ x, _)⟩,
-  set x' := prod_padic_to_zmod n x hd with hx',
-  rw [locally_constant.sum_apply,
-    finset.sum_eq_single_of_mem x'.val (finset.mem_range.2 (zmod.val_lt _)) (λ b hb h, _)],
-  { simp only [nat_cast_val, cast_id', id.def, coe_smul, pi.smul_apply, algebra.id.smul_eq_mul],
-    rw [(char_fn_one R _ _).1 (mem_clopen_from_prod_padic_to_zmod _ _ hd), mul_one],
-    refine ((le hd f).some_spec _ _ (self_rel_prod_padic_to_zmod _ _ hd)).symm, },
-  { rw [locally_constant.smul_apply, (char_fn_zero R _ _).1 (λ h', h _), smul_zero],
-    suffices : (b : zmod (d * p^n)) = x',
-    { rw ←val_cast_of_lt (finset.mem_range.1 hb),
-      refine _root_.congr_arg _ this, },
-    { rw [mem_clopen_from, eq_comm] at h',
-      rw [←equiv.apply_eq_iff_eq (zmod.chinese_remainder (coprime.pow_right n hd)).to_equiv,
-        prod.ext_iff, inv_fst', inv_snd', inv_fst', inv_snd', hx', proj_fst, proj_snd],
-      assumption, }, },
-end
-
-namespace nat
-lemma ne_zero_of_lt' (b : ℕ) {a : ℕ} [fact (b < a)] : a ≠ 0 := @ne_zero_of_lt _ _ b _ (fact.out _)
-
-lemma one_lt_mul_pow_of_ne_one [fact (0 < d)] {k : ℕ} (h : d * p^k ≠ 1) : 1 < d * p^k :=
-nat.one_lt_iff_ne_zero_and_ne_one.2 ⟨nat.mul_ne_zero (ne_zero_of_lt' 0)
-  (pow_ne_zero _ (nat.prime.ne_zero (fact.out _))), h⟩
-
-lemma mul_pow_eq_one_of_mul_pow_sq_not_one_lt [fact (0 < d)] {n : ℕ} (h : ¬ 1 < d * p^(2 * n)) :
-  d * p^n = 1 :=
-begin
-  rw [not_lt_iff_eq_or_lt, lt_one_iff, nat.mul_eq_zero] at h,
-  cases h,
-  { have h' := h.symm,
-    rw [nat.mul_eq_one_iff, pow_mul', pow_succ, pow_one, nat.mul_eq_one_iff] at h',
-    rw [h'.1, h'.2.1, one_mul], },
-  { have p2 : p^(2 * n) ≠ 0 := pow_ne_zero _ (nat.prime.ne_zero (fact.out _)),
-    simp only [ne_zero_of_lt' 0, p2, or_self] at h,
-    exfalso,
-    exact h, },
-end
-end nat
-
-lemma exists_mul_inv_val_eq [fact (0 < d)] (hc' : c.coprime d) (hc : c.coprime p) (k : ℕ) :
-  ∃ z : ℕ, c * ((c : zmod (d * p^(2 * k)))⁻¹.val) = dite (1 < d * p^(2 * k))
-  (λ h, 1 + z * (d * p^(2 * k))) (λ h, 0) :=
-begin
-  by_cases eq_one : (d * p^(2 * k)) = 1,
-  { have k_zero : ¬ 1 < d * p^(2 * k) := by { rw [eq_one, nat.lt_one_iff], apply nat.one_ne_zero, },
-    refine ⟨1, _⟩,
-    rw [dif_neg k_zero, eq_one],
-    simp only [nat.mul_eq_zero, zmod.val_eq_zero, eq_iff_true_of_subsingleton, or_true], },
-  have h : (1 : zmod (d * p^(2 * k))).val = 1,
-  { have : ((1 : ℕ) : zmod (d * p^(2 * k))) = 1 := nat.cast_one,
-    rw [←this, zmod.val_cast_of_lt (nat.one_lt_mul_pow_of_ne_one eq_one)], },
-  simp_rw dif_pos (nat.one_lt_mul_pow_of_ne_one eq_one),
-  conv { congr, funext, find 1 {rw ← h}, rw mul_comm z _, },
-  apply (nat_coe_zmod_eq_iff (d * p^(2 * k)) _ _).1 _,
-  { rw [nat.cast_mul, nat_cast_val, cast_inv (coprime.mul_pow _ hc' hc) dvd_rfl,
-      @cast_nat_cast _ (zmod (d * p ^ (2 * k))) _ _ (zmod.char_p _) dvd_rfl c],
-    apply coe_mul_inv_eq_one _ (coprime.mul_pow _ hc' hc), },
-end
-.
-open nat
-lemma helper_meas_E_c [fact (0 < d)] {n : ℕ} (a : zmod (d * p^n)) (hc' : c.coprime d)
-  (hc : c.coprime p) : ∃ z : ℤ, int.fract ((a.val : ℚ) / (↑d * ↑p ^ n)) -
-  ↑c * int.fract (↑((c : zmod (d * p^(2 * n)))⁻¹.val) * (a : ℚ) / (↑d * ↑p ^ n)) = z :=
-begin
-  obtain ⟨z, hz⟩ := int.fract_mul_nat ((↑((c : zmod (d * p^(2 * n)))⁻¹.val) *
-    (a : ℚ) / (↑d * ↑p ^ n))) c,
-  obtain ⟨z', hz'⟩ := exists_mul_inv_val_eq hc' hc n,
-  rw [mul_comm, mul_comm _ (c : ℚ), ←mul_div, ←mul_assoc, ←nat.cast_mul] at hz,
-  by_cases pos : 1 < d * p^(2 * n),
-  { refine ⟨-z, _⟩,
-    rw dif_pos pos at hz',
-    rw [hz', nat.cast_add, nat.cast_one, one_add_mul] at hz,
-    conv at hz { congr, congr, skip, congr, congr, skip, congr, rw [pow_mul', pow_succ, pow_one], },
-    rw [←mul_assoc d (p^n), mul_comm (d * p^n) (p^n), ←mul_assoc z' _ _, nat.cast_mul,
-      mul_comm _ (↑(d * p ^ n)), mul_assoc, mul_div (↑(z' * p ^ n)) _ _, ←nat.cast_pow,
-      ←nat.cast_mul, mul_div_cancel', ←nat_cast_val, ←nat.cast_mul,
-      ←int.cast_coe_nat (z' * p ^ n * a.val), int.fract_add_int] at hz,
-    { rw [int.cast_neg, ←hz, neg_sub, nat_cast_val a, nat.cast_mul d _, nat.cast_pow, mul_div], },
-    { norm_cast, apply ne_zero_of_lt' 0, apply_instance, }, },
-  { simp_rw [←nat.cast_pow, ←nat_cast_val a, ←nat.cast_mul,
-      mul_pow_eq_one_of_mul_pow_sq_not_one_lt pos, nat.cast_one, div_one, ←int.cast_coe_nat],
-    refine ⟨0, by { simp_rw [int.cast_zero, int.fract_coe, mul_zero, sub_zero] }⟩, },
-end
-
-noncomputable instance [fact (0 < d)] : normed_ring (locally_constant (zmod d × ℤ_[p]) R) :=
-{ dist_eq := λ x y, dist_eq_norm x y,
-  norm_mul := λ a b, begin
-    convert_to ∥inclusion _ _ a * inclusion _ _ b∥ ≤ ∥inclusion _ _ a∥ * ∥inclusion _ _ b∥,
-    refine norm_mul_le _ _, end }

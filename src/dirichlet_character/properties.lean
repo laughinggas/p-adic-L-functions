@@ -8,6 +8,10 @@ import topology.continuous_function.compact
 # Dirichlet characters
 This file defines properties of Dirichlet characters.
 
+# Main Definitions
+ * `lev` : The level of a Dirichlet character
+ * `bound` : The bound of the norm of a Dirichlet character
+
 ## Tags
 p-adic, L-function, Bernoulli measure, Dirichlet character
 -/
@@ -137,15 +141,15 @@ lemma mul_eval_of_coprime {R : Type*} [comm_monoid_with_zero R] {n m : ℕ}
   asso_dirichlet_character (dirichlet_character.mul χ ψ) a =
   asso_dirichlet_character χ a * (asso_dirichlet_character ψ a) :=
 begin
-  rw [mul, ←(zmod.cast_nat_cast (conductor_dvd (χ.change_level (dvd_lcm_left n m) *
-    ψ.change_level (dvd_lcm_right n m))) a)],
+  rw [mul, ←(zmod.cast_nat_cast (conductor.dvd_lev (change_level (dvd_lcm_left n m) χ *
+    change_level (dvd_lcm_right n m) ψ)) a)],
   { have dvd : lcm n m ∣ n * m := lcm_dvd_iff.2 ⟨(dvd_mul_right _ _), (dvd_mul_left _ _)⟩,
     have := zmod.is_unit_of_is_coprime_dvd dvd ha,
-    rw ←change_level_asso_dirichlet_character_eq' _ (conductor_dvd _) this,
+    rw ←change_level.asso_dirichlet_character_eq' _ (conductor.dvd_lev _) this,
     delta asso_primitive_character,
-    rw [←(factors_through_spec _ (factors_through_conductor (χ.change_level _ * ψ.change_level _))),
-      asso_dirichlet_character_mul, monoid_hom.mul_apply, change_level_asso_dirichlet_character_eq'
-      _ _ this, change_level_asso_dirichlet_character_eq' _ _ this, zmod.cast_nat_cast
+    rw [←(factors_through.spec _ (conductor.factors_through (change_level _ χ * change_level _ ψ))),
+      asso_dirichlet_character_mul, monoid_hom.mul_apply, change_level.asso_dirichlet_character_eq'
+      _ _ this, change_level.asso_dirichlet_character_eq' _ _ this, zmod.cast_nat_cast
       (dvd_lcm_left n m), zmod.cast_nat_cast (dvd_lcm_right n m)],
     any_goals { refine zmod.char_p _, }, },
   { refine zmod.char_p _, },
@@ -172,11 +176,11 @@ abbreviation lev {R : Type*} [monoid R] {n : ℕ} (χ : dirichlet_character R n)
 -- dont know how to remove this linting error
 
 lemma lev_mul_dvd_lcm {R : Type*} [comm_monoid_with_zero R] {n k : ℕ} (χ : dirichlet_character R n)
-  (ψ : dirichlet_character R k) : lev (mul χ ψ) ∣ lcm n k := dvd_trans (conductor_dvd _) dvd_rfl
+  (ψ : dirichlet_character R k) : lev (mul χ ψ) ∣ lcm n k := dvd_trans (conductor.dvd_lev _) dvd_rfl
 
 lemma lev_mul_dvd_mul_lev {R : Type*} [comm_monoid_with_zero R] {n k : ℕ} (χ : dirichlet_character R n)
   (ψ : dirichlet_character R k) : lev (mul χ ψ) ∣ n * k :=
-dvd_trans (conductor_dvd _) (nat.lcm_dvd_mul _ _)
+dvd_trans (conductor.dvd_lev _) (nat.lcm_dvd_mul _ _)
 
 open dirichlet_character
 lemma mul_eval_neg_one {R : Type*} [comm_monoid_with_zero R] {n m : ℕ} [fact (0 < n)] [fact (0 < m)]
@@ -186,7 +190,7 @@ lemma mul_eval_neg_one {R : Type*} [comm_monoid_with_zero R] {n m : ℕ} [fact (
 begin
   have one_le : 1 ≤ n * m := nat.succ_le_iff.2 (nat.mul_pos (fact.out _) (fact.out _)),
   have f1 : (-1 : zmod (lev (χ.mul ψ))) = ↑((n * m - 1) : ℕ),
-  { rw [nat.cast_sub one_le, (zmod.nat_coe_zmod_eq_zero_iff_dvd _ _).2 (dvd_trans (conductor_dvd _)
+  { rw [nat.cast_sub one_le, (zmod.nat_coe_zmod_eq_zero_iff_dvd _ _).2 (dvd_trans (conductor.dvd_lev _)
       (lcm_dvd (dvd_mul_right _ _) (dvd_mul_left _ _))), zero_sub, nat.cast_one], },
   rw [int.cast_neg, int.cast_one, f1,
     mul_eval_of_coprime _ _ (nat.coprime_sub (nat.coprime_one_right _) one_le)],

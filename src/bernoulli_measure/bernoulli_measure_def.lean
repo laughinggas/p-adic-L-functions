@@ -5,16 +5,17 @@ Authors: Ashvni Narayanan
 -/
 import padic_int.clopen_properties
 import padic_integral
-import eventually_constant_sequence
+import bernoulli_measure.eventually_constant_sequence
 
 /-!
 # Bernoulli measure and the p-adic L-function
 
-This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems is that
+This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems of this folder is that
 this p-adic distribution is indeed a p-adic measure. As a consequence, we are also able to define
 the p-adic L-function in terms of a p-adic integral.
 
 ## Main definitions
+ * `E_c`
  * `bernoulli_measure`
 
 ## References
@@ -37,7 +38,6 @@ noncomputable abbreviation dirichlet_char_extend (hd : d.coprime p)
 (coprime.pow_right m hd)).symm.to_monoid_hom).comp (mul_equiv.to_monoid_hom
 (mul_equiv.symm mul_equiv.prod_units))).comp (monoid_hom.prod_map (monoid_hom.id (units (zmod d)))
 (units.map (padic_int.to_zmod_pow m).to_monoid_hom)))
--- build API?
 
 open padic_int
 variables (c : ℕ)

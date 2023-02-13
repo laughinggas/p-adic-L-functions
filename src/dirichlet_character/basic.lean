@@ -333,18 +333,20 @@ end
 noncomputable def mul {m : ℕ} (χ₁ : dirichlet_character R n) (χ₂ : dirichlet_character R m) :=
 asso_primitive_character (change_level (dvd_lcm_left n m) χ₁ * change_level (dvd_lcm_right n m) χ₂)
 
-namespace mul
+namespace is_primitive
 lemma mul {m : ℕ} (ψ : dirichlet_character R m) : (mul χ ψ).is_primitive :=
 asso_primitive_character_is_primitive _
-end mul
+end is_primitive
 
 /-- Composition of a Dirichlet character with a multiplicative homomorphism of units. -/
 --abbreviation comp {S : Type*} [comm_monoid_with_zero S] (f : units R →* units S) : dirichlet_character S n := f.comp χ
 
 variables {S : Type*} [comm_ring S] {m : ℕ} (ψ : dirichlet_character S m)
 
+/-- A Dirichlet character is odd if its value at -1 is -1. -/
 def is_odd : Prop := ψ (-1) = -1
 
+/-- A Dirichlet character is even if its value at -1 is 1. -/
 def is_even : Prop := ψ (-1) = 1
 
 lemma is_odd_or_is_even [no_zero_divisors S] : ψ.is_odd ∨ ψ.is_even :=
