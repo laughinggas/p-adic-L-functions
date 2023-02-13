@@ -3,19 +3,15 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import bernoulli_measure.bernoulli_measure_def
 import bernoulli_measure.equi_class
-
 /-!
-# Bernoulli measure and the p-adic L-function
-
-This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems is that
-this p-adic distribution is indeed a p-adic measure. As a consequence, we are also able to define
-the p-adic L-function in terms of a p-adic integral.
+# An eventually constant sequence giving the Bernoulli measure
+This file defines an eventually constant sequence constructed from a locally constant function. 
+Its limit is related to the Bernoulli distribution on `zmod d × ℤ_[p]`.
 
 ## Main definitions
- * `bernoulli_measure_of_measure`
- * `p_adic_L_function`
+ * `from_loc_const`
+ * `loc_const_to_seq_limit`
 
 ## Implementation notes
  * `coprime_pow_spl` replaced with `coprime.pow_right`
@@ -74,7 +70,7 @@ namespace eventually_constant_seq
 noncomputable abbreviation from_loc_const (hc : c.coprime p) (hc' : c.coprime d)
   (f : locally_constant (zmod d × ℤ_[p]) R) (hd' : d.coprime p) : @eventually_constant_seq R :=
 { to_seq := λ (n : ℕ), ∑ a in (zmod' (d * p^n) (mul_prime_pow_pos n)),
-    f(a) • ((algebra_map ℚ_[p] R) (E_c p d c n a)),
+    f(a) • ((algebra_map ℚ_[p] R) (bernoulli_distribution p d c n a)),
   is_eventually_const := ⟨classical.some (le hd' f) + 1,
   λ l hl', begin
   simp only [algebra.id.smul_eq_mul, set.mem_set_of_eq], -- why is the simp needed?
@@ -91,14 +87,14 @@ noncomputable abbreviation from_loc_const (hc : c.coprime p) (hc' : c.coprime d)
   rw [zmod'_succ_eq_bUnion, finset.sum_bUnion disj],
   { haveI : fact (0 < l) := fact_iff.2 (lt_of_lt_of_le (nat.zero_lt_succ _) hl'),
     conv_lhs { apply_congr, skip, conv { apply_congr, skip, rw equi_class.eq R hd' hl x x_1 H_1, },
-    rw [←finset.mul_sum, E_c_sum R x hc hc'], }, }, end⟩, }
+    rw [←finset.mul_sum, bernoulli_distribution_sum R x hc hc'], }, }, end⟩, }
 
 open eventually_constant_seq
 
 lemma from_loc_const_def (hc : c.coprime p) (hc' : c.coprime d)
   (f : locally_constant (zmod d × ℤ_[p]) R) (n : ℕ) (hd' : d.coprime p) :
   (from_loc_const R hc hc' f hd').to_seq n =
-    ∑ a in (finset.range (d * p^n)),f(a) • ((algebra_map ℚ_[p] R) (E_c p d c n a)) :=
+    ∑ a in (finset.range (d * p^n)),f(a) • ((algebra_map ℚ_[p] R) (bernoulli_distribution p d c n a)) :=
 begin
   apply finset.sum_bij (λ a ha, _) (λ a ha, _) (λ a ha, _) (λ a b ha hb h, zmod.val_injective _ h)
     (λ b hb, ⟨(b : zmod (d * p^n)), finset.mem_univ _,
@@ -112,7 +108,7 @@ open eventually_constant_seq locally_constant clopen_from
 lemma from_loc_const_char_fn {n : ℕ} (a : zmod (d * p^n)) (hc : c.coprime p) (hc' : c.coprime d)
   (h' : d.coprime p) (hm : n ≤ m) :
   (from_loc_const R hc hc' (_root_.char_fn R (clopen_from.is_clopen a)) h').to_seq m =
-  ∑ (y : equi_class m a), (algebra_map ℚ_[p] R) (E_c p d c m y) :=
+  ∑ (y : equi_class m a), (algebra_map ℚ_[p] R) (bernoulli_distribution p d c m y) :=
 begin
   rw [from_loc_const_def, _root_.char_fn],
   simp only [algebra.id.smul_eq_mul, boole_mul, locally_constant.coe_mk, finset.sum_ite, add_zero,
@@ -154,7 +150,7 @@ begin
   have hm' : d * p^n ∣ d * p^m := mul_dvd_mul_left d (pow_dvd_pow p hm),
   rw [from_loc_const_char_fn R a hc hc' h' hm,
     from_loc_const_char_fn R a hc hc' h' (le_trans hm (le_succ _))],
-  conv_rhs { apply_congr, skip, rw ←E_c_sum R _ hc hc', },
+  conv_rhs { apply_congr, skip, rw ←bernoulli_distribution_sum R _ hc hc', },
   rw ←finset.sum_bUnion,
   { refine finset.sum_bij (λ b hb, b.val) (λ b hb, finset.mem_bUnion.2 _) (λ b hb, rfl)
       (λ b b' hb hb' h, subtype.ext_iff_val.2 h) (λ b hb, _),
@@ -204,3 +200,25 @@ noncomputable abbreviation loc_const_to_seq_limit (hc : c.coprime p) (hc' : c.co
       refine finset.sum_congr rfl (λ y hy, by { rw [mul_assoc, ring_hom.id_apply], }), },
     { refine le_sup_iff.2 (or.inl le_rfl), },
     { refine le_sup_iff.2 (or.inr le_rfl), }, end }
+
+@[to_additive]
+lemma prod_coe_to_finset {α : Type*} {β :Type*} [comm_monoid β] (s : set α) [fintype s] (f : α → β) :
+  ∏ (i : α) in s.to_finset, f i = ∏ (i : s), f i :=
+finset.prod_bij (λ t ht, ⟨t, set.mem_to_finset.1 ht⟩) (λ a ha, finset.mem_univ _)
+  (λ a ha, by { simp only [subtype.coe_mk] }) (λ b c hb hc h, subtype.mk_eq_mk.1 h)
+  (λ b hb, ⟨b.val, set.mem_to_finset.2 b.prop, by { simp }⟩)
+
+lemma from_loc_const_to_seq [algebra ℚ_[p] R] {n : ℕ} (a : zmod (d * p^n)) (hc : c.coprime p)
+  (hc' : c.coprime d) (h' : d.coprime p) :
+  (from_loc_const R hc hc' (_root_.char_fn R (clopen_from.is_clopen a)) h').to_seq n =
+  (algebra_map ℚ_[p] R) (bernoulli_distribution p d c n a) :=
+begin
+  rw from_loc_const_char_fn R a hc hc' h' (le_refl n),
+  convert_to _ = ∑ (y : zmod (d * p^n)) in {a}, (algebra_map ℚ_[p] R) (bernoulli_distribution p d c n ↑y),
+  { rw [finset.sum_singleton, zmod.cast_id], },
+  { convert_to ∑ (y : zmod (d * p^n)) in (set.to_finset (equi_class n a)),
+      (algebra_map ℚ_[p] R) (bernoulli_distribution p d c n ↑y) = _,
+    { simp_rw [sum_coe_to_finset, zmod.cast_id], },
+    { apply finset.sum_congr (finset.ext_iff.2 (λ y, _)) (λ x hx, rfl),
+      { simp only [set.mem_to_finset, finset.mem_singleton, equi_class.mem, zmod.cast_id], }, }, },
+end

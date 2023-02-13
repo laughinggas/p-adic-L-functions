@@ -3,19 +3,17 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import bernoulli_measure.from_loc_const
-import topology.algebra.group
+import padic_int.properties
+import topology.locally_constant.algebra
 
 /-!
-# Bernoulli measure and the p-adic L-function
-
-This file defines the Bernoulli distribution on `zmod d × ℤ_[p]`. One of the main theorems is that
-this p-adic distribution is indeed a p-adic measure. As a consequence, we are also able to define
-the p-adic L-function in terms of a p-adic integral.
+# Induced functions from units
+This file defines the function on `zmod d × ℤ_[p]` induced by a function on `(zmod d)ˣ × ℤ_[p]ˣ`, 
+and a locally constant version of it. 
 
 ## Main definitions
- * `bernoulli_measure_of_measure`
- * `p_adic_L_function`
+ * `ind_fn`
+ * `loc_const_ind_fn`
 
 ## Implementation notes
  * Changed `s` to `char_fn_set`
@@ -27,9 +25,6 @@ the p-adic L-function in terms of a p-adic integral.
  * `exists_V_h1_1` replaced with `exists_mul_inv_val_eq`
  * `meas_E_c` removed
  * `s_nonempty` removed
-
-## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
 
 ## Tags
 p-adic, L-function, Bernoulli measure

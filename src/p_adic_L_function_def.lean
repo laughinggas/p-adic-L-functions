@@ -3,7 +3,7 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import bernoulli_measure.bernoulli_measure_six
+import bernoulli_measure.bernoulli_measure_def
 import dirichlet_character.teichmuller_character
 import topology.algebra.continuous_monoid_hom
 
@@ -41,11 +41,23 @@ variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} {R : Type*} [normed_comm_ring
 (hc' : c.coprime d) (na : ∀ (n : ℕ) (f : ℕ → R),
   ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
 
-/-- Given a Dirichlet character on (zmod (d * p^m))ˣ, returns a monoid_hom on (zmod d)ˣ × ℤ_[p]ˣ. -/
+/-/-- Given a Dirichlet character on (zmod (d * p^m))ˣ, returns a monoid_hom on (zmod d)ˣ × ℤ_[p]ˣ. -/
 noncomputable abbreviation dir_char_extend : (zmod d)ˣ × ℤ_[p]ˣ →* Rˣ :=
 monoid_hom.comp χ (monoid_hom.comp (monoid_hom.comp (units.map (zmod.chinese_remainder
 (nat.coprime.pow_right m hd)).symm.to_monoid_hom) (mul_equiv.to_monoid_hom
 mul_equiv.prod_units.symm)) (monoid_hom.prod_map (monoid_hom.id (zmod d)ˣ)
+(units.map (padic_int.to_zmod_pow m).to_monoid_hom))) -/
+
+variables (p : ℕ) [fact p.prime] (d : ℕ) (R : Type*) [normed_comm_ring R] (m : ℕ) (c : ℕ)
+open locally_constant zmod nat
+
+/-- Extending the primitive Dirichlet character χ with level (d* p^m) ; We use the composition
+  of χ with the Chinese remainder and `to_zmod_pow` -/
+noncomputable abbreviation dirichlet_char_extend (hd : d.coprime p)
+  (χ : (zmod (d*(p^m)))ˣ →* Rˣ) : ((zmod d)ˣ × ℤ_[p]ˣ) →* Rˣ :=
+χ.comp (((units.map (zmod.chinese_remainder
+(coprime.pow_right m hd)).symm.to_monoid_hom).comp (mul_equiv.to_monoid_hom
+(mul_equiv.symm mul_equiv.prod_units))).comp (monoid_hom.prod_map (monoid_hom.id (units (zmod d)))
 (units.map (padic_int.to_zmod_pow m).to_monoid_hom)))
 
 namespace dirichlet_char_extend
@@ -103,7 +115,7 @@ noncomputable abbreviation mul_inv_pow [normed_algebra ℚ_[p] R] (s : ℕ) :
 continuous_monoid_hom.mk' (mul_inv_pow_hom p d R s) (mul_inv_pow_hom_continuous p d R s)
 
 variables {p d R} (w : continuous_monoid_hom ((zmod d)ˣ × ℤ_[p]ˣ) R)
-theorem cont_paLf' [algebra ℚ_[p] R] [fact (0 < m)] : continuous
+/-theorem cont_paLf' [algebra ℚ_[p] R] [fact (0 < m)] : continuous
 ((units.coe_hom R).comp (dirichlet_char_extend p d R m hd (χ *
   (teichmuller_character_mod_p_change_level p d R m))) * w) :=
 continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous m hd _))
@@ -117,6 +129,22 @@ noncomputable def p_adic_L_function' [normed_algebra ℚ_[p] R] [nontrivial R] [
 ⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd (χ *
 (teichmuller_character_mod_p_change_level p d R m))) * w.to_monoid_hom, cont_paLf' m hd χ w⟩)
 -- technically bernoulli_measure lands in units R, you should not have to use (units.coe_hom R),
--- unless (units R) is not a complete space?
+-- unless (units R) is not a complete space? -/
+
+theorem cont_paLf [fact (0 < m)] : _root_.continuous
+((units.coe_hom R).comp (dirichlet_char_extend p d R m hd ((χ
+--.mul
+--((teichmuller_character_mod_p' p R)^n)).change_level (helper_idk p d R m χ n
+))) * w.to_monoid_hom) :=
+continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous m hd _))
+  w.continuous_to_fun
+
+noncomputable def p_adic_L_function [normed_algebra ℚ_[p] R] [nontrivial R] [complete_space R]
+  [norm_one_class R] [fact (0 < d)] [fact (0 < m)] (hχ : d ∣ χ.conductor) : R :=
+(@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure' R hc hc' hd na)
+⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd
+((χ.mul ((teichmuller_character_mod_p' p R))).change_level (helper_idk p d R m χ))) *
+w.to_monoid_hom, cont_paLf p d R m hd _ w⟩) -- cont_paLf' m hd χ w
+-- check variable match
 
 instance {n : ℕ} : fact (0 < p^n) := fact_iff.2 (pow_pos (nat.prime.pos (fact.out _)) _)

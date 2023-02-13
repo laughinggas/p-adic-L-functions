@@ -1,5 +1,5 @@
 import dirichlet_character.properties
-import bernoulli_measure.bernoulli_measure_seven
+import p_adic_L_function_def
 
 -- `mul_eval_coprime` replaced with `mul_eval_of_coprime`
 -- `lev_mul_dvd` replaced with `lev_mul_dvd_lcm`

@@ -6,8 +6,7 @@ Authors: Ashvni Narayanan
 import padic_int.clopen_properties
 import padic_integral
 import bernoulli_measure.eventually_constant_sequence
-import zmod_properties
-import bernoulli_measure.bernoulli_measure_def
+import bernoulli_measure.bernoulli_distribution
 
 /-!
 # Equivalence class on ℤ/(d * p^n)ℤ
@@ -18,7 +17,7 @@ We also use `zmod'`, which is the universal (sub)set of `zmod`, to make computat
  * `equi_class`
  * `zmod'`
  * `equi_class.zmod'_succ_eq_bUnion`
- * `E_c_sum`
+ * `bernoulli_distribution_sum`
 
 ## Implementation notes
  * Changed bernoulli_measure_one to bernoulli_measure_def and bernoulli_measure_two to equi_class
@@ -367,7 +366,7 @@ end
 -- break up into smaller pieces
 
 variable {m : ℕ}
-lemma helper_E_c_sum' (hc' : c.coprime d) (hc : c.coprime p) (x : zmod (d * p^m)) :
+lemma helper_bernoulli_distribution_sum' (hc' : c.coprime d) (hc : c.coprime p) (x : zmod (d * p^m)) :
   ∑ (x_1 : (equi_class m.succ x)), int.fract (((c : zmod (d * p^(2 * m.succ)))⁻¹.val : ℚ) *
   ↑(x_1 : zmod (d * p^m.succ)) / (↑d * ↑p ^ m.succ)) =
   ∑ (x_1 : (equi_class m.succ (↑((c : zmod (d * p^(2 * m.succ)))⁻¹.val) * x))),
@@ -428,10 +427,10 @@ begin
 end
 
 open equi_class
-lemma E_c_sum' (x : zmod (d * p^m)) (hc : c.coprime p) (hc' : c.coprime d) :
-  ∑ (y : equi_class m.succ x), (E_c p d c m.succ y) = (E_c p d c m x) :=
+lemma bernoulli_distribution_sum' (x : zmod (d * p^m)) (hc : c.coprime p) (hc' : c.coprime d) :
+  ∑ (y : equi_class m.succ x), (bernoulli_distribution p d c m.succ y) = (bernoulli_distribution p d c m x) :=
 begin
-  rw [E_c, ← ring_hom.map_sum],
+  rw [bernoulli_distribution, ← ring_hom.map_sum],
   apply congr_arg,
   rw [finset.sum_add_distrib, finset.sum_sub_distrib, equi_class.sum_fract, ←finset.mul_sum],
   have h2 : ∀ z : ℕ, d * p ^ z ∣ d * p ^ (2 * z),
@@ -444,7 +443,7 @@ begin
     int.fract (((x_1 : zmod (d * p^m.succ)).val : ℚ) / ((d : ℚ) * (p : ℚ)^m.succ)) +
     (∑ (x : (equi_class m.succ x)), ((c : ℚ) - 1) / 2) = _ - _ + _,
   { rw [add_right_cancel_iff, sub_right_inj],
-    refine congr_arg _ (helper_E_c_sum' hc' hc _), },
+    refine congr_arg _ (helper_bernoulli_distribution_sum' hc' hc _), },
   rw [sum_fract, ←nat.cast_pow, ←nat.cast_mul, int.fract_eq_self' (zero_le_div_and_div_lt_one x).1
     (zero_le_div_and_div_lt_one x).2, mul_add, finset.sum_const, equi_class.card,
     _root_.nsmul_eq_mul, sub_add_eq_add_sub, sub_add_eq_add_sub, sub_add_eq_sub_sub, sub_right_comm],
@@ -463,11 +462,11 @@ end
 
 variable [algebra ℚ_[p] R]
 
-lemma E_c_sum (x : zmod (d * p^m)) (hc : c.gcd p = 1) (hc' : c.gcd d = 1) :
+lemma bernoulli_distribution_sum (x : zmod (d * p^m)) (hc : c.gcd p = 1) (hc' : c.gcd d = 1) :
   ∑ (y : zmod (d * p ^ m.succ)) in (λ a : zmod (d * p ^ m), ((equi_class m.succ) a).to_finset) x,
-  ((algebra_map ℚ_[p] R) (E_c p d c m.succ y)) = (algebra_map ℚ_[p] R) (E_c p d c m x) :=
+  ((algebra_map ℚ_[p] R) (bernoulli_distribution p d c m.succ y)) = (algebra_map ℚ_[p] R) (bernoulli_distribution p d c m x) :=
 begin
-  rw ←E_c_sum',
+  rw ←bernoulli_distribution_sum',
   { rw ring_hom.map_sum,
     apply finset.sum_bij (λ a ha, subtype.mk a _) (λ a ha, finset.mem_univ _) (λ a ha, _)
       (λ a b ha hb h, _) (λ b hb, _),

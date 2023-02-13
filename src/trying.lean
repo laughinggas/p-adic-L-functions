@@ -162,7 +162,7 @@ end
 abbreviation ψ (n : ℕ) (hχ : d ∣ χ.conductor) : dirichlet_character R (d * p^(k p d R m hd χ n hχ)) :=
 -- gives a timeout-/
 
-theorem cont_paLf'' [fact (0 < m)] : _root_.continuous
+/-theorem cont_paLf'' [fact (0 < m)] : _root_.continuous
 ((units.coe_hom R).comp (dirichlet_char_extend p d R m hd ((χ
 --.mul
 --((teichmuller_character_mod_p' p R)^n)).change_level (helper_idk p d R m χ n
@@ -175,7 +175,7 @@ noncomputable def p_adic_L_function'' [normed_algebra ℚ_[p] R] [nontrivial R] 
 (@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure' R hc hc' hd na)
 ⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd
 ((χ.mul ((teichmuller_character_mod_p' p R))).change_level (helper_idk p d R m χ))) *
-w.to_monoid_hom, cont_paLf'' p d R m hd _ w⟩) -- cont_paLf' m hd χ w
+w.to_monoid_hom, cont_paLf'' p d R m hd _ w⟩) -- cont_paLf' m hd χ w -/
 
 open filter
 
@@ -598,7 +598,7 @@ theorem p_adic_L_function_eval_neg_int_new [algebra ℚ R] [norm_one_class R] [n
   --(hχ2 : p ∣ (χ.mul (((teichmuller_character_mod_p' p R)^n))).conductor)
   (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
-  (p_adic_L_function'' p d R m hd χ c hc hc' na (mul_inv_pow p d R (n - 1)) hχ1) = (algebra_map ℚ R) (1 / n : ℚ) *
+  (p_adic_L_function p d R m hd χ c hc hc' na (mul_inv_pow p d R (n - 1)) hχ1) = (algebra_map ℚ R) (1 / n : ℚ) *
    (1 - (χ (zmod.unit_of_coprime c (nat.coprime_mul_iff_right.2 ⟨hc', nat.coprime.pow_right m hc⟩))
    * (mul_inv_pow p d R n (zmod.unit_of_coprime c hc', is_unit.unit (padic_int.nat_is_unit_of_not_dvd
    ((fact.out (nat.prime p)).coprime_iff_not_dvd.mp (nat.coprime.symm hc))
@@ -607,7 +607,7 @@ theorem p_adic_L_function_eval_neg_int_new [algebra ℚ R] [norm_one_class R] [n
    (general_bernoulli_number (dirichlet_character.mul χ
      ((teichmuller_character_mod_p' p R)^n)) n) :=
 begin
-  delta p_adic_L_function'',
+  delta p_adic_L_function,
   have h1 := filter.tendsto.add (filter.tendsto.sub (U p d R m χ hd n hn hχ hχ1 hp na)
     (V p d R m χ c hd hc' hc hp hχ hχ1 na' na n hn))
     (W p d R m χ c hd hp na' na n hn hχ),

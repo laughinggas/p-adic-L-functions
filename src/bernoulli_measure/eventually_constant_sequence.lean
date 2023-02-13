@@ -1,4 +1,20 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
+
 import data.nat.lattice
+
+/-!
+# Eventually constant sequences
+
+This file defines eventually constant sequences and their properties.
+
+## Main definitions
+ * `eventually_constant_seq`
+ * `sequence_limit`
+-/
 
 /-- A sequence has the `is_eventually_constant` predicate if all the elements of the sequence
   are eventually the same. -/
