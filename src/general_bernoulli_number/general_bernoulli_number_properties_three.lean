@@ -56,30 +56,6 @@ lemma helper_14 [algebra ℚ R] [algebra ℚ_[p] R] [is_scalar_tower ℚ ℚ_[p]
   a • r = (algebra_map ℚ ℚ_[p]) a • r := by { simp }
 
 variables {p d R}
-
-lemma mul_eq_asso_pri_char {n : ℕ} (χ : dirichlet_character R n) :
-  χ.asso_primitive_character.conductor = χ.conductor :=
-(is_primitive_def χ.asso_primitive_character).1 (asso_primitive_character_is_primitive χ)
-
-lemma nat.pred_add_one_eq_self {n : ℕ} (hn : 0 < n) : n.pred + 1 = n := nat.succ_pred_eq_of_pos hn
-
-lemma asso_dirichlet_character_equiv {S : Type*} [comm_monoid_with_zero S]
-  (ψ : dirichlet_character S m) (h : is_primitive ψ) (a : ℕ) :
-  asso_dirichlet_character ψ.asso_primitive_character a = asso_dirichlet_character ψ a :=
-begin
-  by_cases h' : is_unit (a : zmod m),
-  { conv_rhs { rw factors_through.spec ψ (conductor.factors_through ψ), },
-    rw change_level.asso_dirichlet_character_eq' _ _ h',
-    apply congr,
-    { congr, },
-    { rw zmod.cast_nat_cast _,
-      swap, { refine zmod.char_p _, },
-      { apply conductor.dvd_lev _, }, }, },
-  { repeat { rw asso_dirichlet_character_eq_zero, },
-    { assumption, },
-    rw (is_primitive_def _).1 h, apply h', },
-end
-
 -- note that this works for any dirichlet character which is primitive and whose conductor divides d * p^m
 lemma helper_13 [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < m)]
   {k : ℕ} (hk : 1 < k) : (λ (n : ℕ), (1 / ((d * p ^ n : ℕ) : ℚ_[p])) •
@@ -142,15 +118,6 @@ begin
 end
 
 variables (p d R)
-lemma norm_mul_pow_pos' [nontrivial R] [algebra ℚ_[p] R] (x : ℕ) : 0 < ∥((d * p^x : ℕ) : R)∥ :=
-norm_pos_iff.2 ((@nat.cast_ne_zero _ _ _ (char_zero_of_nontrivial_of_normed_algebra p R) _).2 (nat.ne_zero_of_lt' 0))
-
-lemma norm_le_one' [normed_algebra ℚ_[p] R][norm_one_class R] (n : ℕ) : ∥(n : R)∥ ≤ 1 :=
-begin
-  rw norm_coe_nat_eq_norm_ring_hom_map p,
-  apply padic_int.norm_le_one,
-end
-
 lemma nat_cast_mul_prime_pow_tendsto_zero [normed_algebra ℚ_[p] R] [norm_one_class R] :
   tendsto (λ x : nat, ((d * p^x : nat) : R)) at_top (nhds 0) :=
 begin
@@ -195,21 +162,6 @@ begin
   rw mul_one,
   refine le_cSup (set.finite.bdd_above (set.finite_range _)) ⟨z, _⟩,
   simp only,
-end
-
-lemma zmod.cast_nat_eq_zero_of_dvd {m : ℕ} {n : ℕ} (h : m ∣ n) : (n : zmod m) = 0 :=
-begin
-  rw [←zmod.cast_nat_cast h, zmod.nat_cast_self, zmod.cast_zero],
-  refine zmod.char_p _,
-end
-
-instance zmod.units_fintype (n : ℕ) : fintype (zmod n)ˣ :=
-begin
-  by_cases n = 0,
-  { rw h, refine units_int.fintype, },
-  { haveI : fact (0 < n),
-    { apply fact_iff.2, apply nat.pos_of_ne_zero h, },
-    apply_instance, },
 end
 
 lemma helper_W_4 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {x : ℕ} (y : (zmod (d * p^x))ˣ) : ∥(d : R) * ∑ (x_1 : ℕ) in finset.range (k - 1),

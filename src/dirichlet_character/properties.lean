@@ -159,6 +159,24 @@ begin
   { rw [←zmod.nat_cast_mod, nat.mod_eq_zero_of_dvd hk, nat.cast_zero], },
   rw [this, zero_sub, neg_eq_neg_one_mul, monoid_hom.map_mul],
 end
+
+--`asso_dirichlet_character_equiv` changed to `asso_dirichlet_character.asso_primitive_character`
+lemma asso_primitive_character {S : Type*} [comm_monoid_with_zero S]
+  (ψ : dirichlet_character S m) (h : is_primitive ψ) (a : ℕ) :
+  asso_dirichlet_character ψ.asso_primitive_character a = asso_dirichlet_character ψ a :=
+begin
+  by_cases h' : is_unit (a : zmod m),
+  { conv_rhs { rw factors_through.spec ψ (conductor.factors_through ψ), },
+    rw change_level.asso_dirichlet_character_eq' _ _ h',
+    apply congr,
+    { congr, },
+    { rw zmod.cast_nat_cast _,
+      swap, { refine zmod.char_p _, },
+      { apply conductor.dvd_lev _, }, }, },
+  { repeat { rw asso_dirichlet_character_eq_zero, },
+    { assumption, },
+    rw (is_primitive_def _).1 h, apply h', },
+end
 end asso_dirichlet_character
 
 /-- The level at which the Dirichlet character is defined. -/

@@ -116,6 +116,8 @@ begin
   rw [this, ←nat.mod_eq_sub_mod (nat.succ_le_succ (one_le_mul one_le_two hk)),
     nat.odd_iff.1 ⟨k, rfl⟩],
 end
+
+lemma pred_add_one_eq_self {n : ℕ} (hn : 0 < n) : n.pred + 1 = n := nat.succ_pred_eq_of_pos hn
 end nat
 
 lemma helper_4 {x y : ℕ} (m : ℕ) [fact (0 < m)] : gcd_monoid.lcm (x * y^m) y = x * y^m :=

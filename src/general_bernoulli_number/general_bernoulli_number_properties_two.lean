@@ -1,6 +1,6 @@
 import general_bernoulli_number.general_bernoulli_number_properties_one
 import general_bernoulli_number.basic
-import bernoulli_measure.equi_class
+--import bernoulli_measure.equi_class
 
 variables {p d : nat} (m : nat) [fact (0 < d)] [fact (nat.prime p)]
   {R : Type*} [normed_comm_ring R] {χ : dirichlet_character R (d * p^m)}

@@ -362,4 +362,19 @@ begin
     convert zmod.val_coe_unit_coprime (is_unit.unit ha), },
   { apply zmod.val_le_self, },
 end
+
+lemma zmod.cast_nat_eq_zero_of_dvd {m : ℕ} {n : ℕ} (h : m ∣ n) : (n : zmod m) = 0 :=
+begin
+  rw [←zmod.cast_nat_cast h, zmod.nat_cast_self, zmod.cast_zero],
+  refine zmod.char_p _,
+end
+
+instance zmod.units_fintype (n : ℕ) : fintype (zmod n)ˣ :=
+begin
+  by_cases n = 0,
+  { rw h, refine units_int.fintype, },
+  { haveI : fact (0 < n),
+    { apply fact_iff.2, apply nat.pos_of_ne_zero h, },
+    apply_instance, },
+end
 end zmod

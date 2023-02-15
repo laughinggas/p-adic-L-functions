@@ -237,3 +237,13 @@ begin
   rw norm_coe_nat_eq_norm_ring_hom_map p,
   apply padic_int.norm_le_one,
 end
+
+variables (p d R)
+lemma norm_mul_pow_pos [nontrivial R] [algebra ℚ_[p] R] (x : ℕ) : 0 < ∥((d * p^x : ℕ) : R)∥ :=
+norm_pos_iff.2 ((@nat.cast_ne_zero _ _ _ (char_zero_of_nontrivial_of_normed_algebra p R) _).2 (nat.ne_zero_of_lt' 0))
+
+lemma norm_le_one [normed_algebra ℚ_[p] R][norm_one_class R] (n : ℕ) : ∥(n : R)∥ ≤ 1 :=
+begin
+  rw norm_coe_nat_eq_norm_ring_hom_map p,
+  apply padic_int.norm_le_one,
+end

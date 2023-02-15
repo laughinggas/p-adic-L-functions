@@ -328,6 +328,11 @@ begin
   { repeat { rw asso_dirichlet_character_eq_zero _ h, }, rw zero_mul, },
 end
 
+-- `mul_eq_asso_pri_char` changed to `asso_primitive_conductor_eq`
+lemma asso_primitive_conductor_eq {n : ℕ} (χ : dirichlet_character R n) :
+  χ.asso_primitive_character.conductor = χ.conductor :=
+(is_primitive_def χ.asso_primitive_character).1 (asso_primitive_character_is_primitive χ)
+
 /-- Similar to multiplication of Dirichlet characters, without needing the characters to be
   primitive. -/
 noncomputable def mul {m : ℕ} (χ₁ : dirichlet_character R n) (χ₂ : dirichlet_character R m) :=
