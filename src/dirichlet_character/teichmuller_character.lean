@@ -124,4 +124,56 @@ begin
   rw [dirichlet_character.pow_apply, this, change_level_eval_neg_one' hp],
   any_goals { apply_instance, },
 end
-#lint
+
+variables (p) (d : ℕ) (R m)
+/-- Returns ω⁻¹ : ℤ/(d * p^m)ℤ* →* R*. -/
+noncomputable abbreviation teichmuller_character_mod_p_change_level [algebra ℚ_[p] R]
+  [fact (0 < m)] : dirichlet_character R (d * p^m) :=
+dirichlet_character.change_level (dvd_mul_of_dvd_right (dvd_pow_self p (ne_of_gt (fact.out _))) d) 
+(((units.map ((algebra_map ℚ_[p] R).comp
+(padic_int.coe.ring_hom)).to_monoid_hom).comp
+(teichmuller_character_mod_p p) : dirichlet_character R p)⁻¹)
+
+variables {p d R m}
+open zmod
+
+-- replaced `teichmuller_character_mod_p_change_level_eval_neg_one` with
+-- `teichmuller_character.change_level_eval_neg_one`
+lemma change_level_eval_neg_one [no_zero_divisors R] [algebra ℚ_[p] R] [nontrivial R]
+  (hp : 2 < p) [fact (0 < m)] :
+  ((teichmuller_character_mod_p_change_level p R m d)) (-1 : units (zmod (d * p^m))) =
+  (-1 : units R) :=
+begin
+  cases dirichlet_character.is_odd_or_is_even (teichmuller_character_mod_p_change_level p R m d),
+  { exact h, },
+  { exfalso,
+    suffices : ((units.map ((algebra_map ℚ_[p] R).comp padic_int.coe.ring_hom).to_monoid_hom).comp
+      (teichmuller_character_mod_p p)⁻¹) (-1) = 1,
+    { simp only [monoid_hom.comp_apply, monoid_hom.inv_apply, map_inv, inv_eq_one] at this,
+      rw [teichmuller_character.eval_neg_one hp, ←units.eq_iff, units.coe_map] at this,
+      simp only [ring_hom.to_monoid_hom_eq_coe, units.coe_neg_one, ring_hom.coe_monoid_hom,
+        map_neg, map_one, units.coe_one] at this,
+      apply @nat.cast_add_one_ne_zero R _ _ (char_zero_of_nontrivial_of_normed_algebra p R) 1,
+      rw [←eq_neg_iff_add_eq_zero, nat.cast_one, this], },
+    { convert h,
+      simp only [units.map, monoid_hom.mk'_apply, ring_hom.coe_monoid_hom, units.coe_neg_one,
+        units.val_eq_coe, units.inv_eq_coe_inv, zmod.cast_hom_apply, inv_neg', inv_one],
+      have : ((-1 : zmod (d * p^m)) : zmod p) = -1,
+      { rw [cast_neg_one, nat.cast_mul, nat.cast_pow, nat_cast_self _, zero_pow (fact.out _),
+          mul_zero], rw zero_sub,
+        apply_instance, },
+      simp_rw [this], refl, }, },
+end
+.
+
+-- `teichmuller_character_mod_p_change_level_pow_eval_neg_one` replaced with
+-- `teichmuller_character.change_level_pow_eval_neg_one`
+lemma change_level_pow_eval_neg_one [algebra ℚ_[p] R] [nontrivial R] [no_zero_divisors R]
+  [fact (0 < m)] (k : ℕ) (hp : 2 < p) :
+  ((teichmuller_character_mod_p_change_level p R m d ^ k) is_unit_one.neg.unit) = (-1) ^ k :=
+begin
+  have : (is_unit_one.neg.unit : (zmod (d * p^m))ˣ) = -1,
+  { rw [←units.eq_iff, is_unit.unit_spec, units.coe_neg_one], },
+  rw [dirichlet_character.pow_apply, this, change_level_eval_neg_one hp],
+  any_goals { apply_instance, },
+end

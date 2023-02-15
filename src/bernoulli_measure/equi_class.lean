@@ -7,6 +7,7 @@ import padic_int.clopen_properties
 import padic_integral
 import bernoulli_measure.eventually_constant_sequence
 import bernoulli_measure.bernoulli_distribution
+import nat_properties
 
 /-!
 # Equivalence class on ℤ/(d * p^n)ℤ
@@ -49,56 +50,6 @@ def equi_class {n : ℕ} (m : ℕ) (a : zmod (d * p^n)) :=
 -- need h to be n ≤ m, not n < m for g_char_fn
 
 variable [fact p.prime]
-namespace nat
-lemma mul_prime_pow_pos [fact (0 < d)] (m : ℕ) : 0 < d * p^m := fact_iff.1 infer_instance
-
-lemma mul_pow_lt_mul_pow_succ [fact (0 < d)] (m : ℕ) : d * p ^ m < d * p ^ m.succ :=
-mul_lt_mul' le_rfl (nat.pow_lt_pow_succ (nat.prime.one_lt (fact_iff.1 infer_instance)) m)
-    (nat.zero_le _) (fact_iff.1 infer_instance)
-
-lemma lt_pow {n a : ℕ} (h1 : 1 < a) (h2 : 1 < n) : a < a^n :=
-begin
-  conv { congr, rw ←pow_one a, skip, skip, },
-  apply pow_lt_pow h1 h2,
-end
-
-lemma le_pow {n a : ℕ} (h1 : 1 ≤ a) (h2 : 1 ≤ n) : a ≤ a^n :=
-begin
-  conv { congr, rw ←pow_one a, skip, skip, },
-  apply pow_le_pow h1 h2,
-end
-
-lemma pow_lt_mul_pow_succ_right [fact (0 < d)] (m : ℕ) : p ^ m < d * p ^ m.succ :=
-begin
-  rw [pow_succ, ←mul_assoc],
-  apply lt_mul_of_one_lt_left (pow_pos (nat.prime.pos (fact.out _)) _)
-    (one_lt_mul ((nat.succ_le_iff).2 (fact.out _)) (nat.prime.one_lt (fact.out _))),
-  all_goals { assumption, },
-end
-
-lemma lt_mul_pow_right {m a b : ℕ} (h1 : 0 < b) (h2 : 1 < a) (h3 : 1 < m) : a < b * a^m :=
-lt_of_le_of_lt ((le_mul_iff_one_le_left (lt_trans zero_lt_one h2)).2 h1)
-  (mul_lt_mul' le_rfl (nat.lt_pow h2 h3) (nat.zero_le _) h1)
-
-lemma le_mul_pow_right {m a b : ℕ} (h1 : 0 < b) (h2 : 1 < a) (h3 : 1 ≤ m) : a ≤ b * a^m :=
-le_trans ((le_mul_iff_one_le_left (lt_trans zero_lt_one h2)).2 h1)
-  (mul_le_mul' le_rfl (nat.le_pow (le_of_lt h2) h3))
-
-lemma cast_eq_coe_b (x : ℕ) : @nat.cast ℤ _ _ _ x = coe_b x :=
-begin
-  induction x with d hd,
-  { change 0 = @has_coe.coe ℕ ℤ _ 0,
-    change _ = int.of_nat 0,
-    simp only [int.coe_nat_zero, int.of_nat_eq_coe], },
-  { show d.cast + 1 = @has_coe.coe ℕ ℤ _ d.succ,
-    change _ = int.of_nat d.succ,
-    simp only [int.of_nat_eq_coe, int.coe_nat_succ, add_left_inj],
-    change _ = int.of_nat d at hd, simp [hd], },
-end
-
-lemma coprime.mul_pow {a b c : ℕ} (n : ℕ) (hc' : c.coprime a) (hc : c.coprime b) :
-  c.coprime (a * b^n) := coprime_mul_iff_right.2 ⟨hc', coprime.pow_right n hc⟩
-end nat
 
 namespace int
 lemma fract_eq_self' {a : ℚ} (h : 0 ≤ a) (ha : a < 1) : int.fract a = a :=

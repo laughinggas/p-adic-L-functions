@@ -1,5 +1,6 @@
 import data.zmod.basic
 import ring_theory.witt_vector.compare
+import nat_properties
 
 /-!
 # Properties of ℤ/nℤ
@@ -132,14 +133,7 @@ begin
   { rw int.eq_iff_succ_eq at x_ih,
     convert x_ih, },
 end
-
 end int
-
-namespace nat
-lemma dvd_sub_comm (a b n : ℕ) (h : (n : ℤ) ∣ (a : ℤ) - (b : ℤ)) : (n : ℤ) ∣ (b : ℤ) - (a : ℤ) :=
-(dvd_neg ↑n (↑b - ↑a)).mp (by {simp only [h, neg_sub]})
-
-end nat
 
 namespace zmod
 lemma nat_cast_val_to_int {n : ℕ} [fact (0 < n)] (a : zmod n) : (a.val : ℤ) = (a : ℤ) :=
@@ -160,9 +154,6 @@ begin
 end
 
 open nat
-
-instance [fact (0 < d)] {n : ℕ} : fact (0 < d * p^n) :=
-fact_iff.2 (mul_pos (fact.out _) (pow_pos (nat.prime.pos (fact.out _)) _))
 
 lemma zero_le_div_and_div_lt_one {n : ℕ} [fact (0 < n)] (x : zmod n) :
   0 ≤ (x.val : ℚ) / n ∧ (x.val : ℚ) / n < 1 :=
@@ -338,4 +329,37 @@ lemma cast_hom_self {n : ℕ} : zmod.cast_hom dvd_rfl (zmod n) = ring_hom.id (zm
 lemma zmod.cast_hom_comp {n m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) : 
   (zmod.cast_hom hm (zmod n)).comp (zmod.cast_hom hd (zmod m)) = zmod.cast_hom (dvd_trans hm hd) (zmod n) := 
 ring_hom.ext_zmod _ _
+
+lemma val_le_self (a n : ℕ) : (a : zmod n).val ≤ a :=
+begin
+  cases n,
+  { simp only [int.nat_cast_eq_coe_nat], refl, },
+  { by_cases a < n.succ,
+    rw zmod.val_cast_of_lt h,
+    apply le_trans (zmod.val_le _) _,
+    { apply succ_pos'' _, },
+    { apply le_of_not_gt h, }, },
+end
+
+--`not_is_unit_of_not_coprime` changed to `zmod.coprime_of_is_unit`
+lemma coprime_of_is_unit {m a : ℕ} (ha : is_unit (a : zmod m)) : nat.coprime a m :=
+begin
+  have f := zmod.val_coe_unit_coprime (is_unit.unit ha),
+  rw is_unit.unit_spec at f,
+  have : m ∣ (a - (a : zmod m).val),
+  { rw ← zmod.nat_coe_zmod_eq_zero_iff_dvd,
+    rw nat.cast_sub (zmod.val_le_self _ _),
+    rw sub_eq_zero,
+    cases m,
+    { simp only [int.coe_nat_inj', int.nat_cast_eq_coe_nat], refl, },
+    { rw zmod.nat_cast_val, simp only [zmod.cast_nat_cast'], }, },
+  cases this with y hy,
+  rw nat.sub_eq_iff_eq_add _ at hy,
+  { rw hy, rw add_comm, rw ← nat.is_coprime_iff_coprime,
+    simp only [int.coe_nat_add, int.coe_nat_mul],
+    rw is_coprime.add_mul_left_left_iff,
+    rw nat.is_coprime_iff_coprime,
+    convert zmod.val_coe_unit_coprime (is_unit.unit ha), },
+  { apply zmod.val_le_self, },
+end
 end zmod

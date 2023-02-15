@@ -8,15 +8,14 @@ import dirichlet_character.teichmuller_character
 import topology.algebra.continuous_monoid_hom
 
 /-!
-# Special values of the p-adic L-function
-
-This file determines the special values the p-adic L-function takes at negative integers, in terms
-of generalized Bernoulli numbers. We first define Dirichlet characters over ℤ and then relate them
-to multiplicative homomorphisms over ℤ/nℤ for any n divisible by the conductor. We then define the
-generalized Bernoulli numbers related to Dirichlet characters.
+# p-adic L-function
+This file defines the p-adic L-function in terms of a p-adic integral with respect to the 
+Bernoulli measure. The p-adic L-function takes special values at negative integers, in terms
+of generalized Bernoulli numbers. This result is proved in a separate file.
 
 ## Main definitions
- * `p_adic_L_function'`
+ * `p_adic_L_function`
+ * `mul_inv_pow_hom`
 
 ## Implementation notes
  * `pri_dir_char_extend'` replaced with `dir_char_extend`
@@ -41,29 +40,21 @@ variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} {R : Type*} [normed_comm_ring
 (hc' : c.coprime d) (na : ∀ (n : ℕ) (f : ℕ → R),
   ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
 
-/-/-- Given a Dirichlet character on (zmod (d * p^m))ˣ, returns a monoid_hom on (zmod d)ˣ × ℤ_[p]ˣ. -/
-noncomputable abbreviation dir_char_extend : (zmod d)ˣ × ℤ_[p]ˣ →* Rˣ :=
-monoid_hom.comp χ (monoid_hom.comp (monoid_hom.comp (units.map (zmod.chinese_remainder
-(nat.coprime.pow_right m hd)).symm.to_monoid_hom) (mul_equiv.to_monoid_hom
-mul_equiv.prod_units.symm)) (monoid_hom.prod_map (monoid_hom.id (zmod d)ˣ)
-(units.map (padic_int.to_zmod_pow m).to_monoid_hom))) -/
-
-variables (p : ℕ) [fact p.prime] (d : ℕ) (R : Type*) [normed_comm_ring R] (m : ℕ) (c : ℕ)
+variables (p d R c)
 open locally_constant zmod nat
 
-/-- Extending the primitive Dirichlet character χ with level (d* p^m) ; We use the composition
+/-- Extending the Dirichlet character χ with level (d* p^m) ; We use the composition
   of χ with the Chinese remainder and `to_zmod_pow` -/
-noncomputable abbreviation dirichlet_char_extend (hd : d.coprime p)
-  (χ : (zmod (d*(p^m)))ˣ →* Rˣ) : ((zmod d)ˣ × ℤ_[p]ˣ) →* Rˣ :=
-χ.comp (((units.map (zmod.chinese_remainder
-(coprime.pow_right m hd)).symm.to_monoid_hom).comp (mul_equiv.to_monoid_hom
+noncomputable abbreviation dirichlet_char_extend (hd : d.coprime p) (χ : (zmod (d*(p^m)))ˣ →* Rˣ) : 
+  ((zmod d)ˣ × ℤ_[p]ˣ) →* Rˣ :=
+χ.comp (((units.map (zmod.chinese_remainder (coprime.pow_right m hd)).symm.to_monoid_hom).comp (mul_equiv.to_monoid_hom
 (mul_equiv.symm mul_equiv.prod_units))).comp (monoid_hom.prod_map (monoid_hom.id (units (zmod d)))
 (units.map (padic_int.to_zmod_pow m).to_monoid_hom)))
 
 namespace dirichlet_char_extend
 open zmod
 @[continuity]
-lemma continuous : continuous (dir_char_extend m hd χ) :=
+lemma continuous : continuous (dirichlet_char_extend p d R m hd χ) :=
 continuous.comp continuous_of_discrete_topology (continuous.comp (continuous.comp
 (continuous.comp continuous_of_discrete_topology continuous_of_discrete_topology)
 begin
@@ -75,14 +66,6 @@ begin
 end dirichlet_char_extend
 
 variables (p d R)
-/-- Returns ω⁻¹ : ℤ/(d * p^m)ℤ* →* R*. -/
-noncomputable abbreviation teichmuller_character_mod_p_change_level [algebra ℚ_[p] R]
-  [fact (0 < m)] : dirichlet_character R (d * p^m) :=
-dirichlet_character.change_level (dvd_mul_of_dvd_right (dvd_pow_self p (ne_of_gt (fact.out _))) d) 
-(((units.map ((algebra_map ℚ_[p] R).comp
-(padic_int.coe.ring_hom)).to_monoid_hom).comp
-(teichmuller_character_mod_p p) : dirichlet_character R p)⁻¹)
-
 /-- Given a natural number s, defines the monoid homomorphism <a>^s taking a ∈ ℤ/dℤ* × ℤₚ* to
   (a * ω⁻¹ (a.2 (mod p)))^s in R. -/
 noncomputable abbreviation mul_inv_pow_hom [algebra ℚ_[p] R] (s : ℕ) : (zmod d)ˣ × ℤ_[p]ˣ →* R :=
@@ -115,36 +98,25 @@ noncomputable abbreviation mul_inv_pow [normed_algebra ℚ_[p] R] (s : ℕ) :
 continuous_monoid_hom.mk' (mul_inv_pow_hom p d R s) (mul_inv_pow_hom_continuous p d R s)
 
 variables {p d R} (w : continuous_monoid_hom ((zmod d)ˣ × ℤ_[p]ˣ) R)
-/-theorem cont_paLf' [algebra ℚ_[p] R] [fact (0 < m)] : continuous
-((units.coe_hom R).comp (dirichlet_char_extend p d R m hd (χ *
-  (teichmuller_character_mod_p_change_level p d R m))) * w) :=
-continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous m hd _))
+
+theorem cont_paLf : _root_.continuous ((units.coe_hom R).comp (dirichlet_char_extend p d R m hd χ) * w.to_monoid_hom) :=
+continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous p d R m hd _))
   w.continuous_to_fun
+
+open dirichlet_character
+-- `helper_idk` changed to `helper_change_level_conductor`
+lemma helper_change_level_conductor [algebra ℚ_[p] R] [fact(0 < m)] : (change_level (_root_.dvd_lcm_left (d * p^m) p) χ *
+  change_level (_root_.dvd_lcm_right _ _) (teichmuller_character_mod_p' p R)).conductor ∣ d * p^m :=
+(dvd_trans (conductor.dvd_lev _) (by { rw helper_4 m, }))
 
 /-- The p-adic L- function, as defined in Thm 12.2, absorbing the (1 - χ(c)<c>^(-n)) term
   (since it appears as it is in the Iwasawa Main Conjecture). -/
-noncomputable def p_adic_L_function' [normed_algebra ℚ_[p] R] [nontrivial R] [complete_space R]
-  [norm_one_class R] [fact (0 < d)] [fact (0 < m)] : R :=
-(@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure' R hc hc' hd na)
-⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd (χ *
-(teichmuller_character_mod_p_change_level p d R m))) * w.to_monoid_hom, cont_paLf' m hd χ w⟩)
--- technically bernoulli_measure lands in units R, you should not have to use (units.coe_hom R),
--- unless (units R) is not a complete space? -/
-
-theorem cont_paLf [fact (0 < m)] : _root_.continuous
-((units.coe_hom R).comp (dirichlet_char_extend p d R m hd ((χ
---.mul
---((teichmuller_character_mod_p' p R)^n)).change_level (helper_idk p d R m χ n
-))) * w.to_monoid_hom) :=
-continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous m hd _))
-  w.continuous_to_fun
-
 noncomputable def p_adic_L_function [normed_algebra ℚ_[p] R] [nontrivial R] [complete_space R]
-  [norm_one_class R] [fact (0 < d)] [fact (0 < m)] (hχ : d ∣ χ.conductor) : R :=
-(@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure' R hc hc' hd na)
+  [norm_one_class R] [fact (0 < d)] [fact (0 < m)] : R :=
+(@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure R hc hc' hd na)
 ⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd
-((χ.mul ((teichmuller_character_mod_p' p R))).change_level (helper_idk p d R m χ))) *
-w.to_monoid_hom, cont_paLf p d R m hd _ w⟩) -- cont_paLf' m hd χ w
+(change_level (helper_change_level_conductor m χ) (χ.mul ((teichmuller_character_mod_p' p R))))) *
+w.to_monoid_hom, cont_paLf m hd _ w⟩) 
 -- check variable match
 
 instance {n : ℕ} : fact (0 < p^n) := fact_iff.2 (pow_pos (nat.prime.pos (fact.out _)) _)

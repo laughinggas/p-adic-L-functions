@@ -5,6 +5,7 @@ Authors: Ashvni Narayanan
 -/
 import padic_int.properties
 import topology.locally_constant.algebra
+import nat_properties
 
 /-!
 # Induced functions from units
@@ -35,30 +36,7 @@ local attribute [instance] zmod.topological_space
 variables {A : Type*} [has_zero A]
 variables {p : ℕ} [fact p.prime] {d : ℕ} (R : Type*) [normed_comm_ring R] (m : ℕ) {c : ℕ}
 open_locale big_operators
-
 open padic_int zmod nat locally_constant
-
-namespace nat
-lemma ne_zero_of_lt' (b : ℕ) {a : ℕ} [fact (b < a)] : a ≠ 0 := @ne_zero_of_lt _ _ b _ (fact.out _)
-
-lemma one_lt_mul_pow_of_ne_one [fact (0 < d)] {k : ℕ} (h : d * p^k ≠ 1) : 1 < d * p^k :=
-nat.one_lt_iff_ne_zero_and_ne_one.2 ⟨nat.mul_ne_zero (ne_zero_of_lt' 0)
-  (pow_ne_zero _ (nat.prime.ne_zero (fact.out _))), h⟩
-
-lemma mul_pow_eq_one_of_mul_pow_sq_not_one_lt [fact (0 < d)] {n : ℕ} (h : ¬ 1 < d * p^(2 * n)) :
-  d * p^n = 1 :=
-begin
-  rw [not_lt_iff_eq_or_lt, lt_one_iff, nat.mul_eq_zero] at h,
-  cases h,
-  { have h' := h.symm,
-    rw [nat.mul_eq_one_iff, pow_mul', pow_succ, pow_one, nat.mul_eq_one_iff] at h',
-    rw [h'.1, h'.2.1, one_mul], },
-  { have p2 : p^(2 * n) ≠ 0 := pow_ne_zero _ (nat.prime.ne_zero (fact.out _)),
-    simp only [ne_zero_of_lt' 0, p2, or_self] at h,
-    exfalso,
-    exact h, },
-end
-end nat
 
 /-- Given a function from `(zmod d)ˣ × ℤ_[p]ˣ)` to `A`, this gives the induced
   function on `(zmod d) × ℤ_[p]`, which is 0 everywhere else. -/

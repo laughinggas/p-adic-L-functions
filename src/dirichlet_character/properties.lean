@@ -3,6 +3,7 @@ import zmod_properties
 import analysis.normed_space.basic
 import topology.algebra.group
 import topology.continuous_function.compact
+import nat_properties
 
 /-!
 # Dirichlet characters
@@ -18,17 +19,6 @@ p-adic, L-function, Bernoulli measure, Dirichlet character
 
 local attribute [instance] zmod.topological_space
 open_locale big_operators
-
-namespace nat
-lemma coprime_sub {n m : ℕ} (h : n.coprime m) (hn : m ≤ n) : (n - m).coprime n :=
-begin
-  by_contradiction h',
-  obtain ⟨p, h1, h2, h3⟩ := nat.prime.not_coprime_iff_dvd.1 h',
-  have h4 := nat.dvd_sub (nat.sub_le _ _) h3 h2,
-  rw nat.sub_sub_self hn at h4,
-  apply nat.prime.not_coprime_iff_dvd.2 ⟨p, h1, h3, h4⟩ h,
-end
-end nat
 
 namespace dirichlet_character
 lemma continuous {R : Type*} [monoid R] [topological_space R]

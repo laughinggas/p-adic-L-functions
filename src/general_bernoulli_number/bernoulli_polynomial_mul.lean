@@ -1,6 +1,21 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import number_theory.bernoulli_polynomials
 import data.polynomial.algebra_map
+/-!
+# Evaluation of multiplication on Bernoulli polynomials
+This file describes a multiplication theorem for Bernoulli polynomials. 
+This is needed to define properties of generalized Bernoulli numbers. 
 
+## Main definitions
+ * `bernoulli_eval_mul'`
+
+## Tags
+Bernoulli polynomials, Bernoulli numbers
+-/
 noncomputable theory
 open_locale big_operators nat polynomial
 

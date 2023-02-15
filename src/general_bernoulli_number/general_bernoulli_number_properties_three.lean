@@ -68,13 +68,13 @@ lemma asso_dirichlet_character_equiv {S : Type*} [comm_monoid_with_zero S]
   asso_dirichlet_character ψ.asso_primitive_character a = asso_dirichlet_character ψ a :=
 begin
   by_cases h' : is_unit (a : zmod m),
-  { conv_rhs { rw factors_through_spec ψ (factors_through_conductor ψ), },
-    rw change_level_asso_dirichlet_character_eq' _ _ h',
+  { conv_rhs { rw factors_through.spec ψ (conductor.factors_through ψ), },
+    rw change_level.asso_dirichlet_character_eq' _ _ h',
     apply congr,
     { congr, },
     { rw zmod.cast_nat_cast _,
       swap, { refine zmod.char_p _, },
-      { apply conductor_dvd _, }, }, },
+      { apply conductor.dvd_lev _, }, }, },
   { repeat { rw asso_dirichlet_character_eq_zero, },
     { assumption, },
     rw (is_primitive_def _).1 h, apply h', },
@@ -101,7 +101,8 @@ lemma helper_13 [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ 
 begin
   rw [eventually_eq, eventually_at_top],
   refine ⟨m, λ x hx, _⟩,
-  have h1 : lcm (d * p^m) p ∣ d * p^x := (@helper_4 p d _ _ m _).symm ▸ (nat.mul_dvd_mul_iff_left (fact.out _)).2 (pow_dvd_pow _ hx),
+  have h1 : lcm (d * p^m) p ∣ d * p^x,
+  { rw helper_4, refine (nat.mul_dvd_mul_iff_left (fact.out _)).2 (pow_dvd_pow _ hx), }, 
   have poss : 0 < d * p^x := fact.out _,
   have ne_zero : ((d * p^x : ℕ) : ℚ) ≠ 0 := nat.cast_ne_zero.2 (nat.ne_zero_of_lt' 0),
   have coe_sub : (k : ℤ) - 1 = ((k - 1 : ℕ) : ℤ),
@@ -109,12 +110,12 @@ begin
     rw [int.of_nat_sub (le_of_lt hk), int.of_nat_one], },
   have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character x =
     asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)) x :=
-  asso_dirichlet_character_equiv _ _ (is_primitive_mul _ _),
+  asso_dirichlet_character_equiv _ _ (is_primitive.mul _ _),
   have f1 : (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character.conductor =
     (χ.mul (teichmuller_character_mod_p' p R ^ k)).conductor,
   { rw mul_eq_asso_pri_char, },
-  rw general_bernoulli_number.eq_sum_bernoulli_of_conductor_dvd _ k (dvd_trans (conductor_dvd _)
-    (dvd_trans (conductor_dvd _) h1)),
+  rw general_bernoulli_number.eq_sum_bernoulli_of_conductor_dvd _ k (dvd_trans (conductor.dvd_lev _)
+    (dvd_trans (conductor.dvd_lev _) h1)),
   conv_lhs { conv { congr, skip, rw [coe_sub, zpow_coe_nat, ← one_mul
     ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ (k - 1))), ← (algebra_map ℚ R).map_one,
     ←one_div_mul_cancel ne_zero, (algebra_map ℚ R).map_mul, mul_assoc _ _ ((algebra_map ℚ R)
@@ -142,7 +143,7 @@ end
 
 variables (p d R)
 lemma norm_mul_pow_pos' [nontrivial R] [algebra ℚ_[p] R] (x : ℕ) : 0 < ∥((d * p^x : ℕ) : R)∥ :=
-norm_pos_iff.2 (nat.cast_ne_zero.2 (nat.ne_zero_of_lt' 0))
+norm_pos_iff.2 ((@nat.cast_ne_zero _ _ _ (char_zero_of_nontrivial_of_normed_algebra p R) _).2 (nat.ne_zero_of_lt' 0))
 
 lemma norm_le_one' [normed_algebra ℚ_[p] R][norm_one_class R] (n : ℕ) : ∥(n : R)∥ ≤ 1 :=
 begin
@@ -200,4 +201,110 @@ lemma zmod.cast_nat_eq_zero_of_dvd {m : ℕ} {n : ℕ} (h : m ∣ n) : (n : zmod
 begin
   rw [←zmod.cast_nat_cast h, zmod.nat_cast_self, zmod.cast_zero],
   refine zmod.char_p _,
+end
+
+instance zmod.units_fintype (n : ℕ) : fintype (zmod n)ˣ :=
+begin
+  by_cases n = 0,
+  { rw h, refine units_int.fintype, },
+  { haveI : fact (0 < n),
+    { apply fact_iff.2, apply nat.pos_of_ne_zero h, },
+    apply_instance, },
+end
+
+lemma helper_W_4 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {x : ℕ} (y : (zmod (d * p^x))ˣ) : ∥(d : R) * ∑ (x_1 : ℕ) in finset.range (k - 1),
+  (((p ^ x : ℕ) : R) * ↑d) ^ x_1 * ((-1) * ↑((y : zmod (d * p^x)).val)) ^ (k - 1 - (x_1 + 1)) *
+  ↑((k - 1).choose (x_1 + 1))∥ ≤ 1 :=
+begin
+  have h1 : (-1 : R) = ((-1 : ℤ) : R), norm_cast,
+  conv { congr, congr, congr, skip, apply_congr, skip, rw h1, },
+  simp_rw [← int.cast_coe_nat, ← int.cast_mul, ← int.cast_pow, ← int.cast_mul, ← int.cast_sum,
+    ← int.cast_mul],
+  rw ← ring_hom.map_int_cast (algebra_map ℚ_[p] R),
+  rw norm_algebra_map' R,
+  rw ← padic_int.coe_coe_int,
+  apply padic_int.norm_le_one,
+end
+
+lemma sum_even_character' [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  [norm_one_class R]
+ --(n : ℕ) --[fact (0 < n)]
+  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
+  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+  [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) :
+  filter.tendsto (λ n, ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
+  (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^k)))
+  i * i^(k - 1)) ) (@filter.at_top ℕ _) (nhds 0) :=
+begin
+  suffices : filter.tendsto (λ n, (2 : R) * ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
+    (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^k)))
+    i * i^(k - 1)) ) (@filter.at_top ℕ _) (nhds 0),
+  { have h1 : (2 : ℚ_[p]) ≠ 0, { norm_num, },
+    apply tendsto_zero_of_tendsto_const_smul_zero h1,
+    have h2 : (2 : R) = ((2 : ℕ) : R), { rw nat.cast_two, },
+    conv at this { congr, funext, rw [h2, ←map_nat_cast (algebra_map ℚ_[p] R) 2, ←smul_eq_mul,
+      algebra_map_smul, nat.cast_two], },
+    apply this, },
+  { apply (tendsto_congr' _).2,
+    swap 2, { refine λ x : ℕ, ↑(d * p ^ x) * ∑ (y : (zmod (d * p ^ x))ˣ),
+      (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) (-1) *
+      ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+      ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
+      ↑((k - 1).choose (x_1 + 1))) },
+    { conv { congr, funext, rw finset.mul_sum, },
+      rw metric.tendsto_at_top,
+      intros ε hε,
+      have h4 : 0 < ε / 2 / (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound,
+      { apply div_pos (half_pos hε) (bound_pos _), },
+      obtain ⟨z, hz⟩ := padic_int.exists_pow_neg_lt p h4,
+      refine ⟨max z 1, λ x hx, _⟩,
+      rw dist_zero_right,
+      apply lt_of_le_of_lt (na' _ _),
+      have h2 : ε / 2 < ε, linarith,
+      apply lt_of_le_of_lt _ h2,
+      apply cSup_le _ _,
+      { exact set.range_nonempty (λ (i : (zmod (d * p ^ x))ˣ), ∥↑(d * p ^ x) *
+          ((asso_dirichlet_character (mul χ (teichmuller_character_mod_p' p R ^ k)))
+          (-1) * ((asso_dirichlet_character (mul χ
+          (teichmuller_character_mod_p' p R ^ k))) ↑i * ∑ (x_1 : ℕ) in
+          finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑i) ^ (k - 1 - (x_1 + 1)) *
+          ↑((k - 1).choose (x_1 + 1))))∥), },
+      { intros b hb,
+        cases hb with y hy,
+        rw ← hy, simp only, clear hy,
+        conv { congr, congr, congr, skip, rw ← mul_assoc, rw ←monoid_hom.map_mul, rw mul_comm, },
+        rw ← mul_assoc,
+        apply le_trans (norm_mul_le _ _) _,
+        apply le_trans (mul_le_mul le_rfl (le_of_lt (lt_bound _ _)) _ (norm_nonneg _)) _,
+        { apply norm_nonneg _, },
+        rw _root_.coe_coe, rw ← zmod.nat_cast_val,
+        --rw nat.mul_comm d (p^x),
+        rw nat.cast_mul, rw mul_comm ↑d _, rw mul_assoc,
+        apply le_trans (mul_le_mul (norm_mul_le _ _) le_rfl (le_of_lt (bound_pos _)) _) _,
+        { apply mul_nonneg (norm_nonneg _) (norm_nonneg _), },
+        apply le_trans (mul_le_mul (mul_le_mul le_rfl (helper_W_4 y) (norm_nonneg _)
+          (norm_nonneg _)) le_rfl (le_of_lt (bound_pos _)) _) _,
+        { rw mul_one, apply norm_nonneg _, },
+        rw mul_one,
+        rw ← map_nat_cast (algebra_map ℚ_[p] R), rw norm_algebra_map',
+        rw nat.cast_pow, rw norm_pow,
+        rw padic_norm_e.norm_p,
+        apply le_trans (mul_le_mul (le_trans _ (le_of_lt hz)) le_rfl (le_of_lt (bound_pos _))
+          (le_of_lt h4)) _,
+        { rw inv_pow,
+          rw ← zpow_neg_coe_of_pos _,
+          apply zpow_le_of_le _ _,
+          { norm_cast, apply le_of_lt (nat.prime.one_lt _), apply fact_iff.1, apply_instance, },
+          { apply neg_le_neg, norm_cast, apply (max_le_iff.1 hx).1, },
+          { apply nat.succ_le_iff.1 (max_le_iff.1 hx).2, }, },
+        { rw div_mul_cancel _ _,
+          intro h,
+          have := bound_pos (mul χ (teichmuller_character_mod_p' p R ^ k)),
+          rw h at this, simp only [lt_self_iff_false] at this, apply this, }, }, },
+    { simp_rw two_mul,
+      rw eventually_eq,
+      rw eventually_at_top,
+      refine ⟨m, λ x hx, _⟩,
+      conv { congr, --skip, funext,
+        conv { congr, skip, rw sum_eq_neg_sum_add_dvd p d R m χ hχ hp _ (le_of_lt hk) hx, }, },
+      rw neg_one_mul, rw ← add_assoc, ring, }, },
 end
