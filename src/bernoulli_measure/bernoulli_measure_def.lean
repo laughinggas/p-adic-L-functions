@@ -69,7 +69,7 @@ end
 
 open discrete_quotient_of_to_zmod_pow clopen_from
 
-lemma exists_mul_inv_val_eq [fact (0 < d)] (hc' : c.coprime d) (hc : c.coprime p) (k : ℕ) :
+lemma exists_mul_inv_val_eq (hc' : c.coprime d) (hc : c.coprime p) (k : ℕ) :
   ∃ z : ℕ, c * ((c : zmod (d * p^(2 * k)))⁻¹.val) = dite (1 < d * p^(2 * k))
   (λ h, 1 + z * (d * p^(2 * k))) (λ h, 0) :=
 begin
@@ -90,7 +90,7 @@ begin
 end
 .
 open nat
-lemma helper_meas_bernoulli_distribution [fact (0 < d)] {n : ℕ} (a : zmod (d * p^n)) (hc' : c.coprime d)
+lemma helper_meas_bernoulli_distribution {n : ℕ} (a : zmod (d * p^n)) (hc' : c.coprime d)
   (hc : c.coprime p) : ∃ z : ℤ, int.fract ((a.val : ℚ) / (↑d * ↑p ^ n)) -
   ↑c * int.fract (↑((c : zmod (d * p^(2 * n)))⁻¹.val) * (a : ℚ) / (↑d * ↑p ^ n)) = z :=
 begin
@@ -174,3 +174,18 @@ noncomputable def bernoulli_measure [normed_algebra ℚ_[p] R] [norm_one_class R
         norm_zero] at hi',
       rw [←hi'],
       apply mul_nonneg (le_of_lt Kpos) (norm_nonneg _), }, end⟩
+.
+
+lemma integral_loc_const_eval [nontrivial R] [complete_space R] [normed_algebra ℚ_[p] R] [norm_one_class R] 
+  (hc : c.gcd p = 1) (hc' : c.gcd d = 1) (hd : d.gcd p = 1)
+  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f (i.val)∥) 
+  (f : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) :
+  measure.integral (bernoulli_measure R hc hc' hd na) f = (bernoulli_measure R hc hc' hd na).val f :=
+begin
+  delta measure.integral, 
+  simp only [continuous_linear_map.coe_mk', linear_map.coe_mk, subtype.val_eq_coe],
+  convert dense_inducing.extend_eq (measure.dense_ind_inclusion _ _) (measure.integral_cont _) _,
+  apply_instance,
+  apply_instance,
+  apply_instance,
+end

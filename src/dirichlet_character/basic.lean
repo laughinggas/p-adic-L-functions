@@ -338,6 +338,9 @@ lemma asso_primitive_conductor_eq {n : ℕ} (χ : dirichlet_character R n) :
 noncomputable def mul {m : ℕ} (χ₁ : dirichlet_character R n) (χ₂ : dirichlet_character R m) :=
 asso_primitive_character (change_level (dvd_lcm_left n m) χ₁ * change_level (dvd_lcm_right n m) χ₂)
 
+lemma mul_def {n m : ℕ} {χ : dirichlet_character R n} {ψ : dirichlet_character R m} :
+  χ.mul ψ = (change_level _ χ * change_level _ ψ).asso_primitive_character := rfl
+
 namespace is_primitive
 lemma mul {m : ℕ} (ψ : dirichlet_character R m) : (mul χ ψ).is_primitive :=
 asso_primitive_character_is_primitive _

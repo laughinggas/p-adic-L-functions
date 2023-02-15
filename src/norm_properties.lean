@@ -241,3 +241,29 @@ begin
   rw ← padic_int.coe_coe_int,
   apply padic_int.norm_le_one,
 end
+
+variables (p d R)
+lemma norm_pow_lim_eq_zero [normed_algebra ℚ_[p] R] [norm_one_class R] (k : R) {n : ℕ}
+  (hn : 0 < n) : filter.tendsto (λ x : ℕ, (((d * p^x) : ℕ) : R)^n * k) (filter.at_top) (nhds 0) :=
+begin
+  conv { congr, funext, rw mul_comm _ k, skip, skip, congr, rw ←mul_zero k, rw ← zero_pow hn, },
+  apply tendsto.const_mul,
+  apply tendsto.pow,
+  convert @norm_lim_eq_zero p d _ R _ _ _ (1 : R),
+  simp_rw mul_one,
+end
+
+lemma norm_int_eq_padic_int_norm [norm_one_class R] (z : ℤ) : ∥(z : R)∥ = ∥(z : ℤ_[p])∥ :=
+begin
+  rw padic_int.norm_int_cast_eq_padic_norm,
+  rw ← norm_algebra_map' R (z : ℚ_[p]),
+  rw ring_hom.map_int_cast,
+end
+
+lemma norm_prime_lt_one [norm_one_class R] : ∥(p : R)∥ < 1 :=
+begin
+  change ∥((p : ℤ) : R)∥ < 1,
+  rw norm_int_eq_padic_int_norm p R,
+  rw padic_int.norm_lt_one_iff_dvd _,
+  simp,
+end

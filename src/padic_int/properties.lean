@@ -372,7 +372,7 @@ topological_space.is_topological_basis.continuous discrete_topology.is_topologic
   convert is_open_span p 1,
   rw [pow_one, maximal_ideal_eq_span_p], end)
 
-lemma is_unit_padic_of_is_unit_zmod {x : ℕ} (hx : is_unit (x : zmod p)) (h : x.coprime p) :
+lemma is_unit_padic_of_is_unit_zmod {x : ℕ} (h : x.coprime p) :
   is_unit (x : ℤ_[p]) :=
 begin
   rw is_unit_iff,
@@ -416,5 +416,35 @@ lemma proj_lim_preimage_units_clopen {n : ℕ} (a : (zmod (p^n))ˣ) :
   is_clopen ((units.map (@padic_int.to_zmod_pow p _ n).to_monoid_hom) ⁻¹' {a}) :=
 ⟨continuous_def.mp (continuous_units n) {a} (is_open_discrete _),
   continuous_iff_is_closed.mp (continuous_units n) {a} (is_closed_discrete {a})⟩
+
+variable (p)
+lemma is_unit_to_zmod_pow_of_is_unit {n : ℕ} (hn : 1 < n) (x : ℤ_[p])
+  (hx : is_unit (to_zmod_pow n x)) : is_unit x :=
+begin
+  rw padic_int.is_unit_iff,
+  by_contra h,
+  have hx' := lt_of_le_of_ne (padic_int.norm_le_one _) h,
+  rw padic_int.norm_lt_one_iff_dvd at hx',
+  cases hx' with y hy,
+  rw hy at hx,
+  rw ring_hom.map_mul at hx,
+  rw is_unit.mul_iff at hx,
+  simp only [map_nat_cast] at hx,
+  have : ¬ is_unit (p : zmod (p^n)),
+  { intro h,
+    set q : (zmod (p^n))ˣ := is_unit.unit h,
+    have := zmod.val_coe_unit_coprime q,
+    rw is_unit.unit_spec at this,
+    rw nat.coprime_pow_right_iff (lt_trans zero_lt_one hn) at this,
+    rw zmod.val_cast_of_lt _ at this,
+    simp only [nat.coprime_self] at this,
+    apply @nat.prime.ne_one p (fact.out _),
+    rw this,
+    conv { congr, rw ← pow_one p, },
+    rw pow_lt_pow_iff _, apply hn,
+    apply nat.prime.one_lt (fact.out _),
+    apply_instance, },
+  apply this, apply hx.1,
+end
 
 end padic_int

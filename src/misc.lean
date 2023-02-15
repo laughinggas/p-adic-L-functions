@@ -120,6 +120,27 @@ begin
   { norm_cast, apply hn, },
 end
 
+-- generalize
+lemma inv_smul_self' [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] {n : ℕ} (hn : n ≠ 0) :
+  (n : ℚ_[p])⁻¹ • (n : R) = 1 :=
+begin
+  have : (n : ℚ_[p]) = (algebra_map ℚ ℚ_[p]) n, simp only [map_nat_cast],
+  rw this, rw ←ring_hom.map_inv,
+  rw ←helper_14, rw inv_smul_self, apply hn,
+end
+
+lemma int.exists_int_eq_fract_mul_self (a : ℕ) {b : ℕ} (hb : b ≠ 0) : ∃ z : ℤ, (z : ℚ) = int.fract (a / b : ℚ) * b :=
+begin
+  obtain ⟨z, hz⟩ := int.fract_mul_nat (a / b : ℚ) b,
+  refine ⟨z, _⟩,
+  have : (b : ℚ) ≠ 0,
+  { norm_cast, apply hb, },
+  simp_rw [div_mul_cancel (a : ℚ) this] at hz,
+  rw ← hz,
+  rw sub_eq_self,
+  change int.fract ((a : ℤ) : ℚ) = 0, rw int.fract_coe,
+end
+
 variable (R)
 lemma one_div_smul_self [algebra ℚ R] {n : ℕ} (hn : n ≠ 0) :
   (1 / (n : ℚ)) • (n : R) = 1 :=

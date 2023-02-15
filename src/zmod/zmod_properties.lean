@@ -29,7 +29,7 @@ def zmod.topological_space (d : ℕ) : topological_space (zmod d) := ⊥
 
 local attribute [instance] zmod.topological_space
 
-variables {p : ℕ} [fact p.prime] {d : ℕ}
+variables {p : ℕ} {d : ℕ}
 open zmod
 
 lemma proj_fst' {m n : ℕ} (h : m.coprime n) (a : zmod m) (b : zmod n) :
@@ -48,7 +48,7 @@ end
 
 open padic_int
 
-lemma proj_fst {n : ℕ} (x : zmod d × ℤ_[p]) (cop : d.coprime (p^n)) :
+lemma proj_fst [fact p.prime] {n : ℕ} (x : zmod d × ℤ_[p]) (cop : d.coprime (p^n)) :
   ↑((zmod.chinese_remainder cop).symm (x.fst, (to_zmod_pow n) x.snd)) = x.fst := proj_fst' _ _ _
 
 lemma proj_snd' {m n : ℕ} (h : m.coprime n) (a : zmod m) (b : zmod n) :
@@ -65,7 +65,7 @@ begin
   refine ring_hom.ext_zmod _ _,
 end
 
-lemma proj_snd {n : ℕ} (x : zmod d × ℤ_[p]) (cop : d.coprime (p^n)) :
+lemma proj_snd [fact p.prime] {n : ℕ} (x : zmod d × ℤ_[p]) (cop : d.coprime (p^n)) :
   ↑((zmod.chinese_remainder cop).symm (x.fst, (to_zmod_pow n) x.snd)) =
   (to_zmod_pow n) x.snd :=
 proj_snd' _ _ _
@@ -78,7 +78,7 @@ begin
     zmod.cast_hom_apply, prod.fst_zmod_cast],
 end
 
-lemma inv_fst [fact (0 < d)] {n : ℕ} (x : zmod (d * p^n)) (cop : d.coprime (p^n)) :
+lemma inv_fst {n : ℕ} (x : zmod (d * p^n)) (cop : d.coprime (p^n)) :
   (((zmod.chinese_remainder cop).to_equiv) x).fst = (x : zmod d) := inv_fst' x _
 
 lemma inv_snd' {m n : ℕ} (x : zmod (m * n)) (cop : m.coprime n) :
@@ -161,14 +161,14 @@ lemma zero_le_div_and_div_lt_one {n : ℕ} [fact (0 < n)] (x : zmod n) :
   begin refine cast_pos.2 (fact_iff.1 infer_instance), end).2 -- this does not work?
     (cast_lt.2 (zmod.val_lt _))⟩
 
-lemma coe_add_eq_pos' {n : ℕ} [fact (0 < n)] {a b : zmod n} (h : (a + b : ℤ) < n) :
+lemma coe_add_eq_pos' {n : ℕ} {a b : zmod n} (h : (a + b : ℤ) < n) :
   (((a + b) : zmod n) : ℤ) = (a : ℤ) + (b : ℤ) :=
 begin
   rw [zmod.coe_add_eq_ite, if_neg],
   push_neg, assumption,
 end
 
-lemma val_add_fin_mul_lt [fact (0 < d)] {m : ℕ} (a : zmod (d * p^m)) (x : fin p) :
+lemma val_add_fin_mul_lt [fact p.prime] [fact (0 < d)] {m : ℕ} (a : zmod (d * p^m)) (x : fin p) :
   a.val + ↑x * (d * p ^ m) < d * p ^ m.succ :=
 begin
   have h : ↑x * (d * p ^ m) ≤ (d * p ^ m) * (p - 1),
@@ -199,7 +199,7 @@ zmod.val_cast_of_lt (lt_of_lt_of_le (fin.is_lt y) h)
 lemma fin_prime_coe_coe (m : ℕ) (y : fin p) :
   (y : zmod (d * p^m.succ)) = ((y : ℕ) : zmod (d * p^m.succ)) := coe_coe y
 
-lemma fin_prime_mul_prime_pow_lt_mul_prime_pow_succ [fact (0 < d)] (y : fin p) (m : ℕ) :
+lemma fin_prime_mul_prime_pow_lt_mul_prime_pow_succ [fact p.prime] [fact (0 < d)] (y : fin p) (m : ℕ) :
   (y : ℕ) * (d * p ^ m) < d * p ^ m.succ :=
 begin
   rw [pow_succ', ←mul_assoc d _ _, mul_comm (y : ℕ) _],
@@ -326,7 +326,7 @@ end
 lemma cast_hom_self {n : ℕ} : zmod.cast_hom dvd_rfl (zmod n) = ring_hom.id (zmod n) := by simp
 
 @[simp]
-lemma zmod.cast_hom_comp {n m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) : 
+lemma cast_hom_comp {n m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) : 
   (zmod.cast_hom hm (zmod n)).comp (zmod.cast_hom hd (zmod m)) = zmod.cast_hom (dvd_trans hm hd) (zmod n) := 
 ring_hom.ext_zmod _ _
 
@@ -363,18 +363,105 @@ begin
   { apply zmod.val_le_self, },
 end
 
-lemma zmod.cast_nat_eq_zero_of_dvd {m : ℕ} {n : ℕ} (h : m ∣ n) : (n : zmod m) = 0 :=
+lemma cast_nat_eq_zero_of_dvd {m : ℕ} {n : ℕ} (h : m ∣ n) : (n : zmod m) = 0 :=
 begin
   rw [←zmod.cast_nat_cast h, zmod.nat_cast_self, zmod.cast_zero],
   refine zmod.char_p _,
 end
 
-instance zmod.units_fintype (n : ℕ) : fintype (zmod n)ˣ :=
+instance units_fintype (n : ℕ) : fintype (zmod n)ˣ :=
 begin
   by_cases n = 0,
   { rw h, refine units_int.fintype, },
   { haveI : fact (0 < n),
     { apply fact_iff.2, apply nat.pos_of_ne_zero h, },
     apply_instance, },
+end
+
+variable (p)
+lemma proj_fst'' {n : ℕ} (hd : d.coprime p) (a : (zmod d)ˣ × (zmod (p^n))ˣ) :
+((zmod.chinese_remainder (nat.coprime.pow_right n hd)).inv_fun (↑(a.fst), ↑(a.snd)) : zmod d) = a.fst :=
+by { rw ring_equiv.inv_fun_eq_symm, apply proj_fst', }
+
+lemma proj_snd'' [fact p.prime] {n : ℕ} (hd : d.coprime p) (a : (zmod d)ˣ × (zmod (p^n))ˣ) :
+(padic_int.to_zmod_pow n) ((zmod.chinese_remainder (nat.coprime.pow_right n hd)).inv_fun (↑(a.fst), ↑(a.snd)) : ℤ_[p]) = a.snd :=
+begin
+  rw ← zmod.int_cast_cast,
+  rw ring_hom.map_int_cast,
+  rw zmod.int_cast_cast, rw ring_equiv.inv_fun_eq_symm, convert proj_snd' _ _ _,
+end
+
+lemma is_unit_of_is_unit_mul {m n : ℕ} (x : ℕ) (hx : is_unit (x : zmod (m * n))) :
+  is_unit (x : zmod m) :=
+begin
+  rw is_unit_iff_dvd_one at *,
+  cases hx with k hk,
+  refine ⟨(k : zmod m), _⟩,
+  rw ← zmod.cast_nat_cast (dvd_mul_right m n),
+  rw ← zmod.cast_mul (dvd_mul_right m n),
+  rw ← hk, rw zmod.cast_one (dvd_mul_right m n),
+  any_goals { refine zmod.char_p _, },
+end
+
+lemma is_unit_of_is_unit_mul' {m n : ℕ} (x : ℕ) (hx : is_unit (x : zmod (m * n))) :
+  is_unit (x : zmod n) :=
+begin
+  rw mul_comm at hx,
+  apply is_unit_of_is_unit_mul x hx,
+end
+
+open zmod
+lemma is_unit_of_is_unit_mul_iff {m n : ℕ} (x : ℕ) : is_unit (x : zmod (m * n)) ↔
+  is_unit (x : zmod m) ∧ is_unit (x : zmod n) :=
+  ⟨λ h, ⟨is_unit_of_is_unit_mul x h, is_unit_of_is_unit_mul' x h⟩,
+  begin
+    rintros ⟨h1, h2⟩,
+    apply units.is_unit (zmod.unit_of_coprime x (nat.coprime.mul_right
+      (coprime_of_is_unit h1) (coprime_of_is_unit h2))),
+  end ⟩ -- solve_by_elim gives a funny error
+
+lemma not_is_unit_of_not_is_unit_mul {m n x : ℕ} (hx : ¬ is_unit (x : zmod (m * n))) :
+  ¬ is_unit (x : zmod m) ∨ ¬ is_unit (x : zmod n) :=
+begin
+  rw ← not_and_distrib,
+  contrapose hx,
+  rw not_not at *,
+  rw is_unit_of_is_unit_mul_iff, refine ⟨hx.1, hx.2⟩,
+end
+
+lemma not_is_unit_of_not_is_unit_mul' {m n : ℕ} [fact (0 < m * n)] (x : zmod (m * n))
+  (hx : ¬ is_unit x) : ¬ is_unit (x : zmod m) ∨ ¬ is_unit (x : zmod n) :=
+begin
+  rw ← zmod.cast_id _ x at hx,
+  rw ← zmod.nat_cast_val at hx,
+  rw ← zmod.nat_cast_val, rw ← zmod.nat_cast_val,
+  apply not_is_unit_of_not_is_unit_mul hx,
+end
+
+lemma is_unit_val_of_unit {n k : ℕ} [fact (0 < n)] (hk : k ∣ n) (u : (zmod n)ˣ) :
+  is_unit ((u : zmod n).val : zmod k) :=
+by { apply zmod.is_unit_of_is_coprime_dvd hk, --rw nat.is_coprime_iff_coprime,
+  apply coprime_of_is_unit,
+  rw zmod.nat_cast_val, rw zmod.cast_id, apply units.is_unit _, }
+
+lemma unit_ne_zero {n : ℕ} [fact (1 < n)] (a : (zmod n)ˣ) : (a : zmod n).val ≠ 0 :=
+begin
+  intro h,
+  rw zmod.val_eq_zero at h,
+  have : is_unit (0 : zmod n),
+  { rw ← h, simp, },
+  rw is_unit_zero_iff at this,
+  apply @zero_ne_one _ _ _,
+  rw this,
+  apply zmod.nontrivial,
+end
+
+lemma inv_is_unit_of_is_unit {n : ℕ} {u : zmod n} (h : is_unit u) : is_unit u⁻¹ :=
+begin
+  have h' := is_unit_iff_dvd_one.1 h,
+  cases h' with k h',
+  rw is_unit_iff_dvd_one,
+  refine ⟨u, _⟩,
+  rw zmod.inv_mul_of_unit u h,
 end
 end zmod

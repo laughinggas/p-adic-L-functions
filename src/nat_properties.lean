@@ -118,6 +118,47 @@ begin
 end
 
 lemma pred_add_one_eq_self {n : ℕ} (hn : 0 < n) : n.pred + 1 = n := nat.succ_pred_eq_of_pos hn
+
+lemma prime_dvd_of_not_coprime (p : ℕ) [fact p.prime] {n : ℕ} (h : ¬ n.coprime p) : p ∣ n :=
+begin
+  have := @nat.coprime_or_dvd_of_prime p (fact.out _) n,
+  cases this,
+  { exfalso, apply h this.symm, },
+  { assumption, },
+end
+
+lemma eq_zero_of_not_pos {n : ℕ} (hn : ¬ 0 < n) : n = 0 := by linarith
+
+lemma coprime_of_dvd_of_coprime {m n x y : ℕ} (h : m.coprime n) (hx : x ∣ m) (hy : y ∣ n) :
+  x.coprime y :=
+begin
+  have : x.coprime n,
+  { rw ← nat.is_coprime_iff_coprime,
+    apply is_coprime.of_coprime_of_dvd_left (nat.is_coprime_iff_coprime.2 h) _,
+    norm_cast, assumption, },
+  rw ← nat.is_coprime_iff_coprime,
+--  rw is_coprime_comm,
+  apply is_coprime.of_coprime_of_dvd_right (nat.is_coprime_iff_coprime.2 this) _,
+  norm_cast, assumption,
+end
+
+lemma sub_ne_zero {n k : ℕ} (h : k < n) : n - k ≠ 0 :=
+begin
+  intro h',
+  rw nat.sub_eq_zero_iff_le at h',
+  rw ← not_lt at h',
+  apply h' h,
+end
+
+lemma coprime.sub_self {m n : ℕ} (h : m.coprime n) (h' : m ≤ n) : (n - m).coprime n :=
+begin
+  contrapose h,
+  rw nat.prime.not_coprime_iff_dvd at *,
+  rcases h with ⟨p, hp, h1, h2⟩,
+  refine ⟨p, hp, _, h2⟩,
+  rw ← nat.sub_sub_self h',
+  apply nat.dvd_sub (nat.sub_le _ _) h2 h1,
+end
 end nat
 
 lemma helper_4 {x y : ℕ} (m : ℕ) [fact (0 < m)] : gcd_monoid.lcm (x * y^m) y = x * y^m :=
