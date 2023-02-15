@@ -161,7 +161,7 @@ begin
 end
 
 --`asso_dirichlet_character_equiv` changed to `asso_dirichlet_character.asso_primitive_character`
-lemma asso_primitive_character {S : Type*} [comm_monoid_with_zero S]
+lemma asso_primitive_character {S : Type*} [comm_monoid_with_zero S] {m : ℕ}
   (ψ : dirichlet_character S m) (h : is_primitive ψ) (a : ℕ) :
   asso_dirichlet_character ψ.asso_primitive_character a = asso_dirichlet_character ψ a :=
 begin

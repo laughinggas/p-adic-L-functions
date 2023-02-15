@@ -247,3 +247,19 @@ begin
   rw norm_coe_nat_eq_norm_ring_hom_map p,
   apply padic_int.norm_le_one,
 end
+
+variables {p d R}
+lemma helper_W_4 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {x : ℕ} (y : (zmod (d * p^x))ˣ) : 
+  ∥(d : R) * ∑ (x_1 : ℕ) in finset.range (k - 1),
+  (((p ^ x : ℕ) : R) * ↑d) ^ x_1 * ((-1) * ↑((y : zmod (d * p^x)).val)) ^ (k - 1 - (x_1 + 1)) *
+  ↑((k - 1).choose (x_1 + 1))∥ ≤ 1 :=
+begin
+  have h1 : (-1 : R) = ((-1 : ℤ) : R), norm_cast,
+  conv { congr, congr, congr, skip, apply_congr, skip, rw h1, },
+  simp_rw [← int.cast_coe_nat, ← int.cast_mul, ← int.cast_pow, ← int.cast_mul, ← int.cast_sum,
+    ← int.cast_mul],
+  rw ← ring_hom.map_int_cast (algebra_map ℚ_[p] R),
+  rw norm_algebra_map' R,
+  rw ← padic_int.coe_coe_int,
+  apply padic_int.norm_le_one,
+end

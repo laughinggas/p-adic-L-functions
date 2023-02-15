@@ -1,4 +1,4 @@
-import general_bernoulli_number.general_bernoulli_number_properties_three
+import general_bernoulli_number.tendsto_zero_of_sum_even_char
 import p_adic_L_function_def
 import topology.algebra.nonarchimedean.bases
 
