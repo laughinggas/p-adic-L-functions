@@ -6,29 +6,13 @@ Authors: Ashvni Narayanan
 import dirichlet_character.teichmuller_character
 
 /-!
-# General Bernoulli Numbers
-
-This file defines the generalized Bernoulli numbers related to Dirichlet characters
-and gives its properties.
-
-## Main definitions
- * `general_bernoulli_number`
-
-## Implementation notes
-TODO (optional)
-
-## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
-
-## Tags
-p-adic, L-function, Bernoulli measure, Dirichlet character
+# Properties of norm
+This file describes some properties of norm that are used in proofs of theorems such as `sum_even_character_tendsto_zero`. 
 -/
 open_locale big_operators
 open dirichlet_character zmod
-variables {p d m : nat} [fact (nat.prime p)] [fact (0 < d)] {R : Type*} [normed_comm_ring R]
-  (χ : dirichlet_character R (d * p^m))
+variables (p : nat) {d m : nat} [fact (nat.prime p)] (R : Type*) [normed_comm_ring R] (χ : dirichlet_character R (d * p^m))
 
-variables (p R χ)
 lemma norm_int_le_one [normed_algebra ℚ_[p] R] [norm_one_class R] (z : ℤ) : ∥(z : R)∥ ≤ 1 :=
 begin
   rw [← ring_hom.map_int_cast (algebra_map ℚ_[p] R), ←padic_int.coe_coe_int,
@@ -104,8 +88,8 @@ begin
 end
 
 -- `sub_add_norm_nonneg` replaced with `helper_8`
-lemma helper_8 {k : ℕ} (hk : 1 < k) (y : ℕ) :
-  0 ≤ (k : ℝ) - 1 + ∥((d * p ^ y : ℕ) : R) ^ (k - 2) * (1 + 1)∥ :=
+lemma helper_8 {k : ℕ} (hk : 1 < k) (n : ℕ) :
+  0 ≤ (k : ℝ) - 1 + ∥(n : R) ^ (k - 2) * (1 + 1)∥ :=
 begin
   apply add_nonneg _ (norm_nonneg _),
   rw [le_sub_iff_add_le, zero_add],
@@ -128,8 +112,7 @@ begin
     any_goals { apply_instance, }, --why is this a problem?
     rw sub_add_cancel, },
   { rw one_mul,
-    convert helper_8 hk y,
-    any_goals { apply_instance, }, },
+    convert helper_8 hk _, },
   { linarith, },
 end
 
@@ -239,17 +222,12 @@ begin
 end
 
 variables (p d R)
-lemma norm_mul_pow_pos [nontrivial R] [algebra ℚ_[p] R] (x : ℕ) : 0 < ∥((d * p^x : ℕ) : R)∥ :=
+lemma norm_mul_pow_pos [fact (0 < d)] [nontrivial R] [algebra ℚ_[p] R] (x : ℕ) : 0 < ∥((d * p^x : ℕ) : R)∥ :=
 norm_pos_iff.2 ((@nat.cast_ne_zero _ _ _ (char_zero_of_nontrivial_of_normed_algebra p R) _).2 (nat.ne_zero_of_lt' 0))
 
-lemma norm_le_one [normed_algebra ℚ_[p] R][norm_one_class R] (n : ℕ) : ∥(n : R)∥ ≤ 1 :=
-begin
-  rw norm_coe_nat_eq_norm_ring_hom_map p,
-  apply padic_int.norm_le_one,
-end
-
 variables {p d R}
-lemma helper_W_4 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {x : ℕ} (y : (zmod (d * p^x))ˣ) : 
+--`helper_W_4` replaced with `helper_17`
+lemma helper_17 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {x : ℕ} (y : (zmod (d * p^x))ˣ) : 
   ∥(d : R) * ∑ (x_1 : ℕ) in finset.range (k - 1),
   (((p ^ x : ℕ) : R) * ↑d) ^ x_1 * ((-1) * ↑((y : zmod (d * p^x)).val)) ^ (k - 1 - (x_1 + 1)) *
   ↑((k - 1).choose (x_1 + 1))∥ ≤ 1 :=

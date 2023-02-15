@@ -3,27 +3,25 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import general_bernoulli_number.norm_properties
+import norm_properties
 import nat_properties
-import general_bernoulli_number.misc
-
+import misc
+import number_theory.bernoulli_polynomials
 /-!
-# General Bernoulli Numbers
+# Theorems regarding sums of even characters
+This file describes theorems of convergence properties of certain sums twisted 
+by even Dirichlet characters. These are proved separately over `zmod (d * p^n)` 
+and `(zmod (d * p^n))ˣ`, for `d` coprime to the prime `p`. 
 
-This file defines the generalized Bernoulli numbers related to Dirichlet characters
-and gives its properties.
-
-## Main definitions
- * `general_bernoulli_number`
-
-## Implementation notes
-TODO (optional)
+## Main theorems
+ * `sum_even_character_tendsto_zero`
+ * `sum_even_character_tendsto_zero_of_units`
 
 ## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
+Introduction to Cyclotomic Fields, Washington (Chapter 7, Lemma 7.11)
 
 ## Tags
-p-adic, L-function, Bernoulli measure, Dirichlet character
+p-adic, L-function, Dirichlet character
 -/
 -- `mul_eval_coprime` replaced with `mul_eval_of_coprime`
 -- `lev_mul_dvd` replaced with `lev_mul_dvd_lcm`
@@ -34,9 +32,8 @@ p-adic, L-function, Bernoulli measure, Dirichlet character
 
 open dirichlet_character zmod
 variables {p d m : nat} [fact (nat.prime p)] [fact (0 < d)] {R : Type*} [normed_comm_ring R]
-  (χ : dirichlet_character R (d * p^m))
+  {χ : dirichlet_character R (d * p^m)}
 open_locale big_operators
-variables {χ}
 --set_option pp.proofs true
 open dirichlet_character teichmuller_character
 
@@ -116,7 +113,6 @@ begin
   { apply le_trans (norm_sub_le _ _) _,
     conv { congr, congr, congr, apply_congr, skip, rw [←mul_assoc, ←monoid_hom.map_mul], },
     apply le_trans (add_le_add (norm_sum_le_smul hk na) (le_refl _)) _,
-    { apply_instance, },
     rw ← mul_assoc,
     refine le_trans (add_le_add (le_refl _) (norm_mul_le _ _)) (le_trans (add_le_add (le_refl _)
       ((mul_le_mul_left _).2 (le_of_lt (dirichlet_character.lt_bound _ _)))) _),
@@ -131,7 +127,7 @@ begin
 end
 
 -- `sum_even_character` replaced with `sum_even_character_tendsto_zero`
-lemma sum_even_character [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
+lemma sum_even_character_tendsto_zero [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
   [norm_one_class R] [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   filter.tendsto (λ n : nat, ∑ i in finset.range (d * p^n), ((asso_dirichlet_character
@@ -154,14 +150,12 @@ begin
     le_rfl (le_of_lt (dirichlet_character.bound_pos _)) (norm_nonneg _)) (mul_nonneg (norm_nonneg _)
     (le_of_lt (dirichlet_character.bound_pos _))) (mul_nonneg (norm_nonneg _) (helper_8 hk _))) hz,
 -- refine is so much more powerful than apply, it captures instances of explicit vars very well, but not implicit
-  { have : ((2 : ℕ) : R) = 1 + 1,
-    { simp only [nat.cast_bit0, nat.cast_one], refl, },
-    simp_rw [←this, ←nat.cast_pow, norm_mul_nat_eq_mul_norm p R], -- better than repeat
-    apply mul_le_mul _ le_rfl (norm_nonneg _) (norm_nonneg _),
-    simp_rw [nat.cast_pow, norm_pow_nat_eq_pow_norm p R],
-    refine pow_le_pow_of_le_left (norm_nonneg _)
-      (norm_mul_prime_pow_le_of_ge p R (le_trans (le_max_left _ _) hx)) _, },
-  any_goals { apply_instance, },
+  have : ((2 : ℕ) : R) = 1 + 1,
+  { simp only [nat.cast_bit0, nat.cast_one], refl, },
+  simp_rw [←this, ←nat.cast_pow, norm_mul_nat_eq_mul_norm p R], -- better than repeat
+  apply mul_le_mul _ le_rfl (norm_nonneg _) (norm_nonneg _),
+  simp_rw [nat.cast_pow, norm_pow_nat_eq_pow_norm p R],
+  refine pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_prime_pow_le_of_ge p R (le_trans (le_max_left _ _) hx)) _,
 end
 -- btw, this still works without the na condition, since in the end, we divide by d*p^x
 
@@ -203,67 +197,6 @@ begin
 end
 
 variables {p d R}
--- note that this works for any dirichlet character which is primitive and whose conductor divides d * p^m
-lemma helper_13 [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < m)]
-  {k : ℕ} (hk : 1 < k) : (λ (n : ℕ), (1 / ((d * p ^ n : ℕ) : ℚ_[p])) •
-  ∑ (i : ℕ) in finset.range (d * p ^ n), (asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p' p R^k))) ↑i * ↑i ^ k - general_bernoulli_number
-  (χ.mul (teichmuller_character_mod_p' p R ^ k)) k) =ᶠ[filter.at_top]
-  λ (x : ℕ), -((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ) *
-  ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ x) * ↑(1 + x_1) ^ (k - 1)) +
-  (1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ) *
-  (↑(d * p ^ x) * ∑ (x_2 : ℕ) in finset.range (k - 1),
-  (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
-  (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
-  (1 / (d * p ^ x : ℕ) : ℚ_[p]) •
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character)
-  ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) *
-  (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k))))) :=
-begin
-  rw [eventually_eq, eventually_at_top],
-  refine ⟨m, λ x hx, _⟩,
-  have h1 : lcm (d * p^m) p ∣ d * p^x,
-  { rw helper_4, refine (nat.mul_dvd_mul_iff_left (fact.out _)).2 (pow_dvd_pow _ hx), }, 
-  have poss : 0 < d * p^x := fact.out _,
-  have ne_zero : ((d * p^x : ℕ) : ℚ) ≠ 0 := nat.cast_ne_zero.2 (nat.ne_zero_of_lt' 0),
-  have coe_sub : (k : ℤ) - 1 = ((k - 1 : ℕ) : ℤ),
-  { change int.of_nat k - 1 = int.of_nat (k - 1),
-    rw [int.of_nat_sub (le_of_lt hk), int.of_nat_one], },
-  have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character x =
-    asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)) x :=
-  asso_dirichlet_character.asso_primitive_character _ (is_primitive.mul _ _),
-  have f1 : (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character.conductor =
-    (χ.mul (teichmuller_character_mod_p' p R ^ k)).conductor,
-  { rw asso_primitive_conductor_eq, },
-  rw general_bernoulli_number.eq_sum_bernoulli_of_conductor_dvd _ k (dvd_trans (conductor.dvd_lev _)
-    (dvd_trans (conductor.dvd_lev _) h1)),
-  conv_lhs { conv { congr, skip, rw [coe_sub, zpow_coe_nat, ← one_mul
-    ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ (k - 1))), ← (algebra_map ℚ R).map_one,
-    ←one_div_mul_cancel ne_zero, (algebra_map ℚ R).map_mul, mul_assoc _ _ ((algebra_map ℚ R)
-    (((d * p ^ x : ℕ) : ℚ) ^ (k - 1))), ←(algebra_map ℚ R).map_mul, ←pow_succ,
-    nat.sub_add_cancel (le_of_lt hk), mul_assoc, algebra.algebra_map_eq_smul_one, smul_mul_assoc,
-    one_mul, finset.mul_sum],
-    congr, skip, apply_congr, skip,
-    rw [mul_comm ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ k)) _, mul_assoc,
-      mul_comm _ ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ k))], },
-    rw finset.range_eq_Ico,
-    conv { rw [finset.sum_eq_sum_Ico_succ_bot poss, nat.cast_zero, nat.cast_zero,
-      zero_pow (pos_of_gt hk), mul_zero, zero_add, ←nat.sub_add_cancel (nat.succ_le_iff.2 poss),
-      ←finset.sum_Ico_add, finset.sum_Ico_succ_top (nat.zero_le _) _, ←finset.range_eq_Ico,
-      ←nat.pred_eq_sub_one, nat.succ_pred_eq_of_pos poss], }, },
-  conv { congr, conv { congr, skip, congr, skip, congr, conv { apply_congr, skip,
-    rw [nat.pred_add_one_eq_self poss, helper_12 p d R hk x _, add_assoc, mul_add, this _,
-      add_comm _ 1],
-    conv { congr, congr, rw [nat.succ_eq_add_one, add_comm x_1 1], }, }, }, },
-  rw [finset.sum_add_distrib, div_smul_eq_div_smul p R, ←smul_sub, ←sub_sub, ←sub_sub, sub_self,
-    zero_sub, ←neg_add', smul_neg, nat.pred_add_one_eq_self poss, ←smul_add, ←smul_add],
-  congr,
-  simp_rw mul_add, rw finset.sum_add_distrib,
-  congr,
-end
-
 variables {p d R}
 lemma helper_15 [nontrivial R] [algebra ℚ R] [normed_algebra ℚ_[p] R] [norm_one_class R]
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
@@ -293,10 +226,127 @@ begin
   simp only,
 end
 
-lemma sum_even_character' [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  [norm_one_class R]
+--`helper_W_3` replaced with `helper_16`
+lemma helper_16 [normed_algebra ℚ_[p] R] [fact (0 < m)] (k : ℕ) {x : ℕ} (hx : m ≤ x) :
+  ∑ (i : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character (χ.mul
+    (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1) =
+  ∑ (i : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character (χ.mul
+    (teichmuller_character_mod_p' p R ^ k))) ↑(d * p ^ x - (i : zmod (d * p^x)).val) *
+    ↑(d * p ^ x - (i : zmod (d * p^x)).val) ^ (k - 1) :=
+begin
+  symmetry,
+  apply finset.sum_bij,
+  swap 5, { intros a ha, apply zmod.unit_of_coprime (d * p^x - (a : zmod (d * p^x)).val),
+    apply nat.coprime_sub (coprime_of_is_unit _).symm (le_of_lt (zmod.val_lt _)),
+    { rw zmod.nat_cast_val, rw zmod.cast_id,
+      apply units.is_unit _, },
+    { apply_instance, }, },
+  { intros a ha, apply finset.mem_univ _, },
+  { intros a ha,
+    simp only,
+    have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^m,
+    { --apply dvd_trans _ (mul_dvd_mul_left d (pow_dvd_pow p hk)),
+      apply dvd_trans (conductor.dvd_lev _) _, --(dvd_trans (conductor_dvd _) _),
+      rw helper_4, },
+    have lev_mul_dvd' : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^x,
+    { apply dvd_trans lev_mul_dvd _,
+      --convert dvd_trans (dirichlet_character.lev_mul_dvd _ _) _, rw [lcm_eq_nat_lcm, nat.lcm_self],
+      apply mul_dvd_mul_left d, apply pow_dvd_pow p hx, },
+    symmetry,
+    rw _root_.coe_coe, rw _root_.coe_coe, rw zmod.coe_unit_of_coprime,
+    rw zmod.cast_nat_cast lev_mul_dvd' (d * p ^ x - (a : zmod (d * p^x)).val),
+    swap 2, { delta lev, refine zmod.char_p _, }, congr' 2,
+    rw ← zmod.nat_cast_val (d * p ^ x - (a : zmod (d * p^x)).val : ℕ), congr,
+    apply zmod.val_cast_of_lt, apply nat.sub_lt _ _,
+    { refine fact_iff.1 _, apply_instance, },
+    { apply lt_of_le_of_ne,
+      { apply nat.zero_le _, },
+      { apply ne.symm, simp only [ne.def, zmod.val_eq_zero],
+        apply is_unit.ne_zero (units.is_unit _),
+        apply zmod.nontrivial _,
+        apply fact_iff.2 _, apply nat.one_lt_mul_pow_of_ne_one, intro h,
+        rw nat.mul_eq_one_iff at h,
+        rw pow_eq_one_iff (ne_zero_of_lt (lt_of_le_of_lt' hx (fact.out _))) at h,
+        apply nat.prime.ne_one (fact.out _) h.2,
+        swap 3, { exact 0, },
+        any_goals { apply_instance, }, }, },
+    { apply_instance, }, },
+  { intros a b ha hb, simp only, intro h,
+    rw units.ext_iff at h, rw zmod.coe_unit_of_coprime at h, rw zmod.coe_unit_of_coprime at h,
+    rw nat.cast_sub (le_of_lt (@zmod.val_lt (d * p^x) _ _)) at h,
+    rw nat.cast_sub (le_of_lt (@zmod.val_lt (d * p^x) _ _)) at h,
+    rw zmod.nat_cast_self at h, rw zero_sub at h, rw zero_sub at h, rw eq_neg_iff_eq_neg at h,
+    rw neg_neg at h, rw zmod.nat_cast_val at h, rw zmod.cast_id at h,
+    rw zmod.nat_cast_val at h, rw zmod.cast_id at h, rw ← units.ext_iff at h,
+    rw h, },
+  { intros b hb,
+    refine ⟨_, finset.mem_univ _, _⟩,
+    { apply zmod.unit_of_coprime (d * p^x - (b : zmod (d * p^x)).val),
+      apply nat.coprime_sub (coprime_of_is_unit _).symm (le_of_lt (zmod.val_lt _)),
+      { rw zmod.nat_cast_val, rw zmod.cast_id,
+        apply units.is_unit _, },
+      { apply_instance, }, },
+    simp only, rw units.ext_iff, rw zmod.coe_unit_of_coprime, rw zmod.coe_unit_of_coprime,
+    rw nat.cast_sub (le_of_lt (@zmod.val_lt (d * p^x) _ _)),
+    rw nat.cast_sub (le_of_lt (@zmod.val_lt (d * p^x) _ _)),
+    rw zmod.nat_cast_val, rw zmod.cast_id, rw zmod.nat_cast_val, rw zmod.cast_id,
+    rw sub_sub_cancel, },
+end
+
+--`sum_eq_neg_sum_add_dvd'` replaced with `sum_eq_neg_sum_add_dvd_of_units`
+lemma sum_eq_neg_sum_add_dvd_of_units (hχ : χ.is_even) [normed_algebra ℚ_[p] R] [nontrivial R]
+  [no_zero_divisors R] [fact (0 < m)] (hp : 2 < p) (k : ℕ) (hk : 1 ≤ k) {x : ℕ} (hx : m ≤ x) :
+  ∑ (i : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character (χ.mul
+  (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1) =
+  -1 * ∑ (y : (zmod (d * p ^ x))ˣ),
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+  ↑y ^ (k - 1) + ↑(d * p ^ x) * ∑ (y : (zmod (d * p ^ x))ˣ),
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) (-1) *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+  ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
+  ↑((k - 1).choose (x_1 + 1))) :=
+begin
+  have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^m,
+  { --apply dvd_trans _ (mul_dvd_mul_left d (pow_dvd_pow p hk)),
+    apply dvd_trans (conductor.dvd_lev _) _, --(dvd_trans (conductor_dvd _) _),
+    rw helper_4, },
+  refine eq.trans (helper_16 k hx) _,
+  conv_lhs { apply_congr, skip, rw nat.cast_sub (le_of_lt (@zmod.val_lt (d * p^x) _ _)),
+    rw asso_dirichlet_character.eval_mul_sub' _ (dvd_trans lev_mul_dvd
+      (mul_dvd_mul dvd_rfl (pow_dvd_pow _ hx))),
+    conv { congr, skip, rw [nat.cast_sub (le_of_lt (@zmod.val_lt (d * p^x) _ _)), sub_eq_add_neg,
+    add_pow, finset.sum_range_succ', add_comm, pow_zero, one_mul, nat.sub_zero,
+    nat.choose_zero_right, nat.cast_one, mul_one, neg_eq_neg_one_mul, mul_pow],
+    congr, skip, apply_congr, skip, rw pow_succ, rw mul_assoc ↑(d * p^x) _,
+    rw mul_assoc ↑(d * p^x) _, },
+    rw [←finset.mul_sum, mul_add, mul_mul_mul_comm, mul_mul_mul_comm _ _ ↑(d * p^x) _,
+      mul_comm _ ↑(d * p^x), mul_assoc ↑(d * p^x) _ _], },
+  rw finset.sum_add_distrib, rw ←finset.mul_sum, rw ←finset.mul_sum,
+  simp_rw [← zmod.cast_nat_cast lev_mul_dvd, zmod.nat_cast_val, ← _root_.coe_coe],
+  apply congr_arg2 _ (congr_arg2 _ _ rfl) rfl,
+--  apply congr_arg2 _ (congr_arg2 _ _ rfl) rfl,
+  rw ←int.cast_one, rw ←int.cast_neg,
+  --rw ←zmod.neg_one_eq_sub _,
+  rw mul_eval_neg_one _ _,
+--  rw zmod.neg_one_eq_sub _,
+  --rw int.cast_neg, rw int.cast_one,
+  rw asso_even_dirichlet_character_eval_neg_one _ hχ, rw one_mul,
+  rw asso_dirichlet_character_eq_char' _ (is_unit.neg (is_unit_one)),
+  convert_to (-1 : R)^k * (-1)^(k -1) = -1,
+  { apply congr_arg2 _ _ rfl,
+    rw change_level_pow_eval_neg_one' k hp,
+    simp only [units.coe_neg_one, units.coe_pow],
+    any_goals { apply_instance, }, },
+  { rw ←pow_add, rw nat.add_sub_pred, rw odd.neg_one_pow _, rw nat.odd_iff,
+    rw nat.two_mul_sub_one_mod_two_eq_one hk, },
+  { apply_instance, },
+  { apply fact_iff.2 (nat.prime.pos _), refine fact_iff.1 _, apply_instance, },
+end
+
+--`sum_even_character'` replaced with `sum_even_character_tendsto_zero_of_units`
+lemma sum_even_character_tendsto_zero_of_units [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  [norm_one_class R]
  --(n : ℕ) --[fact (0 < n)]
   (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
   [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) :
   filter.tendsto (λ n, ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
   (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^k)))
@@ -348,7 +398,7 @@ begin
         rw nat.cast_mul, rw mul_comm ↑d _, rw mul_assoc,
         apply le_trans (mul_le_mul (norm_mul_le _ _) le_rfl (le_of_lt (bound_pos _)) _) _,
         { apply mul_nonneg (norm_nonneg _) (norm_nonneg _), },
-        apply le_trans (mul_le_mul (mul_le_mul le_rfl (helper_W_4 y) (norm_nonneg _)
+        refine le_trans (mul_le_mul (mul_le_mul le_rfl (helper_17 y) (norm_nonneg _)
           (norm_nonneg _)) le_rfl (le_of_lt (bound_pos _)) _) _,
         { rw mul_one, apply norm_nonneg _, },
         rw mul_one,
@@ -372,6 +422,6 @@ begin
       rw eventually_at_top,
       refine ⟨m, λ x hx, _⟩,
       conv { congr, --skip, funext,
-        conv { congr, skip, rw sum_eq_neg_sum_add_dvd p d R m χ hχ hp _ (le_of_lt hk) hx, }, },
+        conv { congr, skip, rw sum_eq_neg_sum_add_dvd_of_units hχ hp _ (le_of_lt hk) hx, }, },
       rw neg_one_mul, rw ← add_assoc, ring, }, },
 end

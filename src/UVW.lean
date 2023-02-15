@@ -1,4 +1,4 @@
-import general_bernoulli_number.tendsto_zero_of_sum_even_char
+import tendsto_zero_of_sum_even_char
 import p_adic_L_function_def
 import topology.algebra.nonarchimedean.bases
 
@@ -16,8 +16,69 @@ variables (p : ℕ) [fact (nat.prime p)] (d : ℕ) (R : Type*) [normed_comm_ring
   ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
 (w : continuous_monoid_hom (units (zmod d) × units ℤ_[p]) R)
 
-variable [fact (0 < d)]
-variables [complete_space R] [char_zero R]
+variables {p d R}
+-- note that this works for any dirichlet character which is primitive and whose conductor divides d * p^m
+lemma helper_13 [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < m)]
+  {k : ℕ} (hk : 1 < k) : (λ (n : ℕ), (1 / ((d * p ^ n : ℕ) : ℚ_[p])) •
+  ∑ (i : ℕ) in finset.range (d * p ^ n), (asso_dirichlet_character (χ.mul
+  (teichmuller_character_mod_p' p R^k))) ↑i * ↑i ^ k - general_bernoulli_number
+  (χ.mul (teichmuller_character_mod_p' p R ^ k)) k) =ᶠ[filter.at_top]
+  λ (x : ℕ), -((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ) *
+  ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ x) * ↑(1 + x_1) ^ (k - 1)) +
+  (1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ) *
+  (↑(d * p ^ x) * ∑ (x_2 : ℕ) in finset.range (k - 1),
+  (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
+  (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
+  (1 / (d * p ^ x : ℕ) : ℚ_[p]) •
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character)
+  ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) *
+  (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k))))) :=
+begin
+  rw [eventually_eq, eventually_at_top],
+  refine ⟨m, λ x hx, _⟩,
+  have h1 : lcm (d * p^m) p ∣ d * p^x,
+  { rw helper_4, refine (nat.mul_dvd_mul_iff_left (fact.out _)).2 (pow_dvd_pow _ hx), }, 
+  have poss : 0 < d * p^x := fact.out _,
+  have ne_zero : ((d * p^x : ℕ) : ℚ) ≠ 0 := nat.cast_ne_zero.2 (nat.ne_zero_of_lt' 0),
+  have coe_sub : (k : ℤ) - 1 = ((k - 1 : ℕ) : ℤ),
+  { change int.of_nat k - 1 = int.of_nat (k - 1),
+    rw [int.of_nat_sub (le_of_lt hk), int.of_nat_one], },
+  have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character x =
+    asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)) x :=
+  asso_dirichlet_character.asso_primitive_character _ (is_primitive.mul _ _),
+  have f1 : (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character.conductor =
+    (χ.mul (teichmuller_character_mod_p' p R ^ k)).conductor,
+  { rw asso_primitive_conductor_eq, },
+  rw general_bernoulli_number.eq_sum_bernoulli_of_conductor_dvd _ k (dvd_trans (conductor.dvd_lev _)
+    (dvd_trans (conductor.dvd_lev _) h1)),
+  conv_lhs { conv { congr, skip, rw [coe_sub, zpow_coe_nat, ← one_mul
+    ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ (k - 1))), ← (algebra_map ℚ R).map_one,
+    ←one_div_mul_cancel ne_zero, (algebra_map ℚ R).map_mul, mul_assoc _ _ ((algebra_map ℚ R)
+    (((d * p ^ x : ℕ) : ℚ) ^ (k - 1))), ←(algebra_map ℚ R).map_mul, ←pow_succ,
+    nat.sub_add_cancel (le_of_lt hk), mul_assoc, algebra.algebra_map_eq_smul_one, smul_mul_assoc,
+    one_mul, finset.mul_sum],
+    congr, skip, apply_congr, skip,
+    rw [mul_comm ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ k)) _, mul_assoc,
+      mul_comm _ ((algebra_map ℚ R) (((d * p ^ x : ℕ) : ℚ) ^ k))], },
+    rw finset.range_eq_Ico,
+    conv { rw [finset.sum_eq_sum_Ico_succ_bot poss, nat.cast_zero, nat.cast_zero,
+      zero_pow (pos_of_gt hk), mul_zero, zero_add, ←nat.sub_add_cancel (nat.succ_le_iff.2 poss),
+      ←finset.sum_Ico_add, finset.sum_Ico_succ_top (nat.zero_le _) _, ←finset.range_eq_Ico,
+      ←nat.pred_eq_sub_one, nat.succ_pred_eq_of_pos poss], }, },
+  conv { congr, conv { congr, skip, congr, skip, congr, conv { apply_congr, skip,
+    rw [nat.pred_add_one_eq_self poss, helper_12 p d R hk x _, add_assoc, mul_add, this _,
+      add_comm _ 1],
+    conv { congr, congr, rw [nat.succ_eq_add_one, add_comm x_1 1], }, }, }, },
+  rw [finset.sum_add_distrib, div_smul_eq_div_smul p R, ←smul_sub, ←sub_sub, ←sub_sub, sub_self,
+    zero_sub, ←neg_add', smul_neg, nat.pred_add_one_eq_self poss, ←smul_add, ←smul_add],
+  congr,
+  simp_rw mul_add, rw finset.sum_add_distrib,
+  congr,
+end
+
+variables (p d R) [fact (0 < d)] [complete_space R] [char_zero R]
 
 /-- Gives the equivalence (ℤ/(m * n)ℤ)ˣ ≃* (ℤ/mℤ)ˣ × (ℤ/nℤ)ˣ -/
 -- It would be nice to use units.homeomorph.prod_units instead, however no way to identify it as a mul_equiv.

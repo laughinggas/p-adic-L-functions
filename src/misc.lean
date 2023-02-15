@@ -3,30 +3,18 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import general_bernoulli_number.norm_properties
+import norm_properties
 import nat_properties
 
 /-!
-# General Bernoulli Numbers
-
-This file defines the generalized Bernoulli numbers related to Dirichlet characters
-and gives its properties.
-
-## Main definitions
- * `general_bernoulli_number`
-
-## Implementation notes
-TODO (optional)
-
-## References
-Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
-
-## Tags
-p-adic, L-function, Bernoulli measure, Dirichlet character
+# Miscellaneous assisting lemmas
+This file describes several miscellaneous lemmas that are written specifically 
+for proving the main results of this project. It includes specific properties of 
+`smul` which are used frequently.
 -/
 
 open dirichlet_character zmod
-variables {p d m : nat} [fact (nat.prime p)] [fact (0 < d)] {R : Type*} [normed_comm_ring R]
+variables {p d m : nat} [fact (nat.prime p)] {R : Type*} [normed_comm_ring R]
   (χ : dirichlet_character R (d * p^m))
 
 -- replaced `neg_one_pow_eq_neg_one` with `neg_one_pow_prime_sub_two_eq_neg_one`
