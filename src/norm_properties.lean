@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
 import dirichlet_character.teichmuller_character
-
 /-!
 # Properties of norm
 This file describes some properties of norm that are used in proofs of theorems such as `sum_even_character_tendsto_zero`. 
@@ -243,6 +242,7 @@ begin
 end
 
 variables (p d R)
+open filter
 lemma norm_pow_lim_eq_zero [normed_algebra ℚ_[p] R] [norm_one_class R] (k : R) {n : ℕ}
   (hn : 0 < n) : filter.tendsto (λ x : ℕ, (((d * p^x) : ℕ) : R)^n * k) (filter.at_top) (nhds 0) :=
 begin
@@ -253,14 +253,14 @@ begin
   simp_rw mul_one,
 end
 
-lemma norm_int_eq_padic_int_norm [norm_one_class R] (z : ℤ) : ∥(z : R)∥ = ∥(z : ℤ_[p])∥ :=
+lemma norm_int_eq_padic_int_norm [normed_algebra ℚ_[p] R] [norm_one_class R] (z : ℤ) : ∥(z : R)∥ = ∥(z : ℤ_[p])∥ :=
 begin
   rw padic_int.norm_int_cast_eq_padic_norm,
   rw ← norm_algebra_map' R (z : ℚ_[p]),
   rw ring_hom.map_int_cast,
 end
 
-lemma norm_prime_lt_one [norm_one_class R] : ∥(p : R)∥ < 1 :=
+lemma norm_prime_lt_one [normed_algebra ℚ_[p] R] [norm_one_class R] : ∥(p : R)∥ < 1 :=
 begin
   change ∥((p : ℤ) : R)∥ < 1,
   rw norm_int_eq_padic_int_norm p R,

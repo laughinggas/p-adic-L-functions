@@ -1,8 +1,4 @@
-import tendsto_zero_of_sum_even_char
-import p_adic_L_function_def
-import general_bernoulli_number.basic
-import topology.algebra.nonarchimedean.bases
-import chinese_remainder_units
+import general_bernoulli_number.lim_even_character_of_units
 
 open_locale big_operators
 local attribute [instance] zmod.topological_space
@@ -19,16 +15,6 @@ variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} [fact (0 < d)] {R : Type*} [n
 (w : continuous_monoid_hom (units (zmod d) × units ℤ_[p]) R)
 variables (p d R) [complete_space R] [char_zero R]
 open continuous_map
-
-private lemma preimage_gen {α β γ : Type*} [topological_space α] [topological_space β]
-  [topological_space γ] (g : C(β, γ)) {s : set α} (hs : is_compact s) {u : set γ} (hu : is_open u) :
-  continuous_map.comp g ⁻¹' (compact_open.gen s u) = compact_open.gen s (g ⁻¹' u) :=
-begin
-  ext ⟨f, _⟩,
-  change g ∘ f '' s ⊆ u ↔ f '' s ⊆ g ⁻¹' u,
-  rw [set.image_comp, set.image_subset_iff]
-end
-
 variables [normed_algebra ℚ_[p] R] [fact (0 < m)]
 open clopen_from
 variable [fact (0 < d)]
@@ -41,24 +27,6 @@ lemma ring_equiv.eq_inv_fun_iff {α β : Type*} [semiring α] [semiring β] (h :
 open eventually_constant_seq clopen_from
 open dirichlet_character
 variable (hd)
-
-lemma helper_U_3 (x : ℕ) : finset.range (d * p^x) = set.finite.to_finset (set.finite_of_finite_inter
-  (finset.range (d * p^x)) ({x | ¬ x.coprime d})) ∪ ((set.finite.to_finset (set.finite_of_finite_inter
-  (finset.range (d * p^x)) ({x | ¬ x.coprime p}))) ∪ set.finite.to_finset (set.finite_of_finite_inter (finset.range (d * p^x))
-  ({x | x.coprime d} ∩ {x | x.coprime p}))) :=
-begin
-  ext,
-  simp only [finset.mem_range, finset.mem_union, set.finite.mem_to_finset, set.mem_inter_eq,
-    finset.mem_coe, set.mem_set_of_eq],
-  split, -- better way to do this?
-  { intro h,
-    by_cases h' : a.coprime d ∧ a.coprime p, { right, right, refine ⟨h, h'⟩, },
-    { rw not_and_distrib at h', cases h',
-      { left, refine ⟨h, h'⟩, },
-      { right, left, refine ⟨h, h'⟩, }, }, },
-  { intro h, cases h, apply h.1,
-    cases h, apply h.1, apply h.1, },
-end
 
 open zmod
 variable (c)
@@ -186,7 +154,8 @@ begin
   apply_instance,
 end
 
-lemma helper_299 {n : ℕ} (hn : 1 < n) (hd : d.coprime p) (hc' : c.coprime d) (hc : c.coprime p) :
+-- `helper_299` replaced with `helper_19`
+lemma helper_19 {n : ℕ} (hn : 1 < n) (hd : d.coprime p) (hc' : c.coprime d) (hc : c.coprime p) :
   c.coprime (χ.mul (teichmuller_character_mod_p' p R ^ n)).lev :=
 begin
   obtain ⟨x, y, hx, hy, h'⟩ := exists_mul_of_dvd' p d R m χ n hd,
@@ -197,10 +166,11 @@ begin
     nat.coprime_of_dvd_of_coprime (nat.coprime.pow_right _ hc) dvd_rfl hy⟩),
 end
 
-lemma helper_300 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p)
+-- `helper_300` replaced with `helper_20`
+lemma helper_20 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p)
   (hc' : c.coprime d) (hc : c.coprime p) (n : ℕ) (hn : 1 < n) : (λ k : ℕ,
   (V_def p d R m χ c n k) - (((χ.mul (teichmuller_character_mod_p' p R ^ n))
-  (zmod.unit_of_coprime c (helper_299 p d R m χ c hn hd hc' hc))) *
+  (zmod.unit_of_coprime c (helper_19 p d R m χ c hn hd hc' hc))) *
   (c : R)^n * (U_def p d R m χ n k) + (V_h_def p d R m χ c n k))) =ᶠ[@at_top ℕ _]
   (λ k : ℕ, (∑ (x : (zmod (d * p ^ k))ˣ), (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p' p R ^ n))
@@ -277,7 +247,8 @@ begin
 end
 .
 
-lemma helps (f : Π (n : ℕ), (zmod (d * p^n))ˣ → R)
+--`helps` replaced with `norm_sum_le_of_norm_le_forall`
+lemma norm_sum_le_of_norm_le_forall (f : Π (n : ℕ), (zmod (d * p^n))ˣ → R)
   (na : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥) (k : ℕ → ℝ)
   (h : ∀ (n : ℕ) (i : (zmod (d * p^n))ˣ), ∥f n i∥ ≤ k n) (n : ℕ) :
   ∥∑ i : (zmod (d * p^n))ˣ, f n i∥ ≤ k n :=
@@ -393,7 +364,7 @@ begin
       rw coe_coe,
       any_goals { rw (is_primitive_def _).1 (is_primitive.mul _ _), refine zmod.char_p _, },
       any_goals { apply nat.coprime.mul_right hc' (nat.coprime.pow_right _ hc), },
-      { apply (zmod.unit_of_coprime c (helper_299 p d R m χ c hn hd hc' hc)).is_unit, },
+      { apply (zmod.unit_of_coprime c (helper_19 p d R m χ c hn hd hc' hc)).is_unit, },
       { rw (is_primitive_def _).1 (is_primitive.mul _ _), },
       { refine zmod.char_p _, }, },
     { rw ring_hom.map_mul, rw int.fract_eq_self.2 _, rw mul_div_cancel' _,
@@ -431,7 +402,7 @@ lemma V_h1 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p)
   (n : ℕ) (hn : 1 < n) :
   filter.tendsto (λ (x : ℕ), V_def p d R m χ c n x -
   (↑((χ.mul (teichmuller_character_mod_p' p R ^ n)) (zmod.unit_of_coprime c
-  (helper_299 p d R m χ c hn hd hc' hc))) *
+  (helper_19 p d R m χ c hn hd hc' hc))) *
   ↑c ^ n * U_def p d R m χ n x + V_h_def p d R m χ c n x)) filter.at_top (nhds 0) :=
 begin
   have mul_ne_zero' : ∀ n : ℕ, d * p^n ≠ 0,
@@ -440,7 +411,7 @@ begin
   { --apply dvd_trans _ (mul_dvd_mul_left d (pow_dvd_pow p hk)),
     apply dvd_trans (conductor.dvd_lev _) (dvd_trans (conductor.dvd_lev _) _),
     rw helper_4, },
-  rw filter.tendsto_congr' (helper_300 p d R m χ c hd hc' hc n hn),
+  rw filter.tendsto_congr' (helper_20 p d R m χ c hd hc' hc n hn),
   conv { congr, skip, skip, congr, rw ← add_zero (0 : R), rw ← add_zero ((0 : R) + 0), },
   apply tendsto.add, apply tendsto.add,
   { convert tendsto.congr' (helper_301 p d R m χ c hd hc' hc n hn).symm _,
@@ -478,7 +449,7 @@ begin
     rw [zero_mul] at h1,
     apply squeeze_zero_norm _ h1,
     simp only [sub_zero], intro z,
-    convert helps p d R _ na _ _ z,
+    convert norm_sum_le_of_norm_le_forall p d R _ na _ _ z,
     intros e x,
     simp_rw [two_mul e, pow_add, ← mul_assoc d (p^e) (p^e), nat.cast_mul (d * p^e) (p^e),
       ← mul_assoc _ (↑(d * p ^ e)) _, nat.cast_pow p e, mul_comm _ (↑p^e)],
@@ -570,7 +541,7 @@ begin
       { rw coe_coe, },
       any_goals { refine zmod.char_p _, },
       any_goals { apply nat.coprime.mul_right hc' (nat.coprime.pow_right _ hc), },
-      { apply (zmod.unit_of_coprime c (helper_299 p d R m χ c hn hd hc' hc)).is_unit, },
+      { apply (zmod.unit_of_coprime c (helper_19 p d R m χ c hn hd hc' hc)).is_unit, },
       { rw (is_primitive_def _).1 (is_primitive.mul _ _), refine zmod.char_p _, }, },
     { --rw ring_hom.map_mul,
       rw nat.cast_mul d _, rw nat.cast_pow p _,
@@ -684,7 +655,7 @@ begin
     rw [zero_mul] at hbp,
     apply squeeze_zero_norm _ hbp,
     simp only [sub_zero], intro z,
-    convert helps p d R _ na' _ _ z,
+    convert norm_sum_le_of_norm_le_forall p d R _ na' _ _ z,
     intros e x,
     rw [← ring_hom.map_add, nat.cast_mul, ← neg_mul, ← mul_div, ← mul_assoc, ← mul_div,
       nat.cast_mul _ (p ^ (2 * e)), nat.cast_pow p, ← add_mul],
@@ -794,7 +765,7 @@ lemma V_h3 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.copri
   (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hχ' : d ∣ χ.conductor) :
   filter.tendsto (λ (x : ℕ), ↑((χ.mul (teichmuller_character_mod_p' p R ^ n))
-  (zmod.unit_of_coprime c (helper_299 p d R m χ c hn hd hc' hc))) *
+  (zmod.unit_of_coprime c (helper_19 p d R m χ c hn hd hc' hc))) *
   ↑c ^ n * U_def p d R m χ n x + V_h_def p d R m χ c n x) filter.at_top (nhds (((algebra_map ℚ R)
   ((↑n - 1) / ↑n) + (algebra_map ℚ R) (1 / ↑n) *
   (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑c *
@@ -804,7 +775,7 @@ lemma V_h3 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.copri
 begin
   conv { congr, skip, skip, congr,
     rw ← add_sub_cancel' (↑((χ.mul (teichmuller_character_mod_p' p R ^ n))
-      (zmod.unit_of_coprime c (helper_299 p d R m χ c hn hd hc' hc))) *
+      (zmod.unit_of_coprime c (helper_19 p d R m χ c hn hd hc' hc))) *
       ↑c ^ n * ((1 - asso_dirichlet_character  (dirichlet_character.mul χ
       ((teichmuller_character_mod_p' p R)^n)) (p) * p^(n - 1) ) *
       (general_bernoulli_number (dirichlet_character.mul χ
@@ -851,7 +822,7 @@ lemma V [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.coprime 
 begin
   conv { congr, funext, rw ← sub_add_cancel (V_def p d R m χ c n j)
   (((((χ.mul (teichmuller_character_mod_p' p R^n)) (zmod.unit_of_coprime c
-  (helper_299 p d R m χ c hn hd hc' hc))
+  (helper_19 p d R m χ c hn hd hc' hc))
    * (c : R)^n)) * U_def p d R m χ n j : R) + (V_h_def p d R m χ c n j)), skip, skip,
   rw ← zero_add (((algebra_map ℚ R) ((↑n - 1) / ↑n) + (algebra_map ℚ R) (1 / ↑n) *
     (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑c *

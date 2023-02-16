@@ -1,6 +1,9 @@
 import tendsto_zero_of_sum_even_char
---import p_adic_L_function_def
+import p_adic_L_function_def
 import general_bernoulli_number.basic
+import zmod.chinese_remainder_units
+--import bernoulli_measure.ind_fn
+import topology.algebra.continuous_monoid_hom
 --import topology.algebra.nonarchimedean.bases
 --import chinese_remainder_units
 
@@ -87,8 +90,7 @@ open clopen_from
 -- `helper_289` replaced with `helper_18`
 lemma helper_18 {n : ℕ} (hn : 1 < n) (a : (zmod d)ˣ × (zmod (p^n))ˣ) :
   loc_const_ind_fn (_root_.char_fn R (clopen_from.is_clopen_units a)) =
-  _root_.char_fn R (@clopen_from.is_clopen p _ d n (↑(((units.chinese_remainder
-  (nat.coprime.pow_right n hd)).symm) a))) :=
+  _root_.char_fn R (@clopen_from.is_clopen p _ d n (↑(((units.chinese_remainder (nat.coprime.pow_right n hd)).symm) a))) :=
 begin
   ext,
   rw loc_const_ind_fn, rw ← locally_constant.to_fun_eq_coe,

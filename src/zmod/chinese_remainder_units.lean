@@ -1,4 +1,4 @@
-import zmod_properties
+import zmod.properties
 import dirichlet_character.properties
 
 lemma prod.eq_fst_snd {α β : Type*} (a : α × β) : a = (a.fst, a.snd) := by refine prod.ext rfl rfl

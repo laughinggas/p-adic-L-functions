@@ -120,15 +120,6 @@ begin
   { norm_cast, apply hn, },
 end
 
--- generalize
-lemma inv_smul_self' [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] {n : ℕ} (hn : n ≠ 0) :
-  (n : ℚ_[p])⁻¹ • (n : R) = 1 :=
-begin
-  have : (n : ℚ_[p]) = (algebra_map ℚ ℚ_[p]) n, simp only [map_nat_cast],
-  rw this, rw ←ring_hom.map_inv,
-  rw ←helper_14, rw inv_smul_self, apply hn,
-end
-
 lemma int.exists_int_eq_fract_mul_self (a : ℕ) {b : ℕ} (hb : b ≠ 0) : ∃ z : ℤ, (z : ℚ) = int.fract (a / b : ℚ) * b :=
 begin
   obtain ⟨z, hz⟩ := int.fract_mul_nat (a / b : ℚ) b,
@@ -158,6 +149,15 @@ end
 
 lemma helper_14 [algebra ℚ R] [algebra ℚ_[p] R] [is_scalar_tower ℚ ℚ_[p] R] (a : ℚ) (r : R) :
   a • r = (algebra_map ℚ ℚ_[p]) a • r := by { simp }
+
+-- generalize
+lemma inv_smul_self' [algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] {n : ℕ} (hn : n ≠ 0) :
+  (n : ℚ_[p])⁻¹ • (n : R) = 1 :=
+begin
+  have : (n : ℚ_[p]) = (algebra_map ℚ ℚ_[p]) n, simp only [map_nat_cast],
+  rw this, rw ←ring_hom.map_inv,
+  rw ←helper_14, rw inv_smul_self, apply hn,
+end
 
 open filter
 variables (p d R)

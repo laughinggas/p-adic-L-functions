@@ -1,4 +1,5 @@
 import general_bernoulli_number.lim_even_character
+import dirichlet_character.dvd_conductor_mul
 
 open_locale big_operators
 local attribute [instance] zmod.topological_space
@@ -182,6 +183,7 @@ begin
   apply tendsto.comp h1 h2,
 end
 
+open zmod
 lemma helper_U_2 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (n : ℕ)
   (hd : d.coprime p) (hχ : d ∣ χ.conductor) :
   tendsto (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
@@ -200,7 +202,7 @@ begin
     set.mem_set_of_eq] at hy,
   cases hy with h1 h2,
   rw asso_dirichlet_character_eq_zero,
-  contrapose h2, rw not_not at *, apply coprime_of_is_unit,
+  contrapose h2, rw not_not at *, apply zmod.coprime_of_is_unit,
   obtain ⟨k, hk⟩ := dvd_mul_of_dvd_conductor p d R m χ n hd hχ,
   rw (is_primitive_def _).1 (is_primitive.mul _ _) at hk,
   rw hk at h2,
@@ -226,6 +228,24 @@ begin
   rw (is_primitive_def _).1 (is_primitive.mul _ _) at hk,
   rw hk at p2,
   apply is_unit_of_is_unit_mul y p2,
+end
+
+lemma helper_U_3 (x : ℕ) : finset.range (d * p^x) = set.finite.to_finset (set.finite_of_finite_inter
+  (finset.range (d * p^x)) ({x | ¬ x.coprime d})) ∪ ((set.finite.to_finset (set.finite_of_finite_inter
+  (finset.range (d * p^x)) ({x | ¬ x.coprime p}))) ∪ set.finite.to_finset (set.finite_of_finite_inter (finset.range (d * p^x))
+  ({x | x.coprime d} ∩ {x | x.coprime p}))) :=
+begin
+  ext,
+  simp only [finset.mem_range, finset.mem_union, set.finite.mem_to_finset, set.mem_inter_eq,
+    finset.mem_coe, set.mem_set_of_eq],
+  split, -- better way to do this?
+  { intro h,
+    by_cases h' : a.coprime d ∧ a.coprime p, { right, right, refine ⟨h, h'⟩, },
+    { rw not_and_distrib at h', cases h',
+      { left, refine ⟨h, h'⟩, },
+      { right, left, refine ⟨h, h'⟩, }, }, },
+  { intro h, cases h, apply h.1,
+    cases h, apply h.1, apply h.1, },
 end
 
 open zmod

@@ -283,14 +283,14 @@ The last lemma is particularly useful. it shows that sequences that are the same
 elements have the same limit. Given \lean{f₁ f₂ :ℕ → R}, \lean{f₁ =ᶠ[at\_top] f₂ ↔ ∃ (a : ℕ), ∀ (b : ℕ), b ≥ a, f₁ b = f₂ b}. 
 
 \subsection{Modular arithmetic and $\mathbb{Z}_p$}
-Some fundamental objects with which we shall work throughout are the finite spaces $\mathbb{Z}/n \mathbb{Z}$. Given $n \in \mathbb{N}$, 
+Some fundamental objects with which we shall work throughout are the finite spaces $\mathbb{Z}/n \mathbb{Z}$. Note that proving properties for \lean{zmod n} 
+is equivalent to proving them for any finite abelian group. Given $n \in \mathbb{N}$, 
 $\mathbb{Z}/n \mathbb{Z}$ is the same as \lean{fin n}, the set of natural numbers upto $n$. This has a natural group structure, and is given the discrete topology, 
 making it a topological group. Some of the maps used constantly include \lean{val:zmod n → ℕ}, which takes any element to its smallest nonnegative reprentative less than \lean{n}; 
 and \lean{cast\_hom:zmod n → R}, a coercion to a ring, obtained by composing the canonical coercion with \lean{val}. If \lean{R} has characteristic 
 dividing \lean{n}, the map is a ring homomorphism. Given coprime natural numbers $m$ and $n$, an important equivalence is : 
 \lean{chinese\_remainder:zmod (m * n) ≃+* zmod m × zmod n}. About 30 additional lemmas were required, which have been put in a separate file, 
 \href[]{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/zmod_properties.lean}{\lean{zmod\_properties.lean}}. 
-Note : proving stuff for zmod n also proves them for any finite abelian group.
 %%The \textit{$p$-adic valuation} is a function $\nu_p : \mathbb{Z} \xrightarrow[]{} \mathbb{R}$, such that
 %%$\nu_p (p^k) = k$, and for $gcd(a,p) = 1$, $\nu_p (a) = 0$. By convention,$\nu_p (0) = \infty$, however, in Lean, \lean{valuation 0 = 0 }.
 We assume $p$ is a prime and $d$ is a positive natural with 
@@ -313,7 +313,7 @@ Moreover, lots of facts regarding the clopen basis given above have been utilize
 \subsection{Dirichlet characters and the Teichmüller character}
 An important task was to formalise Dirichlet characters, an integral part of the definition of the $p$-adic $L$-function. 
 Dirichlet characters are often not found to be defined in this technical manner. Another addition is the definition of 
-Dirichlet characters of level and conducor 0. The words character and Dirichlet character are used interchangeably. 
+Dirichlet characters of level and conductor 0. The words character and Dirichlet character are used interchangeably. 
 
 The Dirichlet characters are usually defined as group homomorphisms from $\mathbb{Z}/n \mathbb{Z}^{\times}$ to $\mathbb{C}^{\times}$ for some natural number $n$. 
 We can then assign levels to Dirichlet characters and relate Dirichlet characters of different levels, constructing a "compatible" system of 
@@ -331,9 +331,7 @@ is a vital definition.
 \begin{lstlisting}
 noncomputable abbreviation asso_dirichlet_character {R : Type*} [monoid_with_zero R] {n : ℕ} 
 (χ : dirichlet_character R n) : zmod n →* R :=
-{ to_fun := function.extend (units.coe_hom (zmod n)) ((units.coe_hom R) ∘ χ) 0,
-  map_one' := _,
-  map_mul' := _, }
+{ to_fun := function.extend (units.coe_hom (zmod n)) ((units.coe_hom R) ∘ χ) 0, .. }
 \end{lstlisting}
 %The following useful theorem relates the two definitions :
 %\begin{lstlisting}
@@ -345,15 +343,14 @@ noncomputable abbreviation asso_dirichlet_character {R : Type*} [monoid_with_zer
 One would like to shift between compatible Dirichlet characters of different levels. For this, we have the following tools : 
 \begin{lstlisting}
 /-- Extends the Dirichlet character χ of level n to level m, where n | m. -/
-def change_level {m : ℕ} (hm : n | m) : dirichlet_character R m := 
-χ.comp (units.map (zmod.cast_hom hm (zmod n)))
+def change_level {m : ℕ} (hm : n | m) : dirichlet_character R n →* dirichlet_character R m :=
+{ to_fun := λ ψ, ψ.comp (units.map (zmod.cast_hom hm (zmod n))), .. }
 /-- χ₀ of level d factors through χ of level n if d | n and χ₀ = χ ∘ (zmod n → zmod d). -/
 structure factors_through (d : ℕ) : Prop :=
-(dvd : d | n)
-(ind_char : ∃ χ₀ : dirichlet_character R d, χ = χ₀.change_level dvd)
+(dvd : d | n) (ind_char : ∃ χ₀ : dirichlet_character R d, χ = χ₀.change_level dvd)
 \end{lstlisting}
 With the assistance of a few lemmas, it is easy to translate between \lean{change\_level} and \lean{factors\_through}. The notions of primitivity 
-and conductor of a Dirichlet character follow easily : 
+and conductor of a Dirichlet character follow easily : \newpage
 \begin{lstlisting}
 /-- The set of natural numbers for which a Dirichlet character is periodic. -/
 def conductor_set : set ℕ := {x : ℕ | χ.factors_through x}
@@ -372,7 +369,7 @@ This is easily separated from the rest by the lemma :
 \begin{lstlisting}
 lemma conductor_eq_zero_iff_level_eq_zero : χ.conductor = 0 ↔ n = 0
 \end{lstlisting}
-An issue with the definition \lean{is\_primitive} is that it equates the levels of of two Dirichlet characters, 
+An issue with the definition \lean{is\_primitive} is that it equates levels of two Dirichlet characters, 
 however, this does not imply the types are equal. As an example, consider :
 \begin{lstlisting}
 lemma dirichlet_character_eq_of_eq {a b : ℕ} (h : a = b) :
@@ -381,10 +378,11 @@ dirichlet_character R a = dirichlet_character R b
 It is best avoided to make lemmas about equality of types, however, the tactic \lean{subst} fails here. 
 We needed it to deal with further complex statements, such as, \lean{χ} and \lean{χ.asso\_primitive\_dirichlet\_character} 
 being the ``same'' when \lean{χ} is primitive. The tactic \lean{congr'} and the lemma \lean{cast\_heq} were useful in 
-dealing with such issues. Another alternative we used was to show that they are multiplicatively equivalent 
-(bijection which preserves multiplication) : 
+dealing with such issues. To this effect, making \lean{change\_level} a \lean{monoid\_hom} helped with constructing the 
+following useful lemma, reiterating the importance of choosing an ``appropriate'' definition : 
 \begin{lstlisting}
-def equiv {a b : ℕ} (h : a = b) : dirichlet_character R a ≃* dirichlet_character R b
+lemma change_level_heq {a b : ℕ} {S : Type*} [comm_monoid_with_zero S] 
+  (χ : dirichlet_character S a) (h : a = b) : change_level (show a | b, from by {rw h}) χ == χ
 \end{lstlisting}
 Traditionally only for primitive characters, our definition of multiplication of characters 
 extends to any two characters: 
@@ -403,13 +401,6 @@ either odd or even :
 \begin{lstlisting}
 lemma is_odd_or_is_even {S : Type*} [comm_ring S] [no_zero_divisors S] {m : ℕ} 
   (ψ : dirichlet_character S m) : ψ.is_odd ∨ ψ.is_even
-\end{lstlisting}
-An important consequence is : 
-\begin{lstlisting}
-lemma asso_odd_dirichlet_character_eval_sub (x : zmod m) (hψ : ψ.is_odd) :
-  asso_dirichlet_character ψ (m - x) = -(asso_dirichlet_character ψ x)
-lemma asso_even_dirichlet_character_eval_sub (x : zmod m) (hψ : ψ.is_even) :
-  asso_dirichlet_character ψ (m - x) = (asso_dirichlet_character ψ x)
 \end{lstlisting}
 Other important properties include : 
 \begin{lstlisting}
@@ -476,8 +467,7 @@ lemma teichmuller_character_mod_p_two : teichmuller_character_mod_p 2 = 1
 % \end{lstlisting}
 % The first two lines of the definition define the function, while the rest proves that it is a
 % monoid homomorphism, since it is a composition of monoid homomorphisms.
- Mention dangerous instance problem - first made p an implicit variable, then linter said it is a metavariable, so changed it to lemma instead, but it should be an instance.
- 
+
 \subsection{Bernoulli polynomials and the generalized Bernoulli number}
 The Bernoulli numbers $B_n$ are generating functions given by $\sum B_n\frac{t^n}{n!}=\frac{t}{e^{t} - 1}$. 
 Note that several authors think of Bernoulli numbers $B_n'$ to be defined as $\sum B_n'\frac{t^n}{n!}=\frac{t}{1-e^{-t}}$. 
@@ -492,7 +482,7 @@ The Bernoulli polynomials, denoted $B_n(X)$, a generalization of the Bernoulli n
 are generating functions $ \sum_{n = 0}^{\infty} B_n(X) \frac{t^n}{n!} = \frac{t e^{tX}}{e^t - 1} $. 
 This gives :
 $$ B_n (X) = \sum_{i = 0}^n {n \choose i} B_i X^{n - i} $$
-We now define the Bernoulli polynomials as :
+We now define the Bernoulli polynomials as : \newpage
 \begin{lstlisting}
 def polynomial.bernoulli (n : ℕ) : polynomial ℚ :=
   ∑ i in range (n + 1), polynomial.monomial (n - i) ((bernoulli i) * (choose n i))
@@ -589,19 +579,19 @@ $$ \lim_{n \to \infty} \frac{1}{dp^{n}} \sum_{0 < a < dp^{n} ; (a, dp) = 1} \chi
 \end{theorem} 
 This is formulated in Lean as :
 \begin{lstlisting}
-theorem sum_lim_even_character : 
+theorem lim_even_character' : 
   tendsto (λ (n : ℕ), (1 / ↑(d * p ^ n)) • ∑ (i : ℕ) in finset.range (d * p ^ n),
   (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ k) at_top
   (nhds (general_bernoulli_number (χ.mul (teichmuller_character_mod_p' p R ^ k)) k))
 \end{lstlisting}
 There were two options for the \lean{finset} used in \lean{finset.sum} : \lean{finset.range} or \lean{zmod (d * p\textasciicircum j)}. 
-While both are mathematically equivalent, choosing either would create different kinds of coercions. 
-We chose the former since it was easier to deal with, as some required lemmas regarding it had been previously formalised.
+While both are mathematically equivalent, they create different kinds of coercions. 
+We worked with both, as explained in Section \ref{section3}. %chose the former since it was easier to deal with, as some required lemmas regarding it had been previously formalised.
 
 The proof of this theorem follows from the proof in Lemma 7.11 of \cite{cyc}. Majorly, it equates the two sides modulo $p^n$ for a 
 sufficiently large $n$, and uses the fact that $ \lim_{n \to \infty} \frac{1}{dp^{n}} \sum_{0 < a < dp^{n} ; (a, dp) = 1} \chi \omega^{-m} (a) a^{m} = 0 $ :
 \begin{lstlisting}
-lemma sum_even_character' [nontrivial R] [no_zero_divisors R] [norm_one_class R]
+lemma sum_even_character_tendsto_zero_of_units 
   (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
   [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) :
@@ -609,66 +599,32 @@ lemma sum_even_character' [nontrivial R] [no_zero_divisors R] [norm_one_class R]
   (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^k))) i * i^(k - 1))) 
   at_top (nhds 0) 
 \end{lstlisting}
-Notice that this sum is over the \lean{fintype} \lean{(zmod (d * p\textasciicircum n))ˣ}.
-
-The formalisation is very calculation intensive, since there are multiple 
-coercions to be dealt with. Also, terms needs to be moved around to be multiplied, deleted and cancelled. Unfortunately, there is no tactic 
-that takes care of these elementary but lengthy calculations.
-
-This is used heavily in the proof of the special values of the $p$-adic $L$-functions theorem (cite). 
-We shall discuss its proof in Section 4 (link).
+Notice that this sum is over the \lean{fintype} \lean{(zmod (d * p\textasciicircum n))ˣ}. The conditions 
+\lean{na} and \lean{na'} arise from \lean{R} being a non-Archimedean ring. 
+The formalisation is very calculation intensive, and is a good example of a small proof on paper being magnified in Lean, 
+because there are multiple coercions to be dealt with. Also, terms needs to be moved around to be multiplied, deleted and cancelled. 
+Unfortunately, there is no tactic (including \lean{ring} and \lean{simp}) that help with these elementary but lengthy calculations.
 
 \section{Construction of the $p$-adic $L$-function}
 \label{section3}
-\subsection{Profinite spaces}
-\subsubsection{Density of locally constant functions}
-In Proposition 12.1 of \cite{cyc}, Washington defines the $p$-adic integral on $C(X, \mathbb{C}_p)$,
-the Banach space of continuous functions from a profinite space X to $\mathbb{C}_p$.
-This is an extension of a function defined on a dense subset of $C(X, \mathbb{C}_p)$, the
-locally constant functions from X to $\mathbb{C}_p$. In fact, for any compact
-Hausdorff totally disconnected space X and a commutative
-normed ring A, $LC(X, A)$ is a dense subset of $C(X, A)$. 
-
-The mathematical proof is the following : For $f \in C(X, A)$, we want to prove that,
-for any $\epsilon > 0$, we have $R = \bigcup_{x \in R} B(x, \epsilon)$. Since X is compact,
-one can find finitely many open sets $U_1, \dots, U_n$ such that $U_i = f^{-1}(B(x_i, \epsilon))$
-for $x_1, \dots, x_n$ in R. One needs the fact that compact Hausdorff totally disconnected spaces
-have a clopen basis. We then find a finite set of disjoint clopen sets $C_1, \dots, C_m$ which form
-a basis, such that each $C_j$ is contained in some $U_i$.
-Then, we pick elements $a_1, \dots, a_m$ in $C_1, \dots, C_m$, and construct the locally constant
-function $g(x) := \sum_{j = 1}^m f(a_j) \chi_{C_j}(x)$, where $\chi_U$ is the characteristic
-(locally constant) function taking value 1 on every element of U and 0 otherwise. It then follows
-that $|| f - g || = sup_{x \in X} ||f(x) - g(x)|| < \epsilon$, as required. 
-
-formalising this took about 500 lines of code. Let us show that locally compact Hausdorff
+%\subsection{Profinite spaces}
+\subsection{Density of locally constant functions}
+We denote the Banach space of continuous functions from a profinite space $X$ to a group $A$ by $C(X, A)$, 
+and its subset of locally constant functions by $LC(X, A)$. A function is locally constant if the preimage of any set is open. 
+For any compact Hausdorff totally disconnected space X and a commutative
+normed ring A, we have proved that $LC(X, A)$ is a dense subset of $C(X, A)$. 
+Formalising this took about 500 lines of code, and is based on the fact that locally compact Hausdorff
 totally disconnected spaces have a clopen basis :
-
 \begin{lstlisting}
-lemma loc_compact_Haus_tot_disc_of_zero_dim {H : Type*} [topological_space H] 
-[locally_compact_space H] [t2_space H] [totally_disconnected_space H] :
-  is_topological_basis {s : set H | is_clopen s}
+lemma loc_compact_Haus_tot_disc_of_zero_dim {H : Type*} [t2_space H] [locally_compact_space H] 
+[totally_disconnected_space H] : is_topological_basis {s : set H | is_clopen s}
 \end{lstlisting}
-
-The mathematical proof is : We want to show that for every $x \in H$ and open set $U$ such that
-$x \in U$, there exists a clopen set $C$ such that $x \in C$ and $C \subseteq U$. Since $H$ is a
-locally compact space, we can find a compact set $s$ such that $x \in \text{(interior s)}$ and
-$s \subseteq U$. The following lemma states that, every member of an open set in a compact Hausdorff 
-totally disconnected space is contained in a clopen set contained in the open set. :
-\begin{lstlisting}
-lemma compact_exists_clopen_in_open {x : α} {U : set α} (is_open : is_open U) 
-  (memU : x ∈ U) : ∃ (V : set α) (hV : is_clopen V), x ∈ V ∧ V ⊆ U
-\end{lstlisting}
-This implies that we can find a clopen set $V \subseteq \text{(interior s)}$ of $s$, with $x \in V$. 
-Since $V$ is closed in $s$(compact, hence closed), $V$ is closed in $H$. Since
-$V \subseteq \text{(interior s)}$ is open in $s$, hence in (interior $s$), $V$ is open in $H$, thus
-we are done. 
-
-This turned out to be harder to formalise than expected. Lean gives a subset $V$ of s \newline (\lean{compact\_space s ↔ is\_compact (s:set H)}) 
-the type \lean{V:set s}; however, Lean does not recognize $V$ as a subset of $H$. As a result, I must construct \lean{V':set H} 
+This turned out to be hard to formalise. Given a set $s$ of $H$, Lean gives a subset $V$ of $s$ 
+the type \lean{V:set s}; however, Lean does not recognize $V$ as a subset of $H$. As a result, 
+to use \lean{compact\_space s ↔ is\_compact (s:set H)}, one must construct \lean{V':set H} 
 to be the image of $V$ under the closed embedding \lean{coe:s → H}. This process must be repeated each time a subset of $H$, 
 which is also a topological subspace, is considered. Finally, it must be shown that all these coercions match up in the big 
 topological space $H$.
-
 %%and $s$ has type \lean{set H}, but does not recognize $V$ as a subset of  This is because $s$, which is of type
 %%\lean{s : set H} also has the property \lean{is\_compact (s:set H)}. This is equivalent to saying
 %%that $s$ is a compact space, that is, \lean{compact\_space (set.univ:set s)}, where
@@ -677,51 +633,31 @@ topological space $H$.
 %%a subset of $H$. We construct \lean{V':set H} to be the image of $V$ under the closed embedding \lean{coe:s → H}. This process must be repeated each time we consider a
 %%subset as a topological space.
 
-\subsubsection{Clopen sets of the $p$-adic integers}
-As mentioned before, $\mathbb{Z}_p$ is a profinite space. Since it is the inverse limit of finite
-discrete topological spaces $\mathbb{Z}/p^n \mathbb{Z}$ for all $n$, it has a clopen basis of the
+\subsection{Clopen sets of the $p$-adic integers}
+Since $\mathbb{Z}_p$ is a profinite space, it is the inverse limit of finite
+discrete topological spaces $\mathbb{Z}/p^n \mathbb{Z}$ for all $n$, and has a clopen basis of the
 form $U_{a,n} := proj_n ^{-1} (a)$ for $a \in \mathbb{Z}/p^n \mathbb{Z}$, where $proj_n$ is the
 canonical projection ring homomorphism \lean{to\_zmod\_pow n:$\mathbb{Z}$\_[p] →+* zmod (p $\hat{}$ n)}. 
-
 We first define the collection of sets $(U_{a,n})_{a,n}$ :
 \begin{lstlisting}
   def clopen_basis : set (set ℤ_[p]) := 
-  {x : set ℤ_[p] | ∃ (n : ℕ) (a : zmod (p^n)),
-  x = set.preimage (padic_int.to_zmod_pow n) {a} }
+  {x : set ℤ_[p] | ∃ (n : ℕ) (a : zmod (p^n)), x = set.preimage (padic_int.to_zmod_pow n) {a} }
 \end{lstlisting}
-
-We now want to show that \lean{clopen\_basis} forms a topological basis and that every element is
+We show that \lean{clopen\_basis} forms a topological basis and that every element is
 clopen :
 \begin{lstlisting}
   theorem clopen_basis_clopen : 
-    topological_space.is_topological_basis (clopen_basis p) ∧
-    ∀ x ∈ (clopen_basis p), is_clopen x
+    topological_space.is_topological_basis (clopen_basis p) ∧ ∀ x ∈ (clopen_basis p), is_clopen x
 \end{lstlisting}
 The mathematical proof is to show that for any $\epsilon$-ball, one can find $U_{a,n}$ inside it.
 This is true because, given $n \in \mathbb{N}$ and $x \in \mathbb{Z} / p^n \mathbb{Z}$, the preimage of $x$ 
-under \lean{to\_zmod\_pow n} is the same as the ball centered at $x$ (now considered as an element of $\mathbb{Z}_p$) with radius $p^{1 - n}$ :
+under \lean{to\_zmod\_pow n} is the same as the ball centered at $x$ (now considered as an element of $\mathbb{Z}_p$) with radius $p^{1 - n}$. 
+The following lemmas prove useful :
 \begin{lstlisting}
-  lemma preimage_to_zmod_pow_eq_ball (n : ℕ) (x : zmod (p^n)) : 
-  (to_zmod_pow n) ⁻¹' {(x : zmod (p^n))} = 
-    metric.ball (x : ℤ_[p]) ((p : ℝ) ^ (1 - (n : ℤ)))
-\end{lstlisting}
-
-Notice that, in the RHS, we must specify \lean{n:ℤ}. If that is not done, Lean interprets \lean{1 - n:ℕ}. This is not the same as 
-\lean{1 - n:ℤ}, since subtraction is defined differently for the naturals. 
-Proving this lemma was fairly straightforward using the expansion of a $p$-adic integer, that is, every
-$a \in \mathbb{Z}_p$ can be written as $\sum_{n = 0}^{\infty} a_n p^n$, with $a_n \in \mathbb{Z}/p^n \mathbb{Z}$.
-Approximating $a$ by $\sum_{n = 0}^{m} a_n p^n$ is done by the function \lean{appr:$\mathbb{Z}$\_p → $\mathbb{N}$ → $\mathbb{N}$}.
-Note that \lean{appr} returns a natural number, with $a_n$ being the smallest natural number in the
-$\mathbb{Z}/p^n \mathbb{Z}$ equivalence class. This turned out to be very useful, along with the
-following lemmas :
-
-\begin{lstlisting}
-  lemma appr_spec (n : ℕ) (x : ℤ_[p]) :  
-    x - appr x n ∈ (ideal.span {p^n} : ideal ℤ_[p])
-  lemma has_coe_t_eq_coe (x : ℤ_[p]) (n : ℕ) :
+lemma appr_spec (n : ℕ) (x : ℤ_[p]) : x - appr x n ∈ (ideal.span {p^n} : ideal ℤ_[p])
+lemma has_coe_t_eq_coe (x : ℤ_[p]) (n : ℕ) : 
   (((appr x n) : zmod (p^n)) : ℤ_[p]) = ((appr x n) : ℤ_[p])
 \end{lstlisting}
-
 In the latter lemma, the LHS is a coercion of \lean{appr x n}, which has type \lean{$\mathbb{N}$}, to \lean{$\mathbb{Z}$\_p}. 
 The RHS is a coercion of \lean{appr x n} to \lean{zmod (p $\hat{}$ n)} to \lean{$\mathbb{Z}$\_p}. 
 This statement is not true in general, that is, given any natural number $n$, it is not true that the lift of $n$ to $\mathbb{Z}_p$ 
@@ -734,7 +670,7 @@ $\mathbb{Z}/p^n \mathbb{Z}$ equivalence class.
 One can similarly show that the sets $U_{b, a, n} := proj_1^{-1} (b) \times proj_{2,n} ^{-1} (a)$ form a clopen basis for 
 $\mathbb{Z} / d \mathbb{Z} \times \mathbb{Z}_p$, where $proj_1$ is the first canonical projection on $b \in \mathbb{Z} / d \mathbb{Z}$ 
 and $proj_{2,n}$ the composition of the second projection on $a \in \mathbb{Z}_p$ with $proj_n$ descried above. We call this set 
-\lean{clopen\_basis' p d}. For the sake of simplicity, we shall discuss the case $d = 1$ in this article.
+\lean{clopen\_basis' p d}. Its properties are formalised in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/padic_int/clopen_properties.lean}{\lean{padic\_int.clopen\_properties.lean}}.
 
 \subsection{$p$-adic distributions and measures}
 In this section, $X = \varprojlim_{i \in \mathbb{N}} X_i$ denotes a profinite space with $X_i$ finite and
@@ -1260,7 +1196,7 @@ There is also an effort by Prof David Loeffler which involves formalisation of t
 
 In the future, the author hopes to be able to work on Iwasawa theory, for which the $p$-adic $L$-function is a key ingredient. She also hopes to formalise more properties of Bernoulli numbers, 
 that are a fundamental component of number theory.
-
+ Mention dangerous instance problem - first made p an implicit variable, then linter said it is a metavariable, so changed it to lemma instead, but it should be an instance.
 \bibliography{ITP-2023}
 
 \end{document}

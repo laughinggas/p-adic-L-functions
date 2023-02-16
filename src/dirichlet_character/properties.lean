@@ -1,5 +1,5 @@
 import dirichlet_character.basic
-import zmod_properties
+import zmod.properties
 import analysis.normed_space.basic
 import topology.algebra.group
 import topology.continuous_function.compact

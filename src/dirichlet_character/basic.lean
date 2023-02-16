@@ -6,7 +6,7 @@ Authors: Ashvni Narayanan
 
 import data.zmod.quotient
 import ring_theory.roots_of_unity
-import zmod_properties
+import zmod.properties
 
 /-!
 # Dirichlet characters
