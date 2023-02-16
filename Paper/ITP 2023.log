@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.16)  16 FEB 2023 11:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.16)  16 FEB 2023 11:55
 entering extended mode
 **"c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.tex"
 ("c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.tex"
@@ -860,17 +860,17 @@ Package rerunfilecheck Info: File `"ITP 2023".out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1028.
  ) 
 Here is how much of TeX's memory you used:
- 23733 strings out of 480790
- 400343 string characters out of 2897301
+ 23734 strings out of 480790
+ 400354 string characters out of 2897301
  930542 words of memory out of 3000000
  38768 multiletter control sequences out of 15000+200000
  683938 words of font info for 281 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
  56i,15n,49p,621b,1309s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathex.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5brands1.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free1.enc}<C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Brands-Regular.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Regular.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmex10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi5.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi7.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi8.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmib10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr6.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr7.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmss8.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy5.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy6.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy7.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt8.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on "c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.pdf" (17 pages, 617532 bytes).
+Output written on "c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.pdf" (17 pages, 620060 bytes).
 PDF statistics:
- 672 PDF objects out of 1000 (max. 8388607)
- 276 named destinations out of 1000 (max. 500000)
+ 676 PDF objects out of 1000 (max. 8388607)
+ 277 named destinations out of 1000 (max. 500000)
  87238 words of extra memory for PDF output out of 89155 (max. 10000000)
 
