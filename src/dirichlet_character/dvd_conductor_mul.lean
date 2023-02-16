@@ -1,5 +1,27 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import dirichlet_character.teichmuller_character
 import zmod.chinese_remainder_units
+
+/-!
+# A factor of conductor
+This file explains why we need the hypothesis `d ∣ χ.conductor`, 
+for a Dirichlet character `χ` of level `d * p^m`, for a natural `d` coprime to the odd prime `p`. 
+It also contains several properties regarding the conductor and multiplication, and provides 
+a useful framework to translate `change_level` for equal levels, using `cast_heq`.
+
+## Main theorems
+ * `exists_mul_of_dvd`
+ * `cast_change_level`
+ * `eq_mul_primitive_of_coprime`
+ * `dvd_mul_of_dvd_conductor`
+
+## Tags
+Dirichlet character, conductor
+-/
 
 namespace dirichlet_character
 open dirichlet_character

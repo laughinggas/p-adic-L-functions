@@ -1,9 +1,24 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import tendsto_zero_of_sum_even_char
 --import p_adic_L_function_def
 -- import general_bernoulli_number.basic
 -- import topology.algebra.nonarchimedean.bases
 -- import chinese_remainder_units
+/-!
+# A convergence property regarding (ℤ/dp^n ℤ)ˣ
+This file proves the third sum in the proof of Theorem 12.2 in Introduction to Cyclotomic Fields, Washington. 
+It gives a convergence property relating to generalized Bernoulli numbers.
 
+# Main Theorems
+ * `W`
+
+## Tags
+p-adic, L-function, Bernoulli measure, Dirichlet character
+-/
 open_locale big_operators
 local attribute [instance] zmod.topological_space
 

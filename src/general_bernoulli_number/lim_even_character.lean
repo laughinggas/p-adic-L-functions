@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import tendsto_zero_of_sum_even_char
 import p_adic_L_function_def
 import general_bernoulli_number.basic
@@ -6,6 +11,18 @@ import zmod.chinese_remainder_units
 import topology.algebra.continuous_monoid_hom
 --import topology.algebra.nonarchimedean.bases
 --import chinese_remainder_units
+
+/-!
+# A convergence property regarding (ℤ/dp^n ℤ)
+This file proves Proposition 7.11 in Introduction to Cyclotomic Fields, Washington. 
+It gives a convergence property relating to generalized Bernoulli numbers.
+
+# Main Theorems
+ * `lim_even_character`
+
+## Tags
+p-adic, L-function, Bernoulli measure, Dirichlet character
+-/
 
 open_locale big_operators
 local attribute [instance] zmod.topological_space

@@ -1,5 +1,23 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import general_bernoulli_number.lim_even_character
 import dirichlet_character.dvd_conductor_mul
+
+/-!
+# A convergence property regarding (ℤ/dp^n ℤ)ˣ
+This file proves Proposition 7.11 in Introduction to Cyclotomic Fields, Washington. 
+It gives a convergence property relating to generalized Bernoulli numbers.
+
+# Main Theorems
+ * `U` 
+ * `helper_U_3`
+
+## Tags
+p-adic, L-function, Bernoulli measure, Dirichlet character
+-/
 
 open_locale big_operators
 local attribute [instance] zmod.topological_space
@@ -22,6 +40,8 @@ open clopen_from
 variable [fact (0 < d)]
 
 open eventually_constant_seq clopen_from
+
+/-- The first sum in the proof of Theorem 12.2. -/
 noncomputable def U_def [algebra ℚ R] [norm_one_class R] (n : ℕ) (k : ℕ) :=
   ∑ (x : (zmod (d * p ^ k))ˣ),
   ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R^n)) x : R) *

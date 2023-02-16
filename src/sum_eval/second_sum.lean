@@ -1,5 +1,21 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import general_bernoulli_number.lim_even_character_of_units
 
+/-!
+# A convergence property regarding (ℤ/dp^n ℤ)ˣ
+This file proves the second sum in the proof of Theorem 12.2 in Introduction to Cyclotomic Fields, Washington. 
+It gives a convergence property relating to generalized Bernoulli numbers.
+
+# Main Theorems
+ * `V` 
+
+## Tags
+p-adic, L-function, Bernoulli measure, Dirichlet character
+-/
 open_locale big_operators
 local attribute [instance] zmod.topological_space
 
@@ -31,6 +47,7 @@ variable (hd)
 open zmod
 variable (c)
 
+/-- The middle sum in the proof of Theorem 12.2. -/
 noncomputable def V_def [algebra ℚ R] [norm_one_class R] (n : ℕ) (j : ℕ) :=
 ∑ (x : (zmod (d * p ^ j))ˣ), ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R^n)) x : R) *
   ((((x : zmod (d * p^j))).val)^(n - 1) : R)) •
@@ -38,6 +55,7 @@ noncomputable def V_def [algebra ℚ R] [norm_one_class R] (n : ℕ) (j : ℕ) :
 
 variables (hc) (hc')
 
+/-- A part of `V_def`. -/
 noncomputable def V_h_def [algebra ℚ R] [norm_one_class R] (n : ℕ) (k : ℕ) :=
 ∑ (x : (zmod (d * p ^ k))ˣ), (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n)) x) *
 (↑(c ^ (n - 1)) * (algebra_map ℚ R) (↑(n - 1) * (↑d * (↑p ^ k *

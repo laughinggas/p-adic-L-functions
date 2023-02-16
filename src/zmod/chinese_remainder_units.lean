@@ -1,5 +1,27 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import zmod.properties
 import dirichlet_character.properties
+
+/-!
+# Chinese Remainder Theorem on (ℤ/nℤ)ˣ
+This file defines a Chinese Remainder Theorem on `(zmod n)ˣ` for all `n`. 
+We also enlist several properties that are helpful with modular arithmetic.
+
+## Main definitions and theorems
+ * `units.chinese_remainder`
+
+## Implementation notes
+TODO (optional)
+
+## References
+
+## Tags
+zmod, units, CRT
+-/
 
 lemma prod.eq_fst_snd {α β : Type*} (a : α × β) : a = (a.fst, a.snd) := by refine prod.ext rfl rfl
 

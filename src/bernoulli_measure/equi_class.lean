@@ -42,7 +42,7 @@ def zmod' (n : ℕ) (h : 0 < n) : finset (zmod n) :=
 
 open nat padic_int zmod discrete_quotient_of_to_zmod_pow
 
-/-- Given `a ∈ zmod (d * p^n)`, and `n < m`, the set of all `b ∈ zmod (d * p^m)` such that
+/-- Given `a ∈ zmod (d * p^n)`, the set of all `b ∈ zmod (d * p^m)` such that
   `b = a mod (d * p^n)`. -/
 def equi_class {n : ℕ} (m : ℕ) (a : zmod (d * p^n)) :=
  {b : zmod (d * p^m) | (b : zmod (d * p^n)) = a}
@@ -413,6 +413,7 @@ end
 
 variable [algebra ℚ_[p] R]
 
+--`E_c_sum_equi_class` replaced with `bernoulli_distribution_sum`
 lemma bernoulli_distribution_sum (x : zmod (d * p^m)) (hc : c.gcd p = 1) (hc' : c.gcd d = 1) :
   ∑ (y : zmod (d * p ^ m.succ)) in (λ a : zmod (d * p ^ m), ((equi_class m.succ) a).to_finset) x,
   ((algebra_map ℚ_[p] R) (bernoulli_distribution p d c m.succ y)) = (algebra_map ℚ_[p] R) (bernoulli_distribution p d c m x) :=

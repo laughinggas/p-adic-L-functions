@@ -3,14 +3,11 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-
 import data.zmod.quotient
 import ring_theory.roots_of_unity
 import zmod.properties
-
 /-!
 # Dirichlet characters
-
 This file defines Dirichlet characters over (ℤ/nℤ)* and then relates them
 to multiplicative homomorphisms over ℤ/nℤ for any n divisible by the conductor.
 

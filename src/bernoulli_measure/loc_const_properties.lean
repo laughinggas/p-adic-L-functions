@@ -6,7 +6,7 @@ Authors: Ashvni Narayanan
 import bernoulli_measure.equi_class
 import topology.algebra.group
 /-!
-# Bernoulli measure and the p-adic L-function
+# Properties of locally constant functions
 This file specifies properties of locally constant functions, especially on `zmod d × ℤ_[p]`. 
 
 ## Main theorem

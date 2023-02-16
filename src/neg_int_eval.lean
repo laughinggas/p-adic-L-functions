@@ -1,6 +1,34 @@
+/-
+Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Ashvni Narayanan
+-/
 import sum_eval.second_sum
 import sum_eval.third_sum
 import p_adic_L_function_def
+
+/-!
+# p-adic L-function
+This file proves that the p-adic L-function takes special values at negative integers, in terms
+of generalized Bernoulli numbers. 
+
+## Main definitions
+ * `p_adic_L_function_eval_neg_int`
+ * `bernoulli_measure_eval_char_fn`
+
+## Implementation notes
+ * `pri_dir_char_extend'` replaced with `dir_char_extend`
+ * Try to avoid `teichmuller_character_mod_p_change_level`
+ * `neg_pow'_to_hom` replaced with `mul_inv_pow_hom`
+ * `neg_pow'` replaced with `mul_inv_pow`
+ * `clopen_from_units` replaced with `clopen_from.units`
+
+## References
+Introduction to Cyclotomic Fields, Washington (Chapter 12, Section 2)
+
+## Tags
+p-adic, L-function, Bernoulli measure, Dirichlet character
+-/
 
 open_locale big_operators
 local attribute [instance] zmod.topological_space
@@ -630,7 +658,7 @@ begin
     apply helper_262, },
 end
 
-theorem p_adic_L_function_eval_neg_int_new [algebra ℚ R] [norm_one_class R] [no_zero_divisors R]
+theorem p_adic_L_function_eval_neg_int [algebra ℚ R] [norm_one_class R] [no_zero_divisors R]
   [is_scalar_tower ℚ ℚ_[p] R]
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hp : 2 < p)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
