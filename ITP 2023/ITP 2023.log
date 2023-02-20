@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.16)  20 FEB 2023 02:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.6.29) (preloaded format=pdflatex 2020.7.16)  20 FEB 2023 12:46
 entering extended mode
-**"c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.tex"
-("c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.tex"
+**"c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.tex"
+("c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.tex"
 LaTeX2e <2020-02-02> patch level 5
-L3 programming layer <2020-06-18> (c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\lipics-v2021.cls
+L3 programming layer <2020-06-18> ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lipics-v2021.cls"
 Document Class: lipics-v2021 2021/05/04 v3.1.2 LIPIcs articles
 (C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
 Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
@@ -546,7 +546,7 @@ Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 ) (C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex/latex/tools\xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
-) (c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\lstlean.tex)
+) ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lstlean.tex")
    defining Unicode char U+2208 (decimal 8712)
    defining Unicode char U+21D1 (decimal 8657)
    defining Unicode char U+2194 (decimal 8596)
@@ -579,7 +579,7 @@ Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
    defining Unicode char U+2200 (decimal 8704)
    defining Unicode char U+2265 (decimal 8805)
    defining Unicode char U+1DA0 (decimal 7584)
- ("c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.aux")
+ ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux")
 \openout1 = `"ITP 2023.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 145.
@@ -646,7 +646,7 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 145.
 LaTeX Info: Redefining \pageref on input line 145.
 LaTeX Info: Redefining \nameref on input line 145.
- ("c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out") ("c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out")
+ ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out") ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out")
 \@outlinefile=\write5
 \openout5 = `"ITP 2023.out"'.
 
@@ -840,10 +840,10 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 944.
 
-[13.13] [14.14] [15.15] [16.16] ("c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.bbl" [17.17]) [18.18]
+[13.13] [14.14] [15.15] [16.16] ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.bbl" [17.17]) [18.18]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1175.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 1175.
- ("c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.aux")
+ ("c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux")
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1175.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1175.
 Package rerunfilecheck Info: File `"ITP 2023".out' has not changed.
@@ -852,16 +852,16 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1175.
  ) 
 Here is how much of TeX's memory you used:
  23712 strings out of 480790
- 399660 string characters out of 2897301
- 856542 words of memory out of 3000000
+ 399713 string characters out of 2897301
+ 855542 words of memory out of 3000000
  38748 multiletter control sequences out of 15000+200000
  684438 words of font info for 288 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,15n,49p,621b,1303s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,15n,49p,624b,1303s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathex.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5brands1.enc}{C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free1.enc}<C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Brands-Regular.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Regular.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmex10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi12.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi5.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi7.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmib10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr5.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr6.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr7.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmri9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmss8.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy5.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy7.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmsy9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt8.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmtt9.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm7.pfb>
-Output written on "c:/Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.pdf" (18 pages, 601915 bytes).
+Output written on "c:/Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.pdf" (18 pages, 600346 bytes).
 PDF statistics:
- 687 PDF objects out of 1000 (max. 8388607)
+ 682 PDF objects out of 1000 (max. 8388607)
  261 named destinations out of 1000 (max. 500000)
  87246 words of extra memory for PDF output out of 89155 (max. 10000000)
 

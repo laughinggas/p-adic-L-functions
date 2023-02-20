@@ -1,9 +1,9 @@
-PWD c:\Users\ashvn\my_project1\p-adic-L-functions\Paper
+PWD c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023
 INPUT C:\Users\ashvn\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.tex
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.log
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\lipics-v2021.cls
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\lipics-v2021.cls
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.tex
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.log
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lipics-v2021.cls
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lipics-v2021.cls
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\fleqn.clo
@@ -209,11 +209,11 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\tools\xspace.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\tools\xspace.sty
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\lstlean.tex
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\lstlean.tex
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.aux
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.aux
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.aux
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lstlean.tex
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lstlean.tex
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-cmr.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-cmr.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
@@ -226,14 +226,14 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\refcount\refcount.s
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\refcount\refcount.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.pdf
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.pdf
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmss.fd
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmss.fd
@@ -297,7 +297,7 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\fontawesome5\ufonta
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\fontawesome5\ufontawesomebrands1.fd
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fontawesome5\fa5brands1.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr9.tfm
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.vtc
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.vtc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmss10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
@@ -379,11 +379,11 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy10.tf
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.bbl
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.bbl
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.aux
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Paper\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.bbl
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.bbl
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-rm.enc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-mathit.enc

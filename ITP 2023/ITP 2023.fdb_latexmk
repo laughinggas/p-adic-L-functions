@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex ITP 2023"] 1676859647 "ITP 2023.aux" "ITP 2023.bbl" "ITP 2023" 1676859650
+["bibtex ITP 2023"] 1676896961 "ITP 2023.aux" "ITP 2023.bbl" "ITP 2023" 1676897173
   "C:/Users/ashvn/AppData/Local/Programs/MiKTeX/bibtex/bst/urlbst/plainurl.bst" 1562002750 33034 6f80d55ce824a32ed5562a5220ff287a ""
-  "ITP 2023.aux" 1676859649 6420 a3315987621ec767a14e53f23a09be65 "pdflatex"
+  "ITP 2023.aux" 1676897173 6420 a3315987621ec767a14e53f23a09be65 "pdflatex"
   "ITP-2023.bib" 1676757124 10371 d442d1c208be74808d4947b549192d5a ""
   (generated)
   "ITP 2023.blg"
   "ITP 2023.bbl"
-["pdflatex"] 1676859647 "c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.tex" "c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.pdf" "ITP 2023" 1676859650
+["pdflatex"] 1676897170 "c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.tex" "c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.pdf" "ITP 2023" 1676897173
   "C:/Users/ashvn/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1594860248 10020124 24551ce3de2691c4c5bfc79c8cef2c18 ""
   "C:/Users/ashvn/AppData/Local/MiKTeX/pdftex/config/pdftex.map" 1676038999 83788 3e06ff692e1323f668f12ea28ca579e9 ""
   "C:/Users/ashvn/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5brands1.enc" 1585059804 2596 dffa4135cb10401177ac888ce3d96b89 ""
@@ -223,19 +223,19 @@
   "C:/Users/ashvn/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/ashvn/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1463131981 57049 34128738f682d033422ca125f82e5d62 ""
   "C:/Users/ashvn/AppData/Local/Programs/MiKTeX/tex/latex/xstring/xstring.sty" 1543858404 123 a302f2c651a95033260db60e51527ae8 ""
-  "ITP 2023.aux" 1676859649 6420 a3315987621ec767a14e53f23a09be65 "pdflatex"
-  "ITP 2023.bbl" 1676859647 2027 63253308beccbe0556e88f16f313ccae "bibtex ITP 2023"
-  "ITP 2023.out" 1676859649 5109 5b6477902ff263338f506400e0df0823 "pdflatex"
-  "ITP 2023.tex" 1676859643 88652 b0f7bb1a8cc8b9d87b76f90bf16ec383 ""
-  "c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.aux" 1676859649 6420 a3315987621ec767a14e53f23a09be65 ""
-  "c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.tex" 1676859643 88652 b0f7bb1a8cc8b9d87b76f90bf16ec383 ""
+  "ITP 2023.aux" 1676897173 6420 a3315987621ec767a14e53f23a09be65 "pdflatex"
+  "ITP 2023.bbl" 1676896961 2027 63253308beccbe0556e88f16f313ccae "bibtex ITP 2023"
+  "ITP 2023.out" 1676897173 5109 5b6477902ff263338f506400e0df0823 "pdflatex"
+  "ITP 2023.tex" 1676897169 88687 2caa3cb3c4eb3555a930c4737150fcb7 ""
+  "c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.aux" 1676897173 6420 a3315987621ec767a14e53f23a09be65 ""
+  "c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.tex" 1676897169 88687 2caa3cb3c4eb3555a930c4737150fcb7 ""
   "lipics-v2021.cls" 1675686546 48046 9e2ace661a3448cd4e3ccc67c1941153 ""
   "lstlean.tex" 1675683712 8838 cf39db8096488f09dd9ccce3046483ce ""
   (generated)
-  "c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.pdf"
-  "ITP 2023.out"
-  "c:/Users/ashvn/my_project1/p-adic-L-functions/Paper/ITP 2023.log"
-  "ITP 2023.vtc"
-  "ITP 2023.pdf"
-  "ITP 2023.aux"
   "ITP 2023.log"
+  "ITP 2023.aux"
+  "ITP 2023.vtc"
+  "ITP 2023.out"
+  "c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.pdf"
+  "ITP 2023.pdf"
+  "c:/Users/ashvn/my_project1/p-adic-L-functions/ITP 2023/ITP 2023.log"

@@ -338,12 +338,12 @@ is equivalent to proving them for any finite cyclic group. Given a positive $n \
 $\mathbb{Z}/n \mathbb{Z}$ is the same as \href{https://leanprover-community.github.io/mathlib_docs/init/data/fin/basic.html#fin}{\lean{fin n}}(and $\mathbb{Z}$ for $n = 0$), 
 the set of natural numbers upto $n$. It is also the set of equivalence classes obtained via the relation 
 on $\mathbb{Z}$ : $a \sim b \iff n | a - b$. It has a natural group structure, and is given the discrete topology, 
-making it a topological group. Some maps used constantly include \href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.val}{\lean{val:zmod n → ℕ}}, 
+making it a topological group. Some maps used constantly include \newline \href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.val}{\lean{val:zmod n → ℕ}}, 
 which takes any element to its smallest nonnegative reprentative less than \lean{n}; 
 and \href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.cast_hom}{\lean{cast\_hom:zmod n → R}}, a coercion to a ring, 
 obtained by composing the canonical coercion with \lean{val}. If \lean{R} has characteristic 
 dividing \lean{n}, the map is a ring homomorphism. Given coprime naturals $m, n$, an important equivalence is 
-\href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.chinese_remainder}{\lean{chinese\_remainder:zmod (m * n) ≃+* zmod m × zmod n}}. 
+\newline \href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.chinese_remainder}{\lean{chinese\_remainder:zmod (m * n) ≃+* zmod m × zmod n}}. 
 About 45 additional lemmas were required, which have been put in a separate file, 
 \href[]{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/zmod/properties.lean}{\lean{zmod/properties.lean}}. 
 %%The \textit{$p$-adic valuation} is a function $\nu_p : \mathbb{Z} \xrightarrow[]{} \mathbb{R}$, such that
@@ -373,8 +373,8 @@ one can obtain a homomorphism \lean{Rˣ →* Sˣ} by \href{https://leanprover-co
 %  (\mathbb{Z}/dp \mathbb{Z})^{\times} \times (1 + p \mathbb{Z}_p)$
 %\end{itemize}
 
-These properties characterize the $p$-adic integers, and are integral to this work. While some preexisted in 
-\lean{mathlib}, about 60 additional lemmas have been proved in \newline \href[]{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/padic_int/properties.lean}{\lean{padic\_int.properties.lean}}. 
+%These properties characterize the $p$-adic integers, and are integral to this work. While some preexisted in 
+%\lean{mathlib}, about 60 additional lemmas have been proved in \newline \href[]{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/padic_int/properties.lean}{\lean{padic\_int.properties.lean}}. 
 %Moreover, lots of facts regarding the clopen basis given above have been utilized and proved in \href[]{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/padic_int/clopen_properties.lean}{\lean{padic\_int.clopen\_properties.lean}}.
 \section{Dirichlet characters and the Teichmüller character}
 \label{dirchar}
@@ -431,7 +431,7 @@ structure factors_through (d : ℕ) : Prop :=
 (ind_char : ∃ χ₀ : dirichlet_character R d, χ = χ₀.change_level dvd)
 \end{lstlisting}
 %With the assistance of a few lemmas, it is easy to translate between \lean{change\_level} and \lean{factors\_through}. 
-The notions of primitivity and conductor of a Dirichlet character follow easily : 
+The notions of primitivity and conductor of a Dirichlet character follow easily : \newpage
 \begin{lstlisting}
 /-- The set of numbers for which a Dirichlet character is periodic. -/
 def conductor_set : set ℕ := {x : ℕ | χ.factors_through x}
@@ -727,7 +727,7 @@ We denote the (Banach) space of continuous functions from a profinite space $X$ 
 and its subset of locally constant functions by $LC(X, A)$. A function is locally constant if the preimage of any set is open. 
 For any compact Hausdorff totally disconnected space X and a commutative
 normed ring A, we have proved that $LC(X, A)$ is a dense subset of $C(X, A)$. 
-Formalizing this took about 500 lines of code, and is based on the fact that locally compact Hausdorff
+Formalizing this took about 500 lines of code (now in \lean{mathlib}), and is based on the fact that locally compact Hausdorff
 totally disconnected spaces have a clopen basis :
 \begin{lstlisting}
 lemma loc_compact_Haus_tot_disc_of_zero_dim {H : Type*} [t2_space H] 
@@ -749,7 +749,7 @@ topological space $H$.
 %%subset as a topological space.
 
 \subsection{Clopen sets of the $p$-adic integers}
-Since $\mathbb{Z}_p$ is a profinite space (as shown in section 2.4 of \cite{witt}), it is the inverse limit of finite
+$\mathbb{Z}_p$ is a profinite space (as shown in section 2.4 of \cite{witt}). It is the inverse limit of finite
 discrete topological spaces $\mathbb{Z}/p^n \mathbb{Z}$ for all $n$, and has a clopen basis of the
 form $U_{a,n} := proj_n ^{-1} (a)$ for $a \in \mathbb{Z}/p^n \mathbb{Z}$, where $proj_n$ is the
 canonical projection ring homomorphism \lean{to\_zmod\_pow n:$\mathbb{Z}$\_[p] →+* zmod (p $\hat{}$ n)}. 
@@ -927,7 +927,7 @@ def equi_class (n m : ℕ) (a : zmod (d * p^n)) :=
 \end{lstlisting}
 Then, we have the following lemma :
 \begin{lstlisting}
-lemma zmod'_succ_eq_bUnion_equi_class : 
+lemma zmod'_succ_eq_bUnion : 
   zmod' (d*p^(m + 1)) = (zmod' (d*p^m)).bUnion
   (λ a : zmod (d * p ^ m), set.to_finset (equi_class m (m + 1)) a) 
 \end{lstlisting}
