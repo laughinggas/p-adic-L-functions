@@ -256,15 +256,16 @@ w.to_monoid_hom, cont_paLf'' p d R m hd _ w⟩) -- cont_paLf' m hd χ w -/
 
 open filter
 
-noncomputable abbreviation pls_help (y : ℕ) : (zmod d)ˣ × ℤ_[p]ˣ →* (zmod (d * p^y))ˣ :=
+-- `pls_help` changed to `rev_prod_hom`
+noncomputable abbreviation rev_prod_hom (y : ℕ) : (zmod d)ˣ × ℤ_[p]ˣ →* (zmod (d * p^y))ˣ :=
 monoid_hom.comp (units.map (zmod.chinese_remainder (nat.coprime.pow_right y hd)).symm.to_monoid_hom)
 (monoid_hom.comp (mul_equiv.to_monoid_hom mul_equiv.prod_units.symm) ((monoid_hom.prod_map (monoid_hom.id (zmod d)ˣ)
 (units.map (@padic_int.to_zmod_pow p _ y).to_monoid_hom))))
 -- dot notation does not work for mul_equiv.to_monoid_hom?
 
-lemma is_loc_const_pls_help (y : ℕ) : is_locally_constant (pls_help p d hd y) :=
+lemma is_loc_const_rev_prod_hom (y : ℕ) : is_locally_constant (rev_prod_hom p d hd y) :=
 begin
-  delta pls_help,
+  delta rev_prod_hom,
   apply is_locally_constant.comp_continuous,
   { convert is_locally_constant.of_discrete _, apply_instance, },
   { simp only [ring_hom.to_monoid_hom_eq_coe, monoid_hom.coe_comp, mul_equiv.coe_to_monoid_hom,
@@ -327,12 +328,12 @@ begin
 end
 
 lemma helper_281 {x : ℕ} (hx : m < x) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
-  (((pls_help p d hd x) a) : zmod (d * p^m)) = ↑((pls_help p d hd m) a) :=
+  (((rev_prod_hom p d hd x) a) : zmod (d * p^m)) = ↑((rev_prod_hom p d hd m) a) :=
 begin
   change ((units.map (zmod.cast_hom (mul_dvd_mul_left d (pow_dvd_pow p (le_of_lt hx)))
-    (zmod (d * p^m))).to_monoid_hom) (pls_help p d hd x a) : zmod (d * p^m)) = _,
+    (zmod (d * p^m))).to_monoid_hom) (rev_prod_hom p d hd x a) : zmod (d * p^m)) = _,
   rw units.coe_map,
-  delta pls_help, simp_rw monoid_hom.comp_apply,
+  delta rev_prod_hom, simp_rw monoid_hom.comp_apply,
   rw units.coe_map, rw units.coe_map,
   simp only [ring_hom.to_monoid_hom_eq_coe, monoid_hom.coe_prod_map, _root_.prod_map, monoid_hom.id_apply,
     mul_equiv.coe_to_monoid_hom, ring_hom.coe_monoid_hom, zmod.cast_hom_apply],
@@ -340,35 +341,35 @@ begin
   rw zmod.coe_proj p d m hd hx a,
 end
 
-lemma units_chinese_remainder_comp_pls_help (x : ℕ) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
-  (units.chinese_remainder (nat.coprime.pow_right x hd)) ((pls_help p d hd x) a) =
+lemma units_chinese_remainder_comp_rev_prod_hom (x : ℕ) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
+  (units.chinese_remainder (nat.coprime.pow_right x hd)) ((rev_prod_hom p d hd x) a) =
   (a.fst, units.map (@padic_int.to_zmod_pow p _ x).to_monoid_hom a.snd) :=
 begin
-  delta pls_help, rw monoid_hom.comp_apply, convert mul_equiv.apply_symm_apply _ _,
+  delta rev_prod_hom, rw monoid_hom.comp_apply, convert mul_equiv.apply_symm_apply _ _,
 end
 .
-lemma units_chinese_remainder_comp_pls_help_fst (x : ℕ) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
-  ((units.chinese_remainder (nat.coprime.pow_right x hd)) ((pls_help p d hd x) a)).fst =
-  a.fst := by { rw units_chinese_remainder_comp_pls_help p d hd x a, }
+lemma units_chinese_remainder_comp_rev_prod_hom_fst (x : ℕ) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
+  ((units.chinese_remainder (nat.coprime.pow_right x hd)) ((rev_prod_hom p d hd x) a)).fst =
+  a.fst := by { rw units_chinese_remainder_comp_rev_prod_hom p d hd x a, }
 
-lemma units_chinese_remainder_comp_pls_help_snd (x : ℕ) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
-  ((units.chinese_remainder (nat.coprime.pow_right x hd)) ((pls_help p d hd x) a)).snd =
+lemma units_chinese_remainder_comp_rev_prod_hom_snd (x : ℕ) (a : (zmod d)ˣ × ℤ_[p]ˣ) :
+  ((units.chinese_remainder (nat.coprime.pow_right x hd)) ((rev_prod_hom p d hd x) a)).snd =
   units.map (@padic_int.to_zmod_pow p _ x).to_monoid_hom a.snd :=
-by { rw units_chinese_remainder_comp_pls_help p d hd x a, }
+by { rw units_chinese_remainder_comp_rev_prod_hom p d hd x a, }
 
 lemma helper_256 (n : ℕ) (hn : 1 < n) : (λ y : ℕ, ((∑ (a : (zmod (d * p ^ y))ˣ),
   ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑a *
   ↑((a : zmod (d * p^y)).val) ^ (n - 1)) • _root_.char_fn R (clopen_from.is_clopen_units
   ((units.chinese_remainder (nat.coprime.pow_right y hd)) a)) : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) : C((zmod d)ˣ × ℤ_[p]ˣ, R))) =ᶠ[at_top]
   (λ y : ℕ, (⟨λ x, (change_level (helper_change_level_conductor m χ) (χ.mul (teichmuller_character_mod_p' p R))
-  ((pls_help p d hd m) x) : R),
-  is_locally_constant.continuous begin apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_pls_help, end⟩) *
-  (((⟨λ x, ↑(pls_help p d hd y x : zmod (d * p^y)) ^ (n - 1), is_locally_constant.continuous begin apply is_locally_constant.comp₂,
-      { apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_pls_help, },
+  ((rev_prod_hom p d hd m) x) : R),
+  is_locally_constant.continuous begin apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_rev_prod_hom, end⟩) *
+  (((⟨λ x, ↑(rev_prod_hom p d hd y x : zmod (d * p^y)) ^ (n - 1), is_locally_constant.continuous begin apply is_locally_constant.comp₂,
+      { apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_rev_prod_hom, },
       { apply is_locally_constant.const, }, end⟩ ) *
-  ⟨λ x, (change_level (dvd_mul_of_dvd_right (dvd_pow dvd_rfl (nat.ne_zero_of_lt' 0)) d) ((teichmuller_character_mod_p' p R) ^ (n - 1)) ((pls_help p d hd m) x) : R),
+  ⟨λ x, (change_level (dvd_mul_of_dvd_right (dvd_pow dvd_rfl (nat.ne_zero_of_lt' 0)) d) ((teichmuller_character_mod_p' p R) ^ (n - 1)) ((rev_prod_hom p d hd m) x) : R),
   is_locally_constant.continuous begin
-    apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_pls_help, end⟩ ))) :=
+    apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_rev_prod_hom, end⟩ ))) :=
 begin
   rw eventually_eq_iff_exists_mem,
   set s : set ℕ := {x : ℕ | m < x} with hs,
@@ -379,9 +380,9 @@ begin
     rw pi.mul_apply, rw locally_constant.coe_continuous_map, --rw locally_constant.coe_sum,
     rw locally_constant.sum_apply',
     simp_rw locally_constant.smul_apply,
-    have h1 : is_unit ((pls_help p d hd x a) : zmod (d * p^m)),
+    have h1 : is_unit ((rev_prod_hom p d hd x a) : zmod (d * p^m)),
     { apply coe_map_of_dvd, apply mul_dvd_mul_left d (pow_dvd_pow p (le_of_lt hx)), },
-    rw finset.sum_eq_single_of_mem (pls_help p d hd x a),
+    rw finset.sum_eq_single_of_mem (rev_prod_hom p d hd x a),
     { rw (char_fn_one R _ _).1, rw smul_eq_mul, rw mul_one,
       conv_rhs { rw mul_comm, rw mul_assoc, rw mul_comm, },
       rw zmod.nat_cast_val, congr, rw ← to_fun_eq_coe, rw ← to_fun_eq_coe, simp only,
@@ -392,7 +393,7 @@ begin
             (pow_dvd_pow p (le_of_lt hx)))) _, },
         apply congr_arg, rw ← monoid_hom.mul_apply, rw units.ext_iff,
         rw ←asso_dirichlet_character_eq_char', rw coe_coe,
-        rw ←zmod.cast_cast _ _ (↑((pls_help p d hd x) a)) (helper_idk' p d R m χ n),
+        rw ←zmod.cast_cast _ _ (↑((rev_prod_hom p d hd x) a)) (helper_idk' p d R m χ n),
         rw ←coe_coe,
         rw helper_281 p d m hd hx, rw ←coe_coe,
         rw ←asso_dirichlet_character_eq_char,
@@ -411,7 +412,7 @@ begin
         simp only [prod.fst_zmod_cast, prod.snd_zmod_cast, set.mem_singleton_iff,
           ring_hom.to_monoid_hom_eq_coe, set.mem_preimage],
         rw units.ext_iff, rw units.ext_iff,
-        rw units_chinese_remainder_comp_pls_help,
+        rw units_chinese_remainder_comp_rev_prod_hom,
         simp only [eq_self_iff_true, ring_hom.to_monoid_hom_eq_coe, and_self], }, },
     { apply finset.mem_univ, },
     { intros b h' hb, clear h',
@@ -420,8 +421,8 @@ begin
       { intro h,
         rw set.mem_prod at h, rw set.mem_preimage at h, rw set.mem_singleton_iff at h,
         rw set.mem_singleton_iff at h, cases h with h2 h3,
-        conv_lhs at h2 { rw ← units_chinese_remainder_comp_pls_help_fst p d hd x a, },
-        conv_lhs at h3 { rw ← units_chinese_remainder_comp_pls_help_snd p d hd x a, },
+        conv_lhs at h2 { rw ← units_chinese_remainder_comp_rev_prod_hom_fst p d hd x a, },
+        conv_lhs at h3 { rw ← units_chinese_remainder_comp_rev_prod_hom_snd p d hd x a, },
         apply hb,
         apply mul_equiv.injective (units.chinese_remainder (nat.coprime.pow_right x hd)),
         symmetry,
@@ -463,10 +464,10 @@ lemma helper_258 (n : ℕ) :
   ((⟨λ x, ((algebra_map ℚ_[p] R) (padic_int.coe.ring_hom (x.snd : ℤ_[p]))),
   helper_271 p d R n⟩ : C((zmod d)ˣ × ℤ_[p]ˣ, R))^ (n - 1) *
   (⟨λ x, (change_level (dvd_mul_of_dvd_right (dvd_pow dvd_rfl (nat.ne_zero_of_lt' 0)) d) 
-  ((teichmuller_character_mod_p' p R)^(n - 1)) ((pls_help p d hd m) x) : R),
+  ((teichmuller_character_mod_p' p R)^(n - 1)) ((rev_prod_hom p d hd m) x) : R),
   begin
     apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _,
-    apply is_loc_const_pls_help, end⟩ : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R)) :=
+    apply is_loc_const_rev_prod_hom, end⟩ : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R)) :=
 begin
   ext,
   change mul_inv_pow_hom p d R (n - 1) a = _,
@@ -476,7 +477,7 @@ begin
   { change _ = ((algebra_map ℚ_[p] R) (padic_int.coe.ring_hom ↑(a.snd)))^(n - 1),
     rw ← ring_hom.map_pow, rw ← ring_hom.map_pow, rw ← units.coe_pow, refl, },
   { change _ = ↑(change_level (dvd_mul_of_dvd_right (dvd_pow dvd_rfl (nat.ne_zero_of_lt' 0)) d) 
-      ((teichmuller_character_mod_p' p R) ^ (n - 1)) ((pls_help p d hd m) a)),
+      ((teichmuller_character_mod_p' p R) ^ (n - 1)) ((rev_prod_hom p d hd m) a)),
     delta teichmuller_character_mod_p',
     --rw dirichlet_character.pow_apply,
     simp_rw monoid_hom.comp_apply,
@@ -502,8 +503,8 @@ end
 -- make change_level a monoid_hom?
 
 lemma helper_259 (n : ℕ) : filter.tendsto (λ (x : ℕ), ((⟨λ (x : (zmod d)ˣ × ℤ_[p]ˣ),
-  ↑(change_level (helper_change_level_conductor m χ) (χ.mul (teichmuller_character_mod_p' p R)) ((pls_help p d hd m) x)),
-  begin apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_pls_help, end⟩ : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) : C((zmod d)ˣ × ℤ_[p]ˣ, R))) filter.at_top
+  ↑(change_level (helper_change_level_conductor m χ) (χ.mul (teichmuller_character_mod_p' p R)) ((rev_prod_hom p d hd m) x)),
+  begin apply is_locally_constant.comp _ _, apply is_locally_constant.comp _ _, apply is_loc_const_rev_prod_hom, end⟩ : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) : C((zmod d)ˣ × ℤ_[p]ˣ, R))) filter.at_top
   (nhds ⟨((units.coe_hom R).comp (dirichlet_char_extend p d R m hd
   (change_level (helper_change_level_conductor m χ) (χ.mul (teichmuller_character_mod_p' p R))))),
   units.continuous_coe.comp (dirichlet_char_extend.continuous p d R m hd _)⟩) :=
@@ -587,8 +588,8 @@ end
 lemma helper_262 [norm_one_class R] : filter.tendsto (λ (x : ℕ), dist (⟨λ (z : (zmod d)ˣ × ℤ_[p]ˣ),
   ↑((@padic_int.to_zmod_pow p _ x) ↑(z.snd)), continuous.comp continuous_bot (continuous.comp (padic_int.continuous_to_zmod_pow x)
   (continuous.comp units.continuous_coe continuous_snd))⟩ : C((zmod d)ˣ × ℤ_[p]ˣ, R)) (⟨λ (y : (zmod d)ˣ × ℤ_[p]ˣ),
-  ↑((pls_help p d hd x) y), continuous.comp continuous_of_discrete_topology
-  (is_locally_constant.continuous (is_loc_const_pls_help p d hd _))⟩)) filter.at_top (nhds 0) :=
+  ↑((rev_prod_hom p d hd x) y), continuous.comp continuous_of_discrete_topology
+  (is_locally_constant.continuous (is_loc_const_rev_prod_hom p d hd _))⟩)) filter.at_top (nhds 0) :=
 begin
 -- use norm_le!
   rw metric.tendsto_at_top, intros ε hε,
@@ -604,7 +605,7 @@ begin
   rw ← hy,
   simp only, clear hy,
   rw norm_sub_rev,
-  delta pls_help,
+  delta rev_prod_hom,
   change ∥(((units.map (zmod.chinese_remainder (nat.coprime.pow_right n hd)).symm.to_monoid_hom)
   ((mul_equiv.prod_units.symm)
      (((monoid_hom.id (zmod d)ˣ).prod_map (units.map (@padic_int.to_zmod_pow p _ n).to_monoid_hom)) y)) : zmod (d * p^n)) : R) - _∥ ≤ ε/2,
@@ -637,16 +638,16 @@ begin
 end
 
 lemma helper_260 [norm_one_class R] (n : ℕ) : filter.tendsto (λ (x : ℕ), ↑(⟨λ (y : (zmod d)ˣ × ℤ_[p]ˣ),
-  ((pls_help p d hd x) y : R) ^ (n - 1), begin apply is_locally_constant.comp₂,
-      { apply is_locally_constant.comp _ _, apply is_loc_const_pls_help, },
+  ((rev_prod_hom p d hd x) y : R) ^ (n - 1), begin apply is_locally_constant.comp₂,
+      { apply is_locally_constant.comp _ _, apply is_loc_const_rev_prod_hom, },
       { apply is_locally_constant.const, }, end⟩ : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R)) filter.at_top
   (nhds ((⟨λ (x : (zmod d)ˣ × ℤ_[p]ˣ), (algebra_map ℚ_[p] R)
   (padic_int.coe.ring_hom ↑(x.snd)), begin continuity, { rw algebra.algebra_map_eq_smul_one',
     exact continuous_id'.smul continuous_const, }, { exact units.continuous_coe, }, end⟩ : C((zmod d)ˣ × ℤ_[p]ˣ, R))^(n - 1))) :=
 begin
-  change filter.tendsto (λ x : ℕ, (⟨λ y, ((pls_help p d hd x) y : R), begin continuity,
+  change filter.tendsto (λ x : ℕ, (⟨λ y, ((rev_prod_hom p d hd x) y : R), begin continuity,
   { simp only, apply continuous_of_discrete_topology, },
-  { apply is_locally_constant.continuous (is_loc_const_pls_help p d hd x), }, end⟩ : C((zmod d)ˣ × ℤ_[p]ˣ, R))^(n - 1))
+  { apply is_locally_constant.continuous (is_loc_const_rev_prod_hom p d hd x), }, end⟩ : C((zmod d)ˣ × ℤ_[p]ˣ, R))^(n - 1))
     filter.at_top _,
   apply filter.tendsto.pow _ (n - 1),
   { apply_instance, },

@@ -17,6 +17,15 @@ Anne Baanen, Sander~R. Dahmen, Ashvni Narayanan, and Filippo A.~E. Nuccio
 \newblock \href {https://doi.org/10.1007/s10817-022-09644-0}
   {\path{doi:10.1007/s10817-022-09644-0}}.
 
+\bibitem{witt}
+Johan Commelin and Robert~Y. Lewis.
+\newblock Formalizing the ring of witt vectors.
+\newblock In {\em Proceedings of the 10th {ACM} {SIGPLAN} International
+  Conference on Certified Programs and Proofs}. {ACM}, jan 2021.
+\newblock URL: \url{https://doi.org/10.1145%2F3437992.3439919}, \href
+  {https://doi.org/10.1145/3437992.3439919}
+  {\path{doi:10.1145/3437992.3439919}}.
+
 \bibitem{KL}
 Tomio Kubota and Heinrich-Wolfgang Leopoldt.
 \newblock Eine {$p$}-adische {T}heorie der {Z}etawerte. {I}. {E}inf\"{u}hrung
