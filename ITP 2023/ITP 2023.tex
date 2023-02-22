@@ -148,16 +148,16 @@ to the entire Lean community for their timely help and consistent support.}%opti
 
 %TODO mandatory: add short abstract of the document
 \begin{abstract}
-The Euler-Riemann zeta function is a largely studied number-theoretic object, and the birthplace of several conjectures, 
+The Euler--Riemann zeta function is a largely studied numbertheoretic object, and the birthplace of several conjectures, 
 such as the Riemann Hypothesis. Different approaches are used to study it, including $p$-adic analysis : 
-deriving information from $p$-adic zeta functions. A generalized version of $p$-adic zeta functions (zeta function) 
+deriving information from $p$-adic zeta functions. A generalized version of $p$-adic zeta functions (Riemann zeta function) 
 are $p$-adic $L$-functions (resp. Dirichlet $L$-functions). This paper describes formalization of $p$-adic $L$-functions 
-in an interactive theorem prover Lean 3. Kubota-Leopoldt $p$-adic $L$-functions are meromorphic functions emerging from the 
-special values they take at negative integers in terms of generalized Bernoulli polynomials. They also take twisted values of 
+in an interactive theorem prover Lean 3. Kubota--Leopoldt $p$-adic $L$-functions are meromorphic functions emerging from the 
+special values they take at negative integers in terms of generalized Bernoulli numbers. They also take twisted values of 
 the Dirichlet $L$-function at negative integers. This work has never been done before in any theorem prover. 
 Our work is done with the support of \lean{mathlib} 3, one of Lean's mathematical libraries. It required formalization of a 
 lot of associated topics, such as Dirichlet characters, Bernoulli polynomials etc. We formalize these first, 
-then the definition of a $p$-adic $L$-function in terms of a $p$-adic integral with respect to the Bernoulli measure, 
+then the definition of a $p$-adic $L$-function in terms of an integral with respect to the Bernoulli measure, 
 proving that they take the required values at negative integers.
 \end{abstract}
 
@@ -171,15 +171,14 @@ formally verify proofs of new theorems dependent on preexisting theorems in \lea
 such a vast library without a highly collaborative spirit and a communal decentralized effort, one of 
 Lean's best features. 
 
-$p$-adic $L$-functions are a well studied number theoretic object. They were initially constructed 
+$p$-adic $L$-functions are a well studied numbertheoretic object. They were initially constructed 
 by Kubota and Leopoldt in \cite{KL}. Their motivation was to construct a meromorphic function that helps study 
 the Kummer congruence for Bernoulli numbers, and gives information regarding $p$-adic class numbers. 
 %%They appear in several places, such as the Birch and Swinnerton-Dyer Conjecture. 
 As a result, these functions take twisted values of the Dirichlet $L$-function at negative integers, and 
 are also related to the generalized Bernoulli numbers and the $p$-adic zeta function. There are several different ways of 
 constructing $p$-adic $L$-functions, we refer to the constructions
-given in Chapter 12 of \cite{cyc}. This has never been done before in any 
-theorem prover. As a result, one needs to build a lot of background (in the maximum possible generality) 
+given in Chapter 12 of \cite{cyc}. As a result, one needs to build a lot of background (in the maximum possible generality) 
 before embarking on the main goal.
 
 It is difficult to explain all the mathematical terms used here, we attempt to describe as many as possible. To that effect, 
@@ -197,19 +196,19 @@ number theory. The Dirichlet $L$-function associated to a Dirichlet character $\
 $$ L(s, \chi) = \sum_{n = 1}^{\infty} \frac{\chi (n)}{n^s} = \prod_{p \text{ prime}} \frac{1}{1 - \chi (p) p^{-s}}$$
 where $s$ is a complex variable with $Re(s) > 1$. This can be analytically extended 
 to the entire complex plane, with a simple pole at $s = 1$ when $\chi = 1$. Note also 
-that $L(s, 1)$ is the same as the Reimann zeta function. Moreover, it is known that 
+that $L(s, 1)$ is the same as the Riemann zeta function. Moreover, it is known that 
 $L(1 - n, \chi) = - \frac{B_{n, \chi}}{n}$, where $B_{n, \chi}$ are the generalized 
 Bernoulli numbers. 
 
 In this paper, we construct, for an integer prime $p$, a $p$-adic analogue of $L(s, \chi)$, 
-called the Kubota-Leopoldt $p$-adic $L$-function, denoted $L_p(s, \chi)$. This is generally done by continuously extending the function 
+called the Kubota--Leopoldt $p$-adic $L$-function, denoted $L_p(s, \chi)$. This is generally done by continuously extending the function 
 $L_p(1 - n, \chi) := (1 - \chi (p) p^{n - 1}) L(1 - n, \chi)$ to the complete $p$-adic space 
 $\mathbb{C}_p$. In fact, $L_p(s, 1)$ is analytic except for a pole at $s = 1$ with residue 
 $1 - \frac{1}{p}$ (Theorem 5.11, \cite{cyc}). 
 
 Formalization of the $p$-adic $L$-functions via analytic continuation was hard, since $\mathbb{C}_p$ did not exist 
 in \lean{mathlib} at the time. Following \cite{cyc}, 
-we instead define it in terms of a ``$p$-adic integral'' with respect to the Bernoulli measure. We explain these terms below. 
+we instead define it in terms of an ``integral'' with respect to the Bernoulli measure. We explain these terms below. 
 
 A profinite space is a compact, Hausdorff and totally disconnected space. The $p$-adic integers 
 $\mathbb{Z}_p$, which are the completion of the integers $\mathbb{Z}$ with respect to the 
@@ -224,23 +223,22 @@ one can show that the locally constant functions from $X$ to $R$ (denoted $LC(X,
 functions from $X$ to $R$ (denoted $C(X, R)$).
 
 Given an abelian group $A$, a distribution is defined to be an $A$-linear map from $LC(X, A)$ 
-to $A$. A $p$-adic measure $\phi$ is defined to be a bounded distribution, that is, $\forall f \in LC(X, R)$, 
+to $A$. A measure $\phi$ is defined to be a bounded distribution, that is, $\forall f \in LC(X, R)$, 
 $\exists K > 0$ such that $|| \phi (f) || \le K ||f|| $, where $||f|| = \sup_{x \in X} || f(x)||$. 
-An example of a $p$-adic measure is a Bernoulli measure. Given a natural number $d$ coprime to $p$ and a clopen set $U_{n, a}$ of 
+An example of a measure is the Bernoulli measure. Given a natural number $d$ coprime to $p$ and a clopen set $U_{n, a}$ of 
 $\mathbb{Z}/ d \mathbb{Z} \times \mathbb{Z}_p$, the characteristic function $\chi_{n, a}$ 
 (defined to be 1 on $U_{n, a}$ and 0 otherwise) is a locally constant function. 
 Given a natural number $c$ that is coprime to $d$ and $p$, we then define the Bernoulli measure $E_c$ by :
 $$ E_c(\chi_{n, a}) := \bigg \{ \frac{a}{d p^{n + 1}} \bigg \} - c \bigg \{ \frac{c^{-1} a}{d p^{n + 1}} \bigg \} + \frac{c - 1}{2} $$
 
-Given a $p$-adic measure $\mu$, the $p$-adic integral with respect to $\mu$ is 
+Given a measure $\mu$, the integral with respect to $\mu$ is 
 $\int f d\mu := \mu (f)$ for any locally constant function $f$, and 
 extending this definition to $C(X, R)$. In fact, this is an $R$-linear map. 
 
-Finally, the $p$-adic $L$-function is defined to be a $p$-adic integral with respect to the Bernoulli 
+Finally, the $p$-adic $L$-function is defined to be an integral with respect to the Bernoulli 
 measure. The characterizing property of the $p$-adic $L$-function is its evaluation at negative integers : 
 $$ L_p (1 - n, \chi) = -(1 - \chi \omega^{-n}(p)p^{n - 1}) \frac{B_{n, \chi \omega^{-n}}}{n} $$
-for $n \ge 1$. If defined as an analytic continuation, this would follow directly. However, when 
-defined as a $p$-adic integral, additional work is needed to prove this. 
+for $n \ge 1$. When defined as an integral, additional work is needed to prove this. 
 %The equivalence of these two definitions is proved in Theorem 12.2 of \cite{cyc}. The same theorem 
 %also proves the independence of the definition from the additional variable $c$.
 
@@ -268,7 +266,7 @@ We shall also use several tactics in proofs, such as \lean{rw}, \lean{apply}, \l
 \subsection{Filters and convergence}
 None of our mathematical proofs require filters on paper, however, we find that working with them makes 
 formalizing our proofs significantly less cumbersome. Due to the efforts of 
-Johannes Hölzl, Jeremy Avigad, and several others, we have a vast API for filters in Lean. 
+Johannes Hölzl, Jeremy Avigad, Patrick Massot and several others, we have a vast API for filters in Lean. 
 We shall not delve into the details of what a filter is, but instead explain how they are used to formalize convergence and limits. 
 \newline For a sequence of functions $(f_n)_{n \in \mathbb{N}}$, the expression $\lim_{n \to \infty} f_n(x) = a$ is 
 represented as :
@@ -276,7 +274,7 @@ represented as :
 tendsto (λ n : ℕ, f_n) filter.at_top ( 𝓝 a)
 \end{lstlisting}
 Here, \href{https://leanprover-community.github.io/mathlib_docs/order/filter/at_top_bot.html#filter.at_top}{\lean{filter.at\_top}} 
-(for the naturals) is a filter on $\mathbb{N}$ generated by the collection of sets $\{ b | a \leq b \}$ 
+(for the naturals) is a filter on $\mathbb{N}$ generated by the collection of sets $\{ b \mid a \leq b \}$ 
 for all $a \in \mathbb{N}$. %There is a large library of lemmas regarding \lean{tendsto} in \lean{mathlib}. 
 The following lemma is particulary useful :
 %Some important properties that we use frequently include :
@@ -301,7 +299,7 @@ lemma filter.tendsto_congr' {α : Type} {β : Type u_1} {f₁ f₂ : α → β}
 %We aim to use these lemmas as much as possible in order to avoid messy calculations with inequalities on norms. The last lemma is particularly useful. 
 This lemma shows that sequences that are the same after finitely many 
 elements have the same limit. 
-Given two sequences \lean{f1} and \lean{f2} (thought of as functions from $\mathbb{N}$), \newline \lean{f₁ =ᶠ[at\_top] f₂ ↔ ∃ (a : ℕ), ∀ (b : ℕ), b ≥ a, f₁ b = f₂ b}. 
+Given two sequences \lean{f₁} and \lean{f₂} (thought of as functions from $\mathbb{N}$), \newline \lean{f₁ =ᶠ[at\_top] f₂ ↔ ∃ (a : ℕ), ∀ (b : ℕ), b ≥ a, f₁ b = f₂ b}. 
 
 An equivalent condition to convergence on metric spaces is : 
 \begin{lstlisting}
@@ -337,7 +335,7 @@ Some fundamental objects with which we shall work throughout are the finite spac
 is equivalent to proving them for any finite cyclic group. Given a positive $n \in \mathbb{N}$, 
 $\mathbb{Z}/n \mathbb{Z}$ is the same as \href{https://leanprover-community.github.io/mathlib_docs/init/data/fin/basic.html#fin}{\lean{fin n}}(and $\mathbb{Z}$ for $n = 0$), 
 the set of natural numbers upto $n$. It is also the set of equivalence classes obtained via the relation 
-on $\mathbb{Z}$ : $a \sim b \iff n | a - b$. It has a natural group structure, and is given the discrete topology, 
+on $\mathbb{Z}$ : $a \sim b \iff n \mid a - b$. It has a natural group structure, and is given the discrete topology, 
 making it a topological group. Some maps used constantly include \newline \href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.val}{\lean{val:zmod n → ℕ}}, 
 which takes any element to its smallest nonnegative reprentative less than \lean{n}; 
 and \href{https://leanprover-community.github.io/mathlib_docs/data/zmod/basic.html#zmod.cast_hom}{\lean{cast\_hom:zmod n → R}}, a coercion to a ring, 
@@ -350,7 +348,7 @@ About 45 additional lemmas were required, which have been put in a separate file
 %%$\nu_p (p^k) = k$, and for $gcd(a,p) = 1$, $\nu_p (a) = 0$. By convention,$\nu_p (0) = \infty$, however, in Lean, \lean{valuation 0 = 0 }.
 
 Every \href{https://leanprover-community.github.io/mathlib_docs/algebra/group/defs.html#monoid}{\lean{monoid}} \lean{M} has an associated space of 
-invertible elements or units, denoted \href{https://leanprover-community.github.io/mathlib_docs/algebra/group/units.html#units}{\lean{units M}} or \lean{Mˣ}. 
+invertible elements or units, denoted \newline \href{https://leanprover-community.github.io/mathlib_docs/algebra/group/units.html#units}{\lean{units M}} or \lean{Mˣ}. 
 We use the map \lean{units.coe\_hom:Mˣ → M} to identify a unit in its parent space frequently. 
 Given a \href{https://leanprover-community.github.io/mathlib_docs/algebra/hom/group.html#monoid_hom}{\lean{monoid\_hom}} (abbreviated as \lean{→*}) \lean{R →* S} for monoids \lean{R} and \lean{S}, 
 one can obtain a homomorphism \lean{Rˣ →* Sˣ} by \href{https://leanprover-community.github.io/mathlib_docs/algebra/hom/units.html#units.map}{\lean{units.map}}. 
@@ -389,7 +387,7 @@ A lot of properties traditionally known for groups hold more generally and are d
 we define Dirichlet characters to be monoid homomorphisms on any \href{https://leanprover-community.github.io/mathlib_docs/algebra/group/defs.html#monoid}{\lean{monoid}} :
 \begin{lstlisting}
 abbreviation dirichlet_character (R : Type*) [monoid R] (n : ℕ) := 
-  (zmod n)ˣ →* Rˣ 
+  (zmod n)ˣ →* R ˣ 
 /-- The level of a Dirichlet character. -/
 abbreviation lev {R : Type*} [monoid R] {n : ℕ} 
   (χ : dirichlet_character R n) : ℕ := n
@@ -410,7 +408,7 @@ noncomputable abbreviation asso_dirichlet_character {R : Type*}
   function.extend (units.coe_hom (zmod n)) ((units.coe_hom R) ∘ χ) 0, ..}
 \end{lstlisting}
 Lean requires us to tag this definition \lean{noncomputable}, since we are producing data from an existential statement, 
-\lean{classical.some}, which has no computational content (see Chapter 11 of \cite{TPIL}).
+\lean{classical.some} (appearing in \lean{function.extend}), which has no computational content (see Chapter 11 of \cite{TPIL}).
 %The following useful theorem relates the two definitions :
 %\begin{lstlisting}
 %  lemma asso_dirichlet_character_eq_char {R : Type*} [monoid_with_zero R] {n : ℕ}
@@ -491,7 +489,9 @@ noncomputable def mul {m n : ℕ} (χ₁ : dirichlet_character R n)
 asso_primitive_character(change_level χ₁ (dvd_lcm_left n m) * 
   change_level χ₂ (dvd_lcm_right n m))
 \end{lstlisting} 
+This multiplication is not trivially commutative or associative, with respect to this definition. 
 %\subsubsection{Additional properties}
+
 We need the notion of odd and even characters. A character $\chi$ is odd if $\chi (-1) = -1$, and 
 even if $\chi (-1) = 1$. For a commutative ring, any character is either odd or even : 
 \begin{lstlisting}
@@ -541,12 +541,12 @@ noncomputable abbreviation teichmuller_character_mod_p (p : ℕ)
   [fact (nat.prime p)] : dirichlet_character ℤ_[p] p := units.map 
   (((witt_vector.equiv p).to_monoid_hom).comp (witt_vector.teichmuller p))
 \end{lstlisting}
-We use \lean{[fact p.prime]} to make the primality of $p$ an instance. This map takes $x \in \mathbb{Z}/p\mathbb{Z}$ to a root of unity $y \in \mathbb{Z}_p$ such that $y \equiv x (\texttt{mod p})$. 
+We use \lean{[fact p.prime]} to make the primality of $p$ an instance. This map takes \newline $x \in \mathbb{Z}/p\mathbb{Z}^{\times}$ to a root of unity $y \in \mathbb{Z}_p$ such that $y \equiv x (\texttt{mod p})$. 
 Often we view this as taking values in a $\mathbb{Q}_p$-algebra $R$, by composing it 
 with \lean{algebra\_map ℚ\_[p] R}, which identifies elements of $\mathbb{Q}_p$ 
 in $R$. Since we mostly deal with $\omega ^{-1}$ taking values on $R^{\times}$, we define this as \lean{teichmuller\_character\_mod\_p'}. \newline
 We proved properties of Teichmüller characters in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/dirichlet_character/teichmuller_character.lean}{\lean{teichmuller\_character.lean}}, 
-such as, for odd primes $p$, the Teichmüller character is primitive, and \lean{1} otherwise : 
+such as, for odd primes $p$, the Teichmüller character is odd, and \lean{1} otherwise : 
 \begin{lstlisting}
 lemma eval_neg_one (hp : 2 < p) : teichmuller_character_mod_p p (-1) = -1
 \end{lstlisting}
@@ -677,12 +677,16 @@ and $\mathbb{Z}$ are different).
 %The latter lemma proves Proposition 4.1 of \cite{cyc}. It is 
 %false for $F = 0$, since there is no dependency of the LHS on $F$. 
 \subsection{A special property of generalized Bernoulli numbers}
-An important property of these numbers is, for $k > 1$, $p$ odd and $\chi$ even : 
+An important property of these numbers is : 
 \begin{theorem}\label{thm1}
+Let $\chi$ be an even Dirichlet character of level $dp^m$ for $d$ coprime to the odd prime $p$, with $m$ positive. 
+Suppose $R$ is a nontrivial commutative non-Archimedean normed $\mathbb{Q}_p$-algebra with no zero divisors. 
+For $k > 1$, 
 $$ \lim_{n \to \infty} \frac{1}{dp^{n}} \sum_{0 < a < dp^{n} ; (a, dp) = 1} \chi \omega^{-k} (a) a^{k} = 
 (1 - \chi \omega^{-k} (p) p^{k-1}) B_{k, \chi \omega^{-k}} $$
 \end{theorem} 
-This is formulated in Lean as :
+Instead of giving \lean{R} a non-Archimedean structure(which did not exist in \lean{mathlib} when this project began), 
+we give as input its consequences, conditions \lean{na} and \lean{na'}. This is formulated in Lean as :
 \begin{lstlisting}
 theorem lim_even_character' (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), 
   ∥∑ i : (zmod n)ˣ, f i ∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i ∥)
@@ -696,8 +700,6 @@ theorem lim_even_character' (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R),
 %There were two options for the \lean{finset} used in \lean{finset.sum} : \lean{finset.range} or \lean{zmod (d * p\textasciicircum j)}. 
 %While both are mathematically equivalent, they create different kinds of coercions. 
 %We worked with both, as explained in Section \ref{section3}. %chose the former since it was easier to deal with, as some required lemmas regarding it had been previously formalized.
-Instead of giving \lean{R} a non-Archimedean structure(which did not exist in \lean{mathlib} when this project began), 
-we give as input its consequences, conditions \lean{na} and \lean{na'}. 
 %This is because the non-Archimedean structure and its required properties did not exist in \lean{mathlib} when this project began. 
 The proof of this theorem follows from the proof in Lemma 7.11 of \cite{cyc}, a 
 point of difference being that our theorem holds more generally for $R$ being a non-Archimedean normed commutative $\mathbb{Q}_p$-algebra with no zero divisors, 
@@ -717,14 +719,12 @@ lemma sum_even_character_tendsto_zero_of_units :
   (χ.mul (teichmuller_character_mod_p' p R^k))) i * i^(k - 1))) 
   at_top ( 𝓝 0) 
 \end{lstlisting}
-The proof of this theorem is in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/tendsto_zero_of_sum_even_char.lean}{tendsto\_zero\_of\_sum\_even\_char.lean}.
+The proof of this theorem is in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/tendsto_zero_of_sum_even_char.lean}{\lean{tendsto\_zero\_of\_sum\_even\_char.lean}}.
 %Notice that this sum is over the \lean{fintype} \lean{(zmod (d * p\textasciicircum n))ˣ}. 
 \section{Construction of the $p$-adic $L$-function}
 \label{section3}
 %\subsection{Profinite spaces}
 \subsection{Density of locally constant functions}
-We denote the (Banach) space of continuous functions from a profinite space $X$ to a group $A$ by $C(X, A)$, 
-and its subset of locally constant functions by $LC(X, A)$. A function is locally constant if the preimage of any set is open. 
 For any compact Hausdorff totally disconnected space X and a commutative
 normed ring A, we have proved that $LC(X, A)$ is a dense subset of $C(X, A)$. 
 Formalizing this took about 500 lines of code (now in \lean{mathlib}), and is based on the fact that locally compact Hausdorff
@@ -790,11 +790,11 @@ $\mathbb{Z} / d \mathbb{Z} \times \mathbb{Z}_p$, where $proj_1$ is the first can
 and $proj_{2,n}$ the composition of the second projection on $a \in \mathbb{Z}_p$ with $proj_n$ described above. We call this set 
 \lean{clopen\_basis' p d}. Its properties are formalized in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/padic_int/clopen_properties.lean}{\lean{padic\_int.clopen\_properties.lean}}.
 
-\subsection{$p$-adic distributions and measures}
+\subsection{Distributions and measures}
 In this section, $X = \varprojlim_{i \in \mathbb{N}} X_i$ denotes a profinite space with $X_i$ finite and
 projection maps $\pi_i : X \xrightarrow[]{} X_i$ and surjective maps
 $\pi_{ij} : X_i \xrightarrow[]{} X_j$ for all $i \ge j$. Henceforth, we use $G$ to denote an abelian group,
-$A$ for a commutative normed ring, $R$ for a commutative complete normed ring which is also a $\mathbb{Q}_p$ and $\mathbb{Q}$-algebra, 
+$A$ for a commutative normed ring, $R$ for a commutative complete normed ring which is also a $\mathbb{Q}_p$-algebra, 
 and $LC(X,Y)$ for the space of locally constant functions from $X$ to $Y$. 
 We fix a prime $p$ and an integer $d$ such that $gcd(d, p) =1$. \newline
 The topology on $C(X, A)$ comes from its normed group structure induced by the norm on $A$ :
@@ -804,13 +804,13 @@ continuous functions on compact spaces was developed at around the same time (cr
 we used the existing lemmas such as 
 \href{https://github.com/leanprover-community/mathlib/blob/32253a1a1071173b33dc7d6a218cf722c6feb514/src/topology/continuous_function/compact.lean#L47}{\lean{equiv\_bounded\_of\_compact}}.
 
-A $p$-adic distribution (from Section 12.1 of \cite{cyc}) is a $G$-linear function $\phi : LC(X, G) \xrightarrow[]{} G$. 
+A distribution (from Section 12.1 of \cite{cyc}) is a $G$-linear function $\phi : LC(X, G) \xrightarrow[]{} G$. 
 This is already a \lean{Type}, hence we do not redefine it. 
 % Ideally, there is no need to define \lean{distribution'}, since there are no additional
 % properties it satisfies which linear maps do not. A database needs to be built for every definition
 % made, which can be costly. Hence, in the final version, this definition will probably be
 % removed. 
-$p$-adic measures (not to be confused with measure theory measures) are bounded distributions :
+Measures (not to be confused with measure theory measures) are bounded distributions :
 \begin{lstlisting}
 def measures := {φ : (locally_constant X A) →ₗ[A] A // ∃ K : ℝ, 0 < K ∧ 
     ∀ f : (locally_constant X A), $\lVert$φ f$\rVert$ ≤ K * $\lVert$inclusion X A f$\rVert$ }
@@ -818,7 +818,7 @@ def measures := {φ : (locally_constant X A) →ₗ[A] A // ∃ K : ℝ, 0 < K �
 The map \lean{inclusion} identifies the locally constant function \lean{f} as a continuous function. 
 The boundedness of the distribution makes the measure continuous.
 \subsection{The Bernoulli measure}
-The Bernoulli measure is an essential $p$-adic measure. We make a choice of an integer $c$ with
+The Bernoulli measure is an essential measure. We make a choice of an integer $c$ with
 $gcd(c,dp) = 1$, and $c^{-1}$ is an integer such that $c c^{-1} \equiv 1 \text{ mod } dp^{2n+1}$.
 For a clopen set $U_{a,n}$, we define
 $$ E_c (\chi_{U_{a,n}}) = E_{c,n} (a) = \bigg\{ \frac{a}{dp^{n + 1}} \bigg\} - c \bigg\{ \frac{c^{-1}a}{dp^{n + 1}} \bigg\} + \frac{c - 1}{2} $$
@@ -941,8 +941,8 @@ lemma bernoulli_distribution_sum' (x : zmod (d * p^m)) :
 \end{lstlisting}
 which says, for $x \in \mathbb{Z}/dp^m \mathbb{Z}$, $E_{c, m} (x) = \sum_{y}' E_{c, m + 1} (y)$, for \lean{y ∈ equi\_class m (m + 1) x}. 
 
-\subsection{$p$-adic Integrals}
-The last piece in the puzzle is the $p$-adic integral. We use the same notation as in the previous
+\subsection{Integrals}
+The last piece in the puzzle is the integral. We use the same notation as in the previous
 section. Given a measure $\mu$, and a function $f \in LC(X, R)$, $\int f d\mu := \mu(f)$. As in Theorem 12.1 of \cite{cyc}, this can be extended to a
 continuous $R$-linear map $ \int_X f d\mu : C(X, R) \xrightarrow[]{} R $. 
 This follows from the fact that $LC(X, R)$ is dense in $C(X, R)$; as a result, the map from 
@@ -959,9 +959,8 @@ The continuity of the extension of the integral follows from the fact that every
 %is $K$, it is clear that $\epsilon / K$ is the required $\delta$. This is the proof of the following lemma :
 
 \subsection{Construction}
-There are several possible definitions for the $p$-adic $L$-function (fixing an embedding of
-$\mathbb{\bar{\mathbb{Q}}}$ into $\mathbb{C}_p$), the most common being a meromorphic function $L_p(s, \chi)$ on
-\newline $\{ s \in \mathbb{C}_p | |s| < p \}$ obtained by analytic continuation, such that
+There are several possible definitions for the $p$-adic $L$-function, the most common being a meromorphic function $L_p(s, \chi)$ on
+\newline $\{ s \in \mathbb{C}_p \mid |s| < p \}$ obtained by analytic continuation, such that
 $$ L_p (1 - n, \chi) = -(1 - \chi \omega^{-n}(p)p^{n - 1}) \frac{B_{n, \chi \omega^{-n}}}{n} $$
 for $n \ge 1$ (Theorem 5.11, \cite{cyc}). Due to the absence of $\mathbb{C}_p$ in \lean{mathlib} at the time, 
 and the difficulty of showing analytic continuity(even on paper), our definition is instead motivated by Theorem 12.2, \cite{cyc}, 
@@ -987,11 +986,11 @@ terms of power series expansions).
 Instead of using the variable $s$ (which takes values in a subset of $\mathbb{C}_p$), we choose to use an element of the weight space, 
 the set of continuous monoid homomorphisms from $\mathbb{Z}/d\mathbb{Z}^{\times} \times \mathbb{Z}_p^{\times}$ to $R$. We replace
 $\langle a \rangle ^s$ with \lean{w:continuous\_monoid\_hom A}. The advantage is that our $p$-adic $L$-function can now be defined over a more general space : 
-a nontrivial normed commutative complete non-Archimedean $\mathbb{Q}_p$ and $\mathbb{Q}$-algebra with no zero divisors. 
+a nontrivial normed commutative complete non-Archimedean $\mathbb{Q}_p$-algebra with no zero divisors. 
 
 Given a Dirichlet character $\chi$ of level $dp^m$ with $gcd(d, p) = 1$ and $m > 0$,
 we now define the $p$-adic $L$-function to be : %the RHS in Theorem \ref{thm3} :
-$$ L_p(w, \chi) = \int_{(\mathbb{Z}/d \mathbb{Z})^{\times} \times \mathbb{Z}_p^{\times}}
+$$ L_p(w, \chi) := \int_{(\mathbb{Z}/d \mathbb{Z})^{\times} \times \mathbb{Z}_p^{\times}}
 \chi \omega^{-1}(a) w dE_c $$
 \begin{lstlisting}
 def p_adic_L_function := 
@@ -1018,7 +1017,7 @@ it takes the same values at negative integers : for $n > 1$,
 \begin{equation}\label{eqn:1}
   $$ L_p (1 - n, \chi) = -(1 - \chi \omega^{-n}(p)p^{n - 1}) \frac{B_{n, \chi \omega^{-n}}}{n} $$
 \end{equation}
-For this section, we assume that $R$ is a non-Archimedean normed commutative $\mathbb{Q}_p$-algebra and $\mathbb{Q}$-algebra, 
+For this section, we assume that $R$ is a non-Archimedean normed commutative $\mathbb{Q}_p$-algebra, 
 which is complete, nontrivial, and has no zero divisors. The scalar multiplication structure obtained from $\mathbb{Q}$ 
 and $\mathbb{Q}_p$ are compatible, given by \lean{is\_scalar\_tower ℚ ℚ\_[p] R} (see Section 4.2 of \cite{DD}). 
 The prime $p$ is odd, and we choose positive natural numbers $d$ and $c$ which are mutually coprime and are also coprime to 
@@ -1045,7 +1044,7 @@ lemma eq_mul_of_coprime_of_dvd_conductor {m n : ℕ} [fact (0 < m * n)]
   χ₁.change_level (dvd_mul_right m n) * χ₂.change_level (dvd_mul_left n m) 
 \end{lstlisting}
 Thus, given $k > 0$, we can find primitive characters $\chi_1$ and $\chi_2$ with conductors $z_1$ and $z_2$ such that 
-$z_1 | d$ and $z_2 | p^m$ and $\chi_1 \chi_2 = \chi \omega^{-k}$. The condition that $d$ divides the conductor of $\chi$ ensures 
+$z_1 \mid d$ and $z_2 \mid p^m$ and $\chi_1 \chi_2 = \chi \omega^{-k}$. The condition that $d$ divides the conductor of $\chi$ ensures 
 that $z_1 = d$. As a result, if $gcd (y, d) \ne 1$, then $gcd (y, z_1 z_2) \ne 1$, so $\chi \omega^{-k} (y) = 0$ as needed.
 
 \subsection{Main Result}
@@ -1090,7 +1089,7 @@ is also (respectively) locally constant or continuous. Other difficulties includ
 
 Each of these sums are then evaluated separately. The first sum in (\ref{eqn:3}) follows from Theorem \ref{thm1}, after translations between \lean{zmod (d * p\textasciicircum n)ˣ} and \lean{finset.range (d * p\textasciicircum n)}. 
 This is done by the following lemma, which says 
-$$ \mathbb{Z} / d p^k \mathbb{Z} \simeq \{ x \in \mathbb{N} | gcd (x, d) \ne 1 \} \cup \{ x \in \mathbb{N} | gcd (x, p) \ne 1 \} 
+$$ \mathbb{Z} / d p^k \mathbb{Z} \simeq \{ x \in \mathbb{N} \mid gcd (x, d) \ne 1 \} \cup \{ x \in \mathbb{N} \mid gcd (x, p) \ne 1 \} 
 \cup (\mathbb{Z} / d p^k \mathbb{Z})^{\times} $$ 
 \begin{lstlisting}
 lemma helper_U_3 (x : ℕ) : range (d * p^x) = 
@@ -1108,7 +1107,7 @@ These calculations can be found in \href{https://github.com/laughinggas/p-adic-L
 
 Evaluating the middle sum (\ref{eqn:4}) is the most tedious. It is first broken into two sums, so that the previous result can be used. Then, a 
 change of variable from $a$ to $c^{-1} a$ is applied. The variable $c$ is coerced to $\mathbb{Z}/ d p^{2k} \mathbb{Z}$, increasing 
-the number of coercions significantly, thus lengthening the calculations. This can be found in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/sum_eval/second_sum.lean}{second\_sum.lean}.
+the number of coercions significantly, thus lengthening the calculations. This can be found in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/sum_eval/second_sum.lean}{\lean{second\_sum.lean}}.
 
 Finally, the last sum (\ref{eqn:5}) is 0. This is where one uses that $\chi$ is even. This follows from Theorem \ref{thm2}. 
 On paper, it is a one-line proof, done by substituting $a$ in the summand with $-a$ and doing caluclations mod $p^n$. However, since we work in a more general setting, 
