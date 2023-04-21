@@ -1,6 +1,6 @@
 This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: ITP 2023.aux
+The top-level auxiliary file: ArXiv.aux
 Reallocating 'name_of_file' (item size: 1) to 9 items.
 The style file: plainurl.bst
 Reallocating 'name_of_file' (item size: 1) to 9 items.
@@ -12,7 +12,7 @@ Reallocating 'singl_function' (item size: 4) to 100 items.
 Database file #1: ITP-2023.bib
 You've used 6 entries,
             2882 wiz_defined-function locations,
-            678 strings with 6360 characters,
+            678 strings with 6354 characters,
 and the built_in function-call counts, 2934 in all, are:
 = -- 312
 > -- 97

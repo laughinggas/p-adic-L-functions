@@ -1,9 +1,9 @@
-PWD c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023
+PWD c:\Users\ashvn\my_project1\p-adic-L-functions\Papers
 INPUT C:\Users\ashvn\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.tex
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.log
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lipics-v2021.cls
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lipics-v2021.cls
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.tex
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.log
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\lipics-v2021.cls
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\lipics-v2021.cls
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\fleqn.clo
@@ -21,6 +21,8 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\microtype.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\inputenc.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\inputenc.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdftex\glyphtounicode.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdftex\glyphtounicode.tex
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\lmodern.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\lmodern.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\lmodern.sty
@@ -109,39 +111,54 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\listings\listings.c
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\listings\listings.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lineno\lineno.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lineno\lineno.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\totpages\totpages.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\totpages\totpages.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\totpages\totpages.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\ms\everyshi.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\ms\everyshi.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hyperref.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperxmp\hyperxmp.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperxmp\hyperxmp.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperxmp\hyperxmp.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\kvoptions\kvoptions.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\ltxcmds\ltxcmds.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\iftex\iftex.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdfescape\pdfescape.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdftexcmds\pdftexcmds.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\infwarerr\infwarerr.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\infwarerr\infwarerr.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\kvsetkeys\kvsetkeys.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\iftex\iftex.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\stringenc.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\ifmtarg\ifmtarg.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\ifmtarg\ifmtarg.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\etoolbox\etoolbox.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\ifthen.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\oberdiek\ifdraft.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\oberdiek\ifdraft.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\totpages\totpages.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\totpages\totpages.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\ms\everyshi.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\ms\everyshi.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\iftex\ifluatex.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\iftex\ifluatex.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\totpages\totpages.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hyperref.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\hyperref.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\kvdefinekeys\kvdefinekeys.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdfescape\pdfescape.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\pdfescape\pdfescape.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hycolor\hycolor.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hycolor\hycolor.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\letltxmacro\letltxmacro.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\letltxmacro\letltxmacro.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\auxhook\auxhook.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\auxhook\auxhook.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\kvoptions\kvoptions.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\kvoptions\kvoptions.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\pd1enc.def
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\pd1enc.def
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\intcalc\intcalc.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\intcalc\intcalc.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\etexcmds\etexcmds.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\etexcmds\etexcmds.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\hyperref\puenc.def
@@ -162,14 +179,22 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\rerunfilecheck\reru
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\rerunfilecheck\rerunfilecheck.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\colorprofiles.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\colorprofiles.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\colorprofiles.sty
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\colorprofiles.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\colorprofiles.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\sRGB.icc
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\FOGRA39L_coated.icc
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\sRGB.icc
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.pdf
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\colorprofiles\sRGB.icc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption3.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\caption\caption3.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\graphics\rotating.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\graphics\rotating.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\ifthen.sty
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\base\ifthen.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\caption\subcaption.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\caption\subcaption.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\xstring\xstring.sty
@@ -209,11 +234,11 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\graphics-cfg\color.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\tools\xspace.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\tools\xspace.sty
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lstlean.tex
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\lstlean.tex
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\lstlean.tex
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\lstlean.tex
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.aux
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.aux
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.aux
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-cmr.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-cmr.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
@@ -226,14 +251,13 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\refcount\refcount.s
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\refcount\refcount.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\gettitlestring\gettitlestring.sty
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.pdf
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr17.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmss.fd
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmss.fd
@@ -271,8 +295,6 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msb.cf
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\microtype\mt-msb.cfg
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr5.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmss8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr7.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr5.tfm
@@ -297,7 +319,7 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\fontawesome5\ufonta
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\fontawesome5\ufontawesomebrands1.fd
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\fontawesome5\fa5brands1.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr9.tfm
-OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.vtc
+OUTPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.vtc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmss10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
@@ -320,17 +342,10 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmss10
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmss12.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt10.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr7.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\mwe\example-image-plain.pdf
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\mwe\example-image-plain.pdf
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\mwe\example-image-plain.pdf
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\mwe\example-image-plain.pdf
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmr.fd
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmr.fd
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ts1-lmr7.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\mwe\example-image-plain.pdf
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\mwe\example-image-plain.pdf
 INPUT C:\Users\ashvn\AppData\Local\MiKTeX\pdftex\config\pdftex.map
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr7.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr5.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtk10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr7.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr5.tfm
@@ -346,7 +361,6 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtk10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr9.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr9.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr6.tfm
@@ -364,13 +378,13 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\sym
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr6.tfm
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmtt.fd
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmtt.fd
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ts1-lmtt10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr12.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmi12.tfm
@@ -379,11 +393,22 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy10.tf
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmsy8.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.bbl
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.bbl
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.aux
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
-INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\ITP 2023\ITP 2023.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.bbl
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.bbl
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\babel\locale\en\babel-ukenglish.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\babel\locale\en\babel-ukenglish.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\babel\locale\en\babel-english-unitedkingdom.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\babel\locale\en\babel-english-unitedkingdom.tex
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\babel\locale\en\babel-en-GB.ini
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\se-utf8.def
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\se-utf8.def
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\se-utf8.def
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\se-pdfdoc.def
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\se-pdfdoc.def
+INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\tex\generic\stringenc\se-pdfdoc.def
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.aux
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
+INPUT c:\Users\ashvn\my_project1\p-adic-L-functions\Papers\ArXiv.out
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-rm.enc
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-mathit.enc
@@ -426,8 +451,6 @@ INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmri10.
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmri10.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmri9.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmri9.pfb
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmss8.pfb
-INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmss8.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmssbx10.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmssbx10.pfb
 INPUT C:\Users\ashvn\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy10.pfb
