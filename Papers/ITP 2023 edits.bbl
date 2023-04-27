@@ -1,0 +1,51 @@
+\begin{thebibliography}{1}
+
+\bibitem{TPIL}
+Jeremy Avigad, Leonardo de~Moura, and Soonho Kong.
+\newblock Theorem proving in lean, Jun 2018.
+\newblock URL:
+  \url{https://kilthub.cmu.edu/articles/journal_contribution/Theorem_Proving_in_Lean/6492902/1},
+  \href {https://doi.org/10.1184/R1/6492902.v1}
+  {\path{doi:10.1184/R1/6492902.v1}}.
+
+\bibitem{DD}
+Anne Baanen, Sander~R. Dahmen, Ashvni Narayanan, and Filippo A.~E. Nuccio
+  Mortarino Majno~di Capriglio.
+\newblock A formalization of dedekind domains and class groups of global
+  fields.
+\newblock {\em Journal of Automated Reasoning}, 66(4):611--637, Nov 2022.
+\newblock \href {https://doi.org/10.1007/s10817-022-09644-0}
+  {\path{doi:10.1007/s10817-022-09644-0}}.
+
+\bibitem{witt}
+Johan Commelin and Robert~Y. Lewis.
+\newblock Formalizing the ring of witt vectors.
+\newblock In {\em Proceedings of the 10th {ACM} {SIGPLAN} International
+  Conference on Certified Programs and Proofs}. {ACM}, jan 2021.
+\newblock URL: \url{https://doi.org/10.1145%2F3437992.3439919}, \href
+  {https://doi.org/10.1145/3437992.3439919}
+  {\path{doi:10.1145/3437992.3439919}}.
+
+\bibitem{KL}
+Tomio Kubota and Heinrich-Wolfgang Leopoldt.
+\newblock Eine {$p$}-adische {T}heorie der {Z}etawerte. {I}. {E}inf\"{u}hrung
+  der {$p$}-adischen {D}irichletschen {$L$}-{F}unktionen.
+\newblock {\em J. Reine Angew. Math.}, 214(215):328--339, 1964.
+
+\bibitem{mathlib}
+{The mathlib Community}.
+\newblock The {L}ean mathematical library.
+\newblock In J.~Blanchette and C.~Hrițcu, editors, {\em CPP 2020}, page
+  367–381. ACM, 2020.
+\newblock \href {https://doi.org/10.1145/3372885.3373824}
+  {\path{doi:10.1145/3372885.3373824}}.
+
+\bibitem{cyc}
+Lawrence~C. Washington.
+\newblock {\em Introduction to cyclotomic fields}, volume~83 of {\em Graduate
+  Texts in Mathematics}.
+\newblock Springer-Verlag, New York, second edition, 1997.
+\newblock \href {https://doi.org/10.1007/978-1-4612-1934-7}
+  {\path{doi:10.1007/978-1-4612-1934-7}}.
+
+\end{thebibliography}
