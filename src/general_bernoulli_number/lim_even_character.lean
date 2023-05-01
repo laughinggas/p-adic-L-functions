@@ -53,7 +53,7 @@ lemma helper_13 [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ 
   (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
   (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
   (1 / (d * p ^ x : ℕ) : ℚ_[p]) •
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character)
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).reduction)
   ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) *
   (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k))))) :=
 begin
@@ -66,10 +66,10 @@ begin
   have coe_sub : (k : ℤ) - 1 = ((k - 1 : ℕ) : ℤ),
   { change int.of_nat k - 1 = int.of_nat (k - 1),
     rw [int.of_nat_sub (le_of_lt hk), int.of_nat_one], },
-  have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character x =
+  have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).reduction x =
     asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)) x :=
-  asso_dirichlet_character.asso_primitive_character _ (is_primitive.mul _ _),
-  have f1 : (χ.mul (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character.conductor =
+  asso_dirichlet_character.reduction _ (is_primitive.mul _ _),
+  have f1 : (χ.mul (teichmuller_character_mod_p' p R ^ k)).reduction.conductor =
     (χ.mul (teichmuller_character_mod_p' p R ^ k)).conductor,
   { rw asso_primitive_conductor_eq, },
   rw general_bernoulli_number.eq_sum_bernoulli_of_conductor_dvd _ k (dvd_trans (conductor.dvd_lev _)
@@ -216,7 +216,7 @@ begin
   { have nz : ∀ x : ℕ, ((d * p^x : ℕ) : ℚ) ≠ 0 := λ x, nat.cast_ne_zero.2 (nat.ne_zero_of_lt' 0),
     simp_rw [div_self (nz _)],
     conv { congr, funext, rw [mul_comm ((asso_dirichlet_character (χ.mul
-      (teichmuller_character_mod_p' p R ^ k)).asso_primitive_character) ↑(d * p ^ x))
+      (teichmuller_character_mod_p' p R ^ k)).reduction) ↑(d * p ^ x))
       ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) * (algebra_map ℚ R)
       (polynomial.eval 1 (polynomial.bernoulli k))), mul_assoc, ← smul_mul_assoc,
       ← nat.succ_pred_eq_of_pos (pos_of_gt hk), pow_succ, (algebra_map ℚ R).map_mul,
@@ -230,7 +230,7 @@ begin
       intros ε hε,
       obtain ⟨N, hN⟩ := metric.tendsto_at_top.1 (norm_pow_lim_eq_zero p d R 1 (nat.pred_lt_pred
         nat.one_ne_zero hk)) (ε/((χ.mul
-        (teichmuller_character_mod_p' p R ^ k.pred.succ)).asso_primitive_character.bound))
+        (teichmuller_character_mod_p' p R ^ k.pred.succ)).reduction.bound))
         (div_pos hε (bound_pos _)),
       refine ⟨N, λ x hx, _⟩,
       rw dist_eq_norm, rw sub_zero, rw mul_comm,

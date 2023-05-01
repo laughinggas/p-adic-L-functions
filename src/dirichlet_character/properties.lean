@@ -141,7 +141,7 @@ begin
   { have dvd : lcm n m ∣ n * m := lcm_dvd_iff.2 ⟨(dvd_mul_right _ _), (dvd_mul_left _ _)⟩,
     have := zmod.is_unit_of_is_coprime_dvd dvd ha,
     rw ←change_level.asso_dirichlet_character_eq' _ (conductor.dvd_lev _) this,
-    delta asso_primitive_character,
+    delta reduction,
     rw [←(factors_through.spec _ (conductor.factors_through (change_level _ χ * change_level _ ψ))),
       asso_dirichlet_character_mul, monoid_hom.mul_apply, change_level.asso_dirichlet_character_eq'
       _ _ this, change_level.asso_dirichlet_character_eq' _ _ this, zmod.cast_nat_cast
@@ -165,10 +165,10 @@ begin
   rw [this, zero_sub, neg_eq_neg_one_mul, monoid_hom.map_mul],
 end
 
---`asso_dirichlet_character_equiv` changed to `asso_dirichlet_character.asso_primitive_character`
-lemma asso_primitive_character {S : Type*} [comm_monoid_with_zero S] {m : ℕ}
+--`asso_dirichlet_character_equiv` changed to `asso_dirichlet_character.reduction`
+lemma reduction {S : Type*} [comm_monoid_with_zero S] {m : ℕ}
   (ψ : dirichlet_character S m) (h : is_primitive ψ) (a : ℕ) :
-  asso_dirichlet_character ψ.asso_primitive_character a = asso_dirichlet_character ψ a :=
+  asso_dirichlet_character ψ.reduction a = asso_dirichlet_character ψ a :=
 begin
   by_cases h' : is_unit (a : zmod m),
   { conv_rhs { rw factors_through.spec ψ (conductor.factors_through ψ), },
@@ -185,6 +185,7 @@ end
 end asso_dirichlet_character
 
 /-- The level at which the Dirichlet character is defined. -/
+@[nolint unused_arguments]
 abbreviation lev {R : Type*} [monoid R] {n : ℕ} (χ : dirichlet_character R n) : ℕ := n
 -- dont know how to remove this linting error
 

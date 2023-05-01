@@ -18,8 +18,8 @@ Naturals
 -/
 
 namespace nat
-lemma dvd_sub_comm (a b n : ℕ) (h : (n : ℤ) ∣ (a : ℤ) - (b : ℤ)) : (n : ℤ) ∣ (b : ℤ) - (a : ℤ) :=
-(dvd_neg ↑n (↑b - ↑a)).mp (by {simp only [h, neg_sub]})
+lemma dvd_sub_comm (a b n : ℤ) (h : (n : ℤ) ∣ (a : ℤ) - (b : ℤ)) : (n : ℤ) ∣ (b : ℤ) - (a : ℤ) :=
+(dvd_neg _ _).mp (by simp [h])
 
 lemma coprime_sub {n m : ℕ} (h : n.coprime m) (hn : m ≤ n) : (n - m).coprime n :=
 begin
@@ -37,8 +37,7 @@ lemma one_lt_mul_pow_of_ne_one [fact (0 < d)] {k : ℕ} (h : d * p^k ≠ 1) : 1 
 nat.one_lt_iff_ne_zero_and_ne_one.2 ⟨nat.mul_ne_zero (ne_zero_of_lt' 0)
   (pow_ne_zero _ (nat.prime.ne_zero (fact.out _))), h⟩
 
-lemma mul_pow_eq_one_of_mul_pow_sq_not_one_lt {p : ℕ} [fact p.prime] {d : ℕ} [fact (0 < d)] 
-  {n : ℕ} (h : ¬ 1 < d * p^(2 * n)) : d * p^n = 1 :=
+lemma mul_pow_eq_one_of_mul_pow_sq_not_one_lt [fact (0 < d)] {n : ℕ} (h : ¬ 1 < d * p^(2 * n)) : d * p^n = 1 :=
 begin
   rw [not_lt_iff_eq_or_lt, lt_one_iff, nat.mul_eq_zero] at h,
   cases h,
@@ -68,6 +67,7 @@ end
 
 lemma le_pow {n a : ℕ} (h1 : 1 ≤ a) (h2 : 1 ≤ n) : a ≤ a^n :=
 begin
+-- do cases
   conv { congr, rw ←pow_one a, skip, skip, },
   apply pow_le_pow h1 h2,
 end
@@ -145,19 +145,8 @@ end
 lemma sub_ne_zero {n k : ℕ} (h : k < n) : n - k ≠ 0 :=
 begin
   intro h',
-  rw nat.sub_eq_zero_iff_le at h',
-  rw ← not_lt at h',
+  rw [nat.sub_eq_zero_iff_le, ← not_lt] at h',
   apply h' h,
-end
-
-lemma coprime.sub_self {m n : ℕ} (h : m.coprime n) (h' : m ≤ n) : (n - m).coprime n :=
-begin
-  contrapose h,
-  rw nat.prime.not_coprime_iff_dvd at *,
-  rcases h with ⟨p, hp, h1, h2⟩,
-  refine ⟨p, hp, _, h2⟩,
-  rw ← nat.sub_sub_self h',
-  apply nat.dvd_sub (nat.sub_le _ _) h2 h1,
 end
 end nat
 

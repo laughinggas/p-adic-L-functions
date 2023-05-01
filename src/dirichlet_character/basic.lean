@@ -25,8 +25,9 @@ lemma is_unit.unit_mul {α : Type*} [monoid α] {x y : α} (hx : is_unit x) (hy 
   hx.unit * hy.unit = (hx.mul hy).unit :=
   by { rw ←units.eq_iff, simp [is_unit.unit_spec] }
 
-/-- A Dirichlet character is defined as a monoid homomorphism which is periodic. -/
-abbreviation dirichlet_character (R : Type*) [monoid R] (n : ℕ) := units (zmod n) →* units R
+/-- A Dirichlet character is defined as a monoid homomorphism which is periodic for n ≠ 0. -/
+@[reducible]
+def dirichlet_character (R : Type*) [monoid R] (n : ℕ) := (zmod n)ˣ →* Rˣ
 
 open_locale classical
 
@@ -129,7 +130,7 @@ lemma change_level_def {m : ℕ} (hm : n ∣ m) : change_level hm χ = χ.comp (
 namespace change_level
 lemma self : change_level (dvd_refl n) χ = χ := by { rw change_level_def, simp, }
 
-lemma dvd {m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) :
+lemma trans {m d : ℕ} (hm : n ∣ m) (hd : m ∣ d) :
   change_level (dvd_trans hm hd) χ = change_level hd (change_level hm χ) :=
 begin
   repeat { rw change_level_def, }, 
@@ -236,7 +237,7 @@ lemma eq_one_iff (hn : 0 < n) : χ = 1 ↔ χ.conductor = 1 :=
 lemma eq_zero_iff_level_eq_zero : χ.conductor = 0 ↔ n = 0 :=
 ⟨λ h, by {rw ←zero_dvd_iff, convert dvd_lev χ, rw h, },
   λ h, by {rw [conductor, nat.Inf_eq_zero], left, refine ⟨zero_dvd_iff.2 h,
-  ⟨change_level (by {rw h}) χ, by { rw [←change_level.dvd _ _ _, change_level.self _], }⟩, ⟩, }⟩
+  ⟨change_level (by {rw h}) χ, by { rw [←change_level.trans _ _ _, change_level.self _], }⟩, ⟩, }⟩
 end conductor
 
 /-- A character is primitive if its level is equal to its conductor. -/
@@ -268,7 +269,7 @@ by { rw h }
 def equiv {a b : ℕ} (h : a = b) : dirichlet_character R a ≃* dirichlet_character R b := by { rw h, }
 
 /-- The primitive character associated to a Dirichlet character. -/
-noncomputable def asso_primitive_character : dirichlet_character R χ.conductor :=
+noncomputable def reduction : dirichlet_character R χ.conductor :=
   classical.some (conductor.factors_through χ).ind_char
 
 lemma mem_conductor_set_eq_conductor {d : ℕ} (hd : d ∈ χ.conductor_set) :
@@ -296,7 +297,7 @@ begin
   convert (factors_through.spec _ _).symm,
 end
 
-lemma asso_primitive_character_is_primitive : (χ.asso_primitive_character).is_primitive :=
+lemma reduction_is_primitive : (χ.reduction).is_primitive :=
 begin
   by_cases χ.conductor = 0,
   { rw is_primitive_def, conv_rhs { rw h, },
@@ -305,11 +306,11 @@ begin
   (mem_conductor_set_eq_conductor _ (conductor.mem_conductor_set _)),
 end
 
-lemma asso_primitive_character_one (hn : 0 < n) :
-  (1 : dirichlet_character R n).asso_primitive_character = 1 :=
+lemma reduction_one (hn : 0 < n) :
+  (1 : dirichlet_character R n).reduction = 1 :=
 begin
   rw conductor.eq_one_iff _,
-  { convert (1 : dirichlet_character R n).asso_primitive_character_is_primitive,
+  { convert (1 : dirichlet_character R n).reduction_is_primitive,
     rw conductor.one hn, },
   { rw conductor.one hn, apply nat.one_pos, },
 end
@@ -327,20 +328,20 @@ end
 
 -- `mul_eq_asso_pri_char` changed to `asso_primitive_conductor_eq`
 lemma asso_primitive_conductor_eq {n : ℕ} (χ : dirichlet_character R n) :
-  χ.asso_primitive_character.conductor = χ.conductor :=
-(is_primitive_def χ.asso_primitive_character).1 (asso_primitive_character_is_primitive χ)
+  χ.reduction.conductor = χ.conductor :=
+(is_primitive_def χ.reduction).1 (reduction_is_primitive χ)
 
-/-- Similar to multiplication of Dirichlet characters, without needing the characters to be
-  primitive. -/
+/-- Primitive character associated to multiplication of Dirichlet characters, 
+  after changing both levels to the same -/
 noncomputable def mul {m : ℕ} (χ₁ : dirichlet_character R n) (χ₂ : dirichlet_character R m) :=
-asso_primitive_character (change_level (dvd_lcm_left n m) χ₁ * change_level (dvd_lcm_right n m) χ₂)
+reduction (change_level (dvd_lcm_left n m) χ₁ * change_level (dvd_lcm_right n m) χ₂)
 
 lemma mul_def {n m : ℕ} {χ : dirichlet_character R n} {ψ : dirichlet_character R m} :
-  χ.mul ψ = (change_level _ χ * change_level _ ψ).asso_primitive_character := rfl
+  χ.mul ψ = (change_level _ χ * change_level _ ψ).reduction := rfl
 
 namespace is_primitive
 lemma mul {m : ℕ} (ψ : dirichlet_character R m) : (mul χ ψ).is_primitive :=
-asso_primitive_character_is_primitive _
+reduction_is_primitive _
 end is_primitive
 
 /-- Composition of a Dirichlet character with a multiplicative homomorphism of units. -/

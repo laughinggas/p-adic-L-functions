@@ -292,8 +292,8 @@ begin
   exact (dvd_iff_mod_eq_zero _ _).2 (sub_mod_eq_zero_of_mod_eq ((eq_iff_modeq_nat _).1 this)),
 end
 
-instance {p : ℕ} [fact (nat.prime p)] [fact (2 < p)] : nontrivial (units (zmod p)) :=
-fintype.one_lt_card_iff_nontrivial.mp ((zmod.card_units p).symm ▸ lt_tsub_iff_right.mpr (fact.out _))
+--instance {p : ℕ} [fact (nat.prime p)] [fact (2 < p)] : nontrivial (units (zmod p)) :=
+--fintype.one_lt_card_iff_nontrivial.mp ((zmod.card_units p).symm ▸ lt_tsub_iff_right.mpr (fact.out _))
 
 @[continuity]
 lemma induced_top_cont_inv {n : ℕ} : @continuous _ _ (topological_space.induced

@@ -35,7 +35,7 @@ open_locale big_operators
   where `f` is the conductor of the Dirichlet character `ψ`. -/
 noncomputable def general_bernoulli_number (m : ℕ) : S :=
   (algebra_map ℚ S ((ψ.conductor)^(m - 1 : ℤ))) * (∑ a in finset.range ψ.conductor,
-  asso_dirichlet_character (asso_primitive_character ψ) a.succ * algebra_map ℚ S
+  asso_dirichlet_character (reduction ψ) a.succ * algebra_map ℚ S
   ((polynomial.bernoulli m).eval (a.succ / ψ.conductor : ℚ)))
 -- def is ind of F
 
@@ -43,7 +43,7 @@ namespace general_bernoulli_number
 
 lemma general_bernoulli_number_def (m : ℕ) : general_bernoulli_number ψ m =
   (algebra_map ℚ S ((ψ.conductor)^(m - 1 : ℤ))) * (∑ a in finset.range ψ.conductor,
-  asso_dirichlet_character (asso_primitive_character ψ) a.succ *
+  asso_dirichlet_character (reduction ψ) a.succ *
   algebra_map ℚ S ((polynomial.bernoulli m).eval (a.succ / ψ.conductor : ℚ))) := rfl
 
 /-- B_{n,1} = B_n, where 1 is the trivial Dirichlet character of level 1. -/
@@ -54,7 +54,7 @@ begin
   simp only [one_pow, one_mul, nat.cast_zero, polynomial.bernoulli_eval_one,
     nat.cast_one, div_one, finset.sum_singleton, finset.range_one, monoid_hom.coe_mk],
   rw extend_eq_char _ is_unit_one,
-  rw asso_primitive_character_one nat.one_pos,
+  rw reduction_one nat.one_pos,
   convert one_mul _,
   { simp only [one_zpow, ring_hom.map_one], },
   { convert (one_mul _).symm, },
@@ -68,7 +68,7 @@ begin
     polynomial.bernoulli_eval_one, nat.cast_one, div_one, finset.sum_singleton,
     finset.range_one, monoid_hom.coe_mk],
   rw extend_eq_char _ is_unit_one,
-  rw asso_primitive_character_one nat.one_pos,
+  rw reduction_one nat.one_pos,
   convert one_mul _,
   { simp only [one_zpow, ring_hom.map_one], },
   { convert (one_mul _).symm, },
@@ -91,7 +91,7 @@ end
   where F is a multiple of the conductor. -/
 lemma eq_sum_bernoulli_of_conductor_dvd {F : ℕ} [hF : fact (0 < F)] (m : ℕ) (h : ψ.conductor ∣ F) :
   general_bernoulli_number ψ m = (algebra_map ℚ S) (F^(m - 1 : ℤ)) *
-  (∑ a in finset.range F, asso_dirichlet_character ψ.asso_primitive_character a.succ *
+  (∑ a in finset.range F, asso_dirichlet_character ψ.reduction a.succ *
     algebra_map ℚ S ((polynomial.bernoulli m).eval (a.succ / F : ℚ))) :=
 begin
   cases h with k h, rw h,
@@ -108,7 +108,7 @@ begin
   conv_lhs { congr, skip, apply_congr, skip,
     rw [←mul_div_mul_left _ _ hk2, ←mul_div_assoc', polynomial.bernoulli_eval_mul' _ hk1,
     (algebra_map _ _).map_mul, (algebra_map _ _).map_sum, ←mul_assoc,
-    mul_comm ((asso_dirichlet_character ψ.asso_primitive_character) ↑(x.succ)) _, mul_assoc,
+    mul_comm ((asso_dirichlet_character ψ.reduction) ↑(x.succ)) _, mul_assoc,
     finset.mul_sum], },
   rw [←finset.mul_sum, ←mul_assoc],
   apply congr_arg2,
