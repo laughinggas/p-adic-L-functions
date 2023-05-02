@@ -72,7 +72,7 @@ namespace units
 
 /-- Gives the equivalence (ℤ/(m * n)ℤ)ˣ ≃* (ℤ/mℤ)ˣ × (ℤ/nℤ)ˣ -/
 -- It would be nice to use units.homeomorph.prod_units instead, however no way to identify it as a mul_equiv.
-abbreviation chinese_remainder {m n : ℕ} (h : m.coprime n) :
+def chinese_remainder {m n : ℕ} (h : m.coprime n) :
   (zmod (m * n))ˣ ≃* (zmod m)ˣ × (zmod n)ˣ :=
 mul_equiv.trans (units.map_equiv (zmod.chinese_remainder h).to_mul_equiv) mul_equiv.prod_units
 
