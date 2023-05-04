@@ -116,12 +116,12 @@ begin
 end
 -- maybe can be simplified
 
-lemma change_level_pow_eval_neg_one' [algebra ℚ_[p] R] [nontrivial R] [no_zero_divisors R] (k : ℕ)
-  (hp : 2 < p) : ((teichmuller_character_mod_p_inv p R ^ k) is_unit_one.neg.unit) = (-1) ^ k :=
+lemma change_level_pow_eval_neg_one [algebra ℚ_[p] R] [nontrivial R] [no_zero_divisors R] (k : ℕ)
+  (hp : 2 < p) : ((teichmuller_character_mod_p_inv p R ^ k) (-1)) = (-1) ^ k :=
 begin
-  have : (is_unit_one.neg.unit : (zmod p)ˣ) = -1,
-  { rw [←units.eq_iff, is_unit.unit_spec, units.coe_neg_one], },
-  rw [dirichlet_character.pow_apply, this, change_level_eval_neg_one' hp],
+--  have : (is_unit_one.neg.unit : (zmod p)ˣ) = -1,
+--  { rw [←units.eq_iff, is_unit.unit_spec, units.coe_neg_one], },
+  rw [dirichlet_character.pow_apply, change_level_eval_neg_one' hp],
   any_goals { apply_instance, },
 end
 
@@ -163,17 +163,4 @@ begin
           mul_zero], rw zero_sub,
         apply_instance, },
       simp_rw [this], refl, }, },
-end
-.
-
--- `teichmuller_character_mod_p_change_level_pow_eval_neg_one` replaced with
--- `teichmuller_character.change_level_pow_eval_neg_one`
-lemma change_level_pow_eval_neg_one [algebra ℚ_[p] R] [nontrivial R] [no_zero_divisors R]
-  [fact (0 < m)] (k : ℕ) (hp : 2 < p) :
-  ((teichmuller_character_mod_p_change_level p R m d ^ k) is_unit_one.neg.unit) = (-1) ^ k :=
-begin
-  have : (is_unit_one.neg.unit : (zmod (d * p^m))ˣ) = -1,
-  { rw [←units.eq_iff, is_unit.unit_spec, units.coe_neg_one], },
-  rw [dirichlet_character.pow_apply, this, change_level_eval_neg_one hp],
-  any_goals { apply_instance, },
 end
