@@ -23,7 +23,7 @@ TODO (optional)
 zmod, units, CRT
 -/
 
-lemma prod.eq_fst_snd {α β : Type*} (a : α × β) : a = (a.fst, a.snd) := by refine prod.ext rfl rfl
+lemma prod.eq_fst_snd {α β : Type*} (a : α × β) : a = (a.fst, a.snd) := prod.ext rfl rfl
 
 lemma mul_equiv.prod_units.coe_symm_apply {M : Type*} {N : Type*} [monoid M] [monoid N]
   (a : Mˣ) (b : Nˣ) : (mul_equiv.prod_units.symm (a, b) : M × N) = (a, b) :=
@@ -36,10 +36,10 @@ lemma ring_equiv.coe_eq_to_equiv {S T : Type*} [semiring S] [semiring T] (f : S 
   f.to_equiv = f := by { ext, simp }
 
 variable (R : Type*)
-lemma chinese_remainder_comp_prod_units [monoid R] {m n x : ℕ} (χ : dirichlet_character R (m * n))
+lemma chinese_remainder_comp_prod_units [monoid R] {m n x : ℕ} 
   (h : m.coprime n) (h1 : is_unit (x : zmod m)) (h2 : is_unit (x : zmod n)) :
-  (x : zmod (m * n)) = ((zmod.chinese_remainder h).symm.to_monoid_hom)
-    (((mul_equiv.symm (@mul_equiv.prod_units _ _ _ _))) (h1.unit, h2.unit)) :=
+  (x : zmod (m * n)) = (zmod.chinese_remainder h).symm.to_monoid_hom
+    ((mul_equiv.symm mul_equiv.prod_units) (h1.unit, h2.unit)) :=
 begin
   delta mul_equiv.prod_units, simp, -- wont squeeze
   rw is_unit.unit_spec, rw is_unit.unit_spec,
@@ -52,22 +52,6 @@ begin
 end
 
 variables (p : ℕ) [fact (nat.prime p)] (d : ℕ) [fact (0 < d)] (hd : d.coprime p)
-
-lemma chinese_remainder_comp_prod_units' [monoid R] {n x : ℕ} (χ : dirichlet_character R (d * p^n))
-  (h : d.coprime (p^n)) (h1 : is_unit (x : zmod d)) (h2 : is_unit (x : zmod (p^n))) :
-  (x : zmod (d * p^n)) = ((zmod.chinese_remainder h).symm.to_monoid_hom)
-    (((mul_equiv.symm (@mul_equiv.prod_units _ _ _ _))) (h1.unit, h2.unit)) :=
-begin
-  delta mul_equiv.prod_units, simp, -- wont squeeze
-  rw is_unit.unit_spec, rw is_unit.unit_spec,
-  delta ring_equiv.to_monoid_hom, rw ring_hom.to_monoid_hom_eq_coe,
-  rw ring_equiv.to_ring_hom_eq_coe, rw ring_hom.coe_monoid_hom, rw ring_equiv.coe_to_ring_hom,
-  rw ← ring_equiv.symm_apply_apply (zmod.chinese_remainder h) (x : zmod (d * p^n)),
-  apply congr_arg, rw ← ring_equiv.coe_to_equiv, rw ← ring_equiv.coe_eq_to_equiv, apply prod.ext _ _,
-  { rw inv_fst', rw zmod.cast_nat_cast (dvd_mul_right d (p^n)), refine zmod.char_p _, },
-  { rw inv_snd', rw zmod.cast_nat_cast (dvd_mul_left (p^n) d), refine zmod.char_p _, },
-end
-
 namespace units
 
 /-- Gives the equivalence (ℤ/(m * n)ℤ)ˣ ≃* (ℤ/mℤ)ˣ × (ℤ/nℤ)ˣ -/

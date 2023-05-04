@@ -139,9 +139,9 @@ begin
   convert exists_pow_lt_of_lt_one h _,
   swap, { exact 1/p, },
   { simp only [one_div, inv_pow], },
-  rw div_lt_iff _,
-  { simp only [one_mul, one_lt_cast], apply nat.prime.one_lt (fact.out _), assumption, },
-  simp only [cast_pos], apply nat.prime.pos (fact.out _), assumption,
+  have := prime.two_le (fact.out (p.prime)),
+  rw div_lt_iff _; 
+  norm_cast; linarith,
 end
 
 variable {p}
@@ -279,17 +279,15 @@ lemma top_eq_iff_cont_inv {α : Type*} [monoid α] [topological_space α] :
 begin
   refine ⟨λ h, _, λ h,
     le_antisymm (top_eq_if_cont_inv' h) (continuous_iff_le_induced.1 units.continuous_coe)⟩,
-  { rw h,
-    have h1 : prod.snd ∘ (units.embed_product α) = mul_opposite.op ∘ units.val ∘ units.has_inv.inv,
-    { ext,
-      rw units.embed_product,
-      simp only [function.comp_app, units.val_eq_coe, monoid_hom.coe_mk], },
-    have h2 : continuous (prod.snd ∘ (units.embed_product α)) :=
-      continuous.comp continuous_snd continuous_induced_dom,
-    rw h1 at h2,
-    have h3 := continuous.comp (@mul_opposite.continuous_unop α _) h2,
-    -- cant substitute h3 as it is, get errors
-    exact h3, },
+  rw h,
+  have h1 : prod.snd ∘ (units.embed_product α) = mul_opposite.op ∘ units.val ∘ units.has_inv.inv,
+  { ext,
+    rw units.embed_product,
+    simp only [function.comp_app, units.val_eq_coe, monoid_hom.coe_mk], },
+  have h2 : continuous (prod.snd ∘ (units.embed_product α)) :=
+    continuous.comp continuous_snd continuous_induced_dom,
+  rw h1 at h2,
+  exact (continuous.comp (@mul_opposite.continuous_unop α _) h2 : _), -- telling Lean to make it the same type as the goal
 end
 
 lemma is_open_coe : is_open_map (coe : units ℤ_[p] → ℤ_[p]) := λ U hU,
@@ -353,7 +351,8 @@ open_locale pointwise -- needed for has_add (set ℤ_[p])
 lemma preimage_to_zmod (x : zmod p) : (@to_zmod p _) ⁻¹' {x} =
  {(x : ℤ_[p])} + (((@to_zmod p _).ker : ideal ℤ_[p]) : set ℤ_[p]) :=
 begin
- ext y,
+-- one has to use cast to use preimage_to_zmod_pow
+  ext y,
   simp only [set.image_add_left, set.mem_preimage, set.singleton_add,
     set.mem_singleton_iff, set_like.mem_coe],
   refine ⟨λ h, _, λ h, _⟩,
@@ -418,6 +417,23 @@ lemma proj_lim_preimage_units_clopen {n : ℕ} (a : (zmod (p^n))ˣ) :
   continuous_iff_is_closed.mp (continuous_units n) {a} (is_closed_discrete {a})⟩
 
 variable (p)
+lemma not_is_unit_p {n : ℕ} (hn : 1 < n) : ¬ is_unit (p : zmod (p^n)) :=
+begin
+  intro h,
+  set q : (zmod (p^n))ˣ := is_unit.unit h,
+  have := zmod.val_coe_unit_coprime q,
+  rw is_unit.unit_spec at this,
+  rw nat.coprime_pow_right_iff (lt_trans zero_lt_one hn) at this,
+  rw zmod.val_cast_of_lt _ at this,
+  simp only [nat.coprime_self] at this,
+  apply @nat.prime.ne_one p (fact.out _),
+  rw this,
+  conv { congr, rw ← pow_one p, },
+  rw pow_lt_pow_iff _, apply hn,
+  apply nat.prime.one_lt (fact.out _),
+  apply_instance,
+end
+
 lemma is_unit_to_zmod_pow_of_is_unit {n : ℕ} (hn : 1 < n) (x : ℤ_[p])
   (hx : is_unit (to_zmod_pow n x)) : is_unit x :=
 begin
@@ -430,21 +446,7 @@ begin
   rw ring_hom.map_mul at hx,
   rw is_unit.mul_iff at hx,
   simp only [map_nat_cast] at hx,
-  have : ¬ is_unit (p : zmod (p^n)),
-  { intro h,
-    set q : (zmod (p^n))ˣ := is_unit.unit h,
-    have := zmod.val_coe_unit_coprime q,
-    rw is_unit.unit_spec at this,
-    rw nat.coprime_pow_right_iff (lt_trans zero_lt_one hn) at this,
-    rw zmod.val_cast_of_lt _ at this,
-    simp only [nat.coprime_self] at this,
-    apply @nat.prime.ne_one p (fact.out _),
-    rw this,
-    conv { congr, rw ← pow_one p, },
-    rw pow_lt_pow_iff _, apply hn,
-    apply nat.prime.one_lt (fact.out _),
-    apply_instance, },
-  apply this, apply hx.1,
+  apply not_is_unit_p p hn hx.1,
 end
 
 end padic_int

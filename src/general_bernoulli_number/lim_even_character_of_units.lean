@@ -44,7 +44,7 @@ open eventually_constant_seq clopen_from
 /-- The first sum in the proof of Theorem 12.2. -/
 noncomputable def U_def [algebra ℚ R] [norm_one_class R] (n : ℕ) (k : ℕ) :=
   ∑ (x : (zmod (d * p ^ k))ˣ),
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R^n)) x : R) *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R^n)) x : R) *
   ((((x : zmod (d * p^k))).val)^(n - 1) : R)) •
   (algebra_map ℚ R) (int.fract (↑x / (↑d * ↑p ^ k)))
 -- Idea 1 : replacing k by m + k so we can remove (hk : m ≤ k)
@@ -86,10 +86,10 @@ end
 
 lemma helper_U_3' [algebra ℚ R] [norm_one_class R] {n : ℕ} (hn : 1 < n) (x : ℕ) :
   ∑ (x_1 : ℕ) in finset.range (d * p ^ x), (1 / ↑(d * p ^ x : ℕ) : ℚ) •
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n))) (↑p * ↑x_1) *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) (↑p * ↑x_1) *
   (↑p ^ (n - 1) * ↑x_1 ^ n)) = ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x.succ)) ({x | ¬ x.coprime p})), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
   (algebra_map ℚ R) (↑y / (↑d * ↑p ^ x.succ)) :=
 begin
   symmetry,
@@ -156,15 +156,15 @@ lemma helper_U_2' [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (n : �
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   tendsto (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x.succ)) ({x | ¬ x.coprime p})), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
   (algebra_map ℚ R) (↑y / (↑d * ↑p ^ x.succ)) ) at_top (nhds ((asso_dirichlet_character
-  (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^n)) (p) * p^(n - 1)) *
+  (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^n)) (p) * p^(n - 1)) *
   (general_bernoulli_number (dirichlet_character.mul χ
-  (teichmuller_character_mod_p' p R^n)) n))) :=
+  (teichmuller_character_mod_p_inv p R^n)) n))) :=
 begin
   conv { congr, funext, rw ← helper_U_3' p d R m χ hn, },
   apply (tendsto_congr _).1 (tendsto.const_mul ((asso_dirichlet_character
-    (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^n)) (p) * p^(n - 1)))
+    (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^n)) (p) * p^(n - 1)))
     (lim_even_character' p d R m χ hn hχ hp na)),
   intro x, rw mul_smul_comm, rw finset.mul_sum, rw finset.smul_sum,
   apply finset.sum_congr rfl,
@@ -176,11 +176,11 @@ lemma helper_U_1' [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (n : �
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   tendsto (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x)) ({x | ¬ x.coprime p})), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
   (algebra_map ℚ R) (↑y / (↑d * ↑p ^ x)) ) at_top (nhds ((asso_dirichlet_character
-  (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^n)) (p) * p^(n - 1) ) *
+  (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^n)) (p) * p^(n - 1) ) *
   (general_bernoulli_number (dirichlet_character.mul χ
-  (teichmuller_character_mod_p' p R^n)) n))) :=
+  (teichmuller_character_mod_p_inv p R^n)) n))) :=
 begin
   have h1 := helper_U_2' p d R m χ n hn hχ hp na,
   have h2 : tendsto nat.pred at_top at_top,
@@ -191,10 +191,10 @@ begin
     { apply hc, }, },
   have h3 : function.comp (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x.succ)) ({x | ¬ x.coprime p})), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
   (algebra_map ℚ R) (↑y / (↑d * ↑p ^ x.succ)) ) nat.pred =ᶠ[at_top] (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x)) ({x | ¬ x.coprime p})), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
   (algebra_map ℚ R) (↑y / (↑d * ↑p ^ x)) ),
   { rw eventually_eq, rw eventually_at_top,
     refine ⟨1, λ x hx, _⟩, rw function.comp_apply,
@@ -208,7 +208,7 @@ lemma helper_U_2 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (n : �
   (hd : d.coprime p) (hχ : d ∣ χ.conductor) :
   tendsto (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x)) ({x | ¬ x.coprime d})), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
   (algebra_map ℚ R) (↑y / (↑d * ↑p ^ x))) at_top (nhds 0) :=
 begin
   apply (tendsto_congr _).2 (tendsto_const_nhds),
@@ -232,7 +232,7 @@ end
 lemma helper_U_4 [algebra ℚ R] [no_zero_divisors R] (hd : d.coprime p) (hχ : d ∣ χ.conductor) (n x : ℕ) : ∑ (x_1 : ℕ) in (set.finite_of_finite_inter
   (finset.range (d * p ^ x)) {x : ℕ | ¬x.coprime d}).to_finset ∩ (set.finite_of_finite_inter
   (finset.range (d * p ^ x)) {x : ℕ | ¬x.coprime p}).to_finset,
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑x_1 *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑x_1 *
   ↑x_1 ^ (n - 1)) • (algebra_map ℚ R) (↑x_1 / (↑d * ↑p ^ x)) = 0 :=
 begin
   apply finset.sum_eq_zero, intros y hy,
@@ -274,9 +274,9 @@ lemma U [algebra ℚ R] [norm_one_class R] [no_zero_divisors R] [is_scalar_tower
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   filter.tendsto (λ j : ℕ, U_def p d R m χ n j)
   filter.at_top (nhds ((1 - asso_dirichlet_character (dirichlet_character.mul χ
-  (teichmuller_character_mod_p' p R^n)) (p) * p^(n - 1) ) *
+  (teichmuller_character_mod_p_inv p R^n)) (p) * p^(n - 1) ) *
   (general_bernoulli_number (dirichlet_character.mul χ
-  (teichmuller_character_mod_p' p R^n)) n)) ) :=
+  (teichmuller_character_mod_p_inv p R^n)) n)) ) :=
 begin
   delta U_def,
   convert (tendsto_congr' _).2 (filter.tendsto.sub (filter.tendsto.sub
@@ -294,9 +294,9 @@ begin
       rw int.fract_eq_self.2 (@zero_le_div_and_div_lt_one (d * p^x) _ _), -- (zero_le_div_and_div_lt_one p d _ _).2,
       rw nat.cast_mul, rw nat.cast_pow p,
       /-conv { congr, rw ← dirichlet_character.mul_eq_mul R χ
-        (teichmuller_character_mod_p' p R ^ n) (zmod.is_unit_val_of_unit h1 x_1), }, -/ },
+        (teichmuller_character_mod_p_inv p R ^ n) (zmod.is_unit_val_of_unit h1 x_1), }, -/ },
     convert sum_units_eq p d R _ (λ (y : ℕ), ((asso_dirichlet_character
-      (χ.mul (teichmuller_character_mod_p' p R ^ n))) ↑y * ↑y ^ (n - 1)) •
+      (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1)) •
       (algebra_map ℚ R) (((y : ℚ) / (↑d * ↑p ^ x)))),
     -- ext, congr,
     rw sub_sub, rw ← finset.sum_union_inter, rw add_comm,

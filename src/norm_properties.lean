@@ -23,16 +23,16 @@ variables {p R χ}
 lemma norm_sum_le_smul {k : ℕ} [normed_algebra ℚ_[p] R] [norm_one_class R] (hk : 1 < k) {x : ℕ}
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   ∥∑ (y : ℕ) in finset.range (d * p ^ x + 1), (asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ k))) ((-1) * ↑y) *
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ((-1) * ↑y) *
   ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
   ↑((k - 1).choose (x_1 + 1))∥ ≤ (dirichlet_character.bound
-  (χ.mul (teichmuller_character_mod_p' p R ^ k)) * (k - 1)) :=
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) * (k - 1)) :=
 begin
   have : ∀ y ∈ finset.range (d * p ^ x + 1), ∥(asso_dirichlet_character
-    (χ.mul (teichmuller_character_mod_p' p R ^ k))) ((-1) * ↑y) *
+    (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ((-1) * ↑y) *
     ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y)^(k - 1 - (x_1 + 1)) *
     ↑((k - 1).choose (x_1 + 1)) ∥ ≤ (dirichlet_character.bound (χ.mul
-    (teichmuller_character_mod_p' p R ^ k))) * (k - 1),
+    (teichmuller_character_mod_p_inv p R ^ k))) * (k - 1),
   { intros l hl,
     refine le_trans (norm_mul_le _ _) (mul_le_mul (le_of_lt (dirichlet_character.lt_bound _ _)) _
       (norm_nonneg _) (le_of_lt (dirichlet_character.bound_pos _))),

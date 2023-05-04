@@ -41,16 +41,16 @@ open dirichlet_character teichmuller_character
 lemma sum_eq_neg_sum_add_dvd (hχ : χ.is_even) [algebra ℚ_[p] R] [nontrivial R]
   [no_zero_divisors R] [fact (0 < m)] (hp : 2 < p) {k : ℕ} (hk : 1 ≤ k) {x : ℕ} (hx : m ≤ x) :
   ∑ (i : ℕ) in finset.range (d * p ^ x).succ, (asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1) = -1 *
+  (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ (k - 1) = -1 *
   ∑ (y : ℕ) in finset.range (d * p ^ x + 1),
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y * ↑y ^ (k - 1) +
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑y * ↑y ^ (k - 1) +
   ↑(d * p ^ x) * ∑ (y : ℕ) in finset.range (d * p ^ x + 1),
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) (-1) *
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) (-1) *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑y *
   ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
   ↑((k - 1).choose (x_1 + 1))) :=
 begin
-  have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^m,
+  have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) ∣ d * p^m,
   { apply dvd_trans (lev_mul_dvd_lcm _ _) _,
     rw helper_4, },
   rw ←finset.sum_flip,
@@ -79,15 +79,15 @@ lemma helper_11 [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  
  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
  [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) {x : ℕ} (hx : m ≤ x) :
  ∃ y, (2 : R) * ∑ i in finset.range (d * p^x), ((asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p' p R ^ k))) i * i^(k - 1)) = ↑(d * p^x) * y ∧ ∥y∥ ≤ ((χ.mul
-  (teichmuller_character_mod_p' p R ^ k)).bound * (↑k - 1)) + ∥(((d * p ^ x : ℕ) : R) ^ (k - 2)) *
-  (1 + 1)∥ * (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound :=
+  (teichmuller_character_mod_p_inv p R ^ k))) i * i^(k - 1)) = ↑(d * p^x) * y ∧ ∥y∥ ≤ ((χ.mul
+  (teichmuller_character_mod_p_inv p R ^ k)).bound * (↑k - 1)) + ∥(((d * p ^ x : ℕ) : R) ^ (k - 2)) *
+  (1 + 1)∥ * (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound :=
 begin
   have f1 : ∑ (i : ℕ) in finset.range (d * p ^ x), (asso_dirichlet_character (χ.mul
-    (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1) =
+    (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ (k - 1) =
     ∑ (i : ℕ) in finset.range (d * p ^ x).succ, (asso_dirichlet_character
-    (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1)
-   - ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(d * p^x) *
+    (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ (k - 1)
+   - ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(d * p^x) *
    ↑(d * p^x) ^ (k - 1)),
   { rw [finset.sum_range_succ, add_sub_cancel], },
   rw [f1, mul_sub, mul_comm _ (↑(d * p ^ x) ^ (k - 1)), ←mul_assoc _ (↑(d * p ^ x) ^ (k - 1)) _,
@@ -103,12 +103,12 @@ begin
   rw [←neg_eq_neg_one_mul, ←add_assoc, ←sub_eq_add_neg],
   conv { congr, funext, rw [sub_self _, zero_add], },
   refine ⟨∑ (y : ℕ) in finset.range (d * p ^ x + 1),
-    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) (-1) *
-    ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) (-1) *
+    ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑y *
     ∑ (x_1 : ℕ) in finset.range (k - 1),
     ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) * ↑((k - 1).choose (x_1 + 1))) -
     ↑((d * p ^ x) ^ (k - 2)) * ((1 + 1) * (asso_dirichlet_character (χ.mul
-    (teichmuller_character_mod_p' p R ^ k))) ↑(d * p ^ x)), _, _⟩,
+    (teichmuller_character_mod_p_inv p R ^ k))) ↑(d * p ^ x)), _, _⟩,
   { rw sub_add_cancel, },
   { apply le_trans (norm_sub_le _ _) _,
     conv { congr, congr, congr, apply_congr, skip, rw [←mul_assoc, ←monoid_hom.map_mul], },
@@ -131,7 +131,7 @@ lemma sum_even_character_tendsto_zero [nontrivial R] [no_zero_divisors R] [norme
   [norm_one_class R] [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   filter.tendsto (λ n : nat, ∑ i in finset.range (d * p^n), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R ^ k))) i * i^(k - 1)) ) filter.at_top (nhds 0) :=
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) i * i^(k - 1)) ) filter.at_top (nhds 0) :=
 begin
   -- better way to do this with filters
   refine metric.tendsto_at_top.2 (λ ε hε, _),
@@ -229,9 +229,9 @@ end
 --`helper_W_3` replaced with `helper_16`
 lemma helper_16 [normed_algebra ℚ_[p] R] [fact (0 < m)] (k : ℕ) {x : ℕ} (hx : m ≤ x) :
   ∑ (i : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character (χ.mul
-    (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1) =
+    (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ (k - 1) =
   ∑ (i : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character (χ.mul
-    (teichmuller_character_mod_p' p R ^ k))) ↑(d * p ^ x - (i : zmod (d * p^x)).val) *
+    (teichmuller_character_mod_p_inv p R ^ k))) ↑(d * p ^ x - (i : zmod (d * p^x)).val) *
     ↑(d * p ^ x - (i : zmod (d * p^x)).val) ^ (k - 1) :=
 begin
   symmetry,
@@ -244,11 +244,11 @@ begin
   { intros a ha, apply finset.mem_univ _, },
   { intros a ha,
     simp only,
-    have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^m,
+    have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) ∣ d * p^m,
     { --apply dvd_trans _ (mul_dvd_mul_left d (pow_dvd_pow p hk)),
       apply dvd_trans (conductor.dvd_lev _) _, --(dvd_trans (conductor_dvd _) _),
       rw helper_4, },
-    have lev_mul_dvd' : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^x,
+    have lev_mul_dvd' : lev (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) ∣ d * p^x,
     { apply dvd_trans lev_mul_dvd _,
       --convert dvd_trans (dirichlet_character.lev_mul_dvd _ _) _, rw [lcm_eq_nat_lcm, nat.lcm_self],
       apply mul_dvd_mul_left d, apply pow_dvd_pow p hx, },
@@ -297,16 +297,16 @@ end
 lemma sum_eq_neg_sum_add_dvd_of_units (hχ : χ.is_even) [normed_algebra ℚ_[p] R] [nontrivial R]
   [no_zero_divisors R] [fact (0 < m)] (hp : 2 < p) (k : ℕ) (hk : 1 ≤ k) {x : ℕ} (hx : m ≤ x) :
   ∑ (i : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p' p R ^ k))) ↑i * ↑i ^ (k - 1) =
+  (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ (k - 1) =
   -1 * ∑ (y : (zmod (d * p ^ x))ˣ),
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑y *
   ↑y ^ (k - 1) + ↑(d * p ^ x) * ∑ (y : (zmod (d * p ^ x))ˣ),
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) (-1) *
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) (-1) *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑y *
   ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
   ↑((k - 1).choose (x_1 + 1))) :=
 begin
-  have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p' p R ^ k)) ∣ d * p^m,
+  have lev_mul_dvd : lev (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) ∣ d * p^m,
   { --apply dvd_trans _ (mul_dvd_mul_left d (pow_dvd_pow p hk)),
     apply dvd_trans (conductor.dvd_lev _) _, --(dvd_trans (conductor_dvd _) _),
     rw helper_4, },
@@ -349,11 +349,11 @@ lemma sum_even_character_tendsto_zero_of_units [nontrivial R] [no_zero_divisors 
   (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
   [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) :
   filter.tendsto (λ n, ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
-  (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^k)))
+  (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^k)))
   i * i^(k - 1)) ) (@filter.at_top ℕ _) (nhds 0) :=
 begin
   suffices : filter.tendsto (λ n, (2 : R) * ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
-    (dirichlet_character.mul χ (teichmuller_character_mod_p' p R^k)))
+    (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^k)))
     i * i^(k - 1)) ) (@filter.at_top ℕ _) (nhds 0),
   { have h1 : (2 : ℚ_[p]) ≠ 0, { norm_num, },
     apply tendsto_zero_of_tendsto_const_smul_zero h1,
@@ -363,14 +363,14 @@ begin
     apply this, },
   { apply (tendsto_congr' _).2,
     swap 2, { refine λ x : ℕ, ↑(d * p ^ x) * ∑ (y : (zmod (d * p ^ x))ˣ),
-      (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) (-1) *
-      ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑y *
+      (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) (-1) *
+      ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑y *
       ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
       ↑((k - 1).choose (x_1 + 1))) },
     { conv { congr, funext, rw finset.mul_sum, },
       rw metric.tendsto_at_top,
       intros ε hε,
-      have h4 : 0 < ε / 2 / (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound,
+      have h4 : 0 < ε / 2 / (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound,
       { apply div_pos (half_pos hε) (bound_pos _), },
       obtain ⟨z, hz⟩ := padic_int.exists_pow_neg_lt p h4,
       refine ⟨max z 1, λ x hx, _⟩,
@@ -380,9 +380,9 @@ begin
       apply lt_of_le_of_lt _ h2,
       apply cSup_le _ _,
       { exact set.range_nonempty (λ (i : (zmod (d * p ^ x))ˣ), ∥↑(d * p ^ x) *
-          ((asso_dirichlet_character (mul χ (teichmuller_character_mod_p' p R ^ k)))
+          ((asso_dirichlet_character (mul χ (teichmuller_character_mod_p_inv p R ^ k)))
           (-1) * ((asso_dirichlet_character (mul χ
-          (teichmuller_character_mod_p' p R ^ k))) ↑i * ∑ (x_1 : ℕ) in
+          (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ∑ (x_1 : ℕ) in
           finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑i) ^ (k - 1 - (x_1 + 1)) *
           ↑((k - 1).choose (x_1 + 1))))∥), },
       { intros b hb,
@@ -415,7 +415,7 @@ begin
           { apply nat.succ_le_iff.1 (max_le_iff.1 hx).2, }, },
         { rw div_mul_cancel _ _,
           intro h,
-          have := bound_pos (mul χ (teichmuller_character_mod_p' p R ^ k)),
+          have := bound_pos (mul χ (teichmuller_character_mod_p_inv p R ^ k)),
           rw h at this, simp only [lt_self_iff_false] at this, apply this, }, }, },
     { simp_rw two_mul,
       rw eventually_eq,

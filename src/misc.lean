@@ -46,16 +46,16 @@ variables {p d R} (χ)
 lemma helper_10 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {ε : ℝ} (hk : 1 < k)
   (hp : 2 < p) (hε : 0 < ε) : ∃ x : ℕ,
   ∥(2⁻¹ : ℚ_[p])∥ * (↑k - 1 + ∥((d * p ^ x : ℕ) : R)^(k - 2) * (1 + 1)∥) *
-  (∥(((d * p ^ x) : ℕ) : R)∥ * (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound) < ε :=
+  (∥(((d * p ^ x) : ℕ) : R)∥ * (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound) < ε :=
 begin
   have one_div_lt_one : 1 / (p : ℝ) < 1,
   { refine (one_div_lt _ _).2 _,
     { refine nat.cast_pos.2 (nat.prime.pos (fact.out _)), },
     { refine zero_lt_one, },
     { rw one_div_one, refine nat.one_lt_cast.2 (nat.prime.one_lt (fact.out _)), }, },
-  have pos' : 0 < ↑k * (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound,
+  have pos' : 0 < ↑k * (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound,
   { apply mul_pos (nat.cast_pos.2 (lt_trans zero_lt_one hk)) (dirichlet_character.bound_pos _), },
-  have pos : 0 < ε / (↑k * (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound) := div_pos hε pos',
+  have pos : 0 < ε / (↑k * (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound) := div_pos hε pos',
   refine ⟨classical.some (exists_pow_lt_of_lt_one pos one_div_lt_one), lt_of_le_of_lt (mul_le_mul
     (helper_9 hk hp _) le_rfl (mul_nonneg (norm_nonneg _)
     (le_of_lt (dirichlet_character.bound_pos _))) (nat.cast_nonneg _)) _⟩,
@@ -73,7 +73,7 @@ begin
     { rw (nat.cast_eq_zero.1 h) at hk,
       simp only [not_lt_zero'] at hk,
       apply hk, },
-    { have := (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound_pos,
+    { have := (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound_pos,
       rw h at this,
       simp only [lt_self_iff_false] at this,
       exact this, }, },

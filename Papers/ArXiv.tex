@@ -697,8 +697,8 @@ theorem lim_even_character' (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R),
   ∥ ∑ (i : ℕ) in finset.range n, f i ∥ ≤ ⨆ (i : zmod n), ∥f i.val ∥) : 
   tendsto (λ (n : ℕ), (1 / ↑(d * p ^ n)) • 
   ∑ (i : ℕ) in finset.range (d * p ^ n),
-  asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)) ↑i * ↑i ^ k) at_top ( 𝓝 (general_bernoulli_number 
-  (χ.mul (teichmuller_character_mod_p' p R ^ k)) k))
+  asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) ↑i * ↑i ^ k) at_top ( 𝓝 (general_bernoulli_number 
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k))
 \end{lstlisting}
 %There were two options for the \lean{finset} used in \lean{finset.sum} : \lean{finset.range} or \lean{zmod (d * p\textasciicircum j)}. 
 %While both are mathematically equivalent, they create different kinds of coercions. 
@@ -719,7 +719,7 @@ It is translated in Lean as :
 \begin{lstlisting}
 lemma sum_even_character_tendsto_zero_of_units :
   tendsto (λ n, ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
-  (χ.mul (teichmuller_character_mod_p' p R^k))) i * i^(k - 1))) 
+  (χ.mul (teichmuller_character_mod_p_inv p R^k))) i * i^(k - 1))) 
   at_top ( 𝓝 0) 
 \end{lstlisting}
 The proof of this theorem is in \href{https://github.com/laughinggas/p-adic-L-functions/blob/main/src/tendsto_zero_of_sum_even_char.lean}{\lean{tendsto\_zero\_of\_sum\_even\_char.lean}}.
@@ -999,7 +999,7 @@ $$ L_p(w, \chi) := \int_{(\mathbb{Z}/d \mathbb{Z})^{\times} \times \mathbb{Z}_p^
 def p_adic_L_function := 
   measure.integral (bernoulli_measure R hc hc' hd na)
   ⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd 
-  (change_level _ (χ.mul ((teichmuller_character_mod_p' p R))))) * 
+  (change_level _ (χ.mul ((teichmuller_character_mod_p_inv p R))))) * 
   w.to_monoid_hom, cont_paLf m hd _ w⟩
 \end{lstlisting}
 Here, \lean{dirichlet\_char\_extend} extends $\chi$ from $(\mathbb{Z}/ dp^m \mathbb{Z})^{\times}$ to 
@@ -1061,9 +1061,9 @@ theorem p_adic_L_function_eval_neg_int_new :
   (1 - (χ (zmod.unit_of_coprime c _) * 
     (mul_inv_pow n (zmod.unit_of_coprime c hc', _)))) * 
   (1 - ((asso_dirichlet_character 
-    (χ.mul ((teichmuller_character_mod_p' p R)^n))) p * p^(n - 1))) * 
+    (χ.mul ((teichmuller_character_mod_p_inv p R)^n))) p * p^(n - 1))) * 
   (general_bernoulli_number 
-    (χ.mul ((teichmuller_character_mod_p' p R)^n)) n) 
+    (χ.mul ((teichmuller_character_mod_p_inv p R)^n)) n) 
 \end{lstlisting}
 Here, \lean{mul\_inv\_pow} is our translation of $\langle a \rangle ^s$. \newline
 The proof consists of two steps : breaking up the integral in the LHS into three sums, 

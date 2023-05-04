@@ -106,7 +106,7 @@ continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous p d 
 open dirichlet_character
 -- `helper_idk` changed to `helper_change_level_conductor`
 lemma helper_change_level_conductor [algebra ℚ_[p] R] [fact(0 < m)] : (change_level (_root_.dvd_lcm_left (d * p^m) p) χ *
-  change_level (_root_.dvd_lcm_right _ _) (teichmuller_character_mod_p' p R)).conductor ∣ d * p^m :=
+  change_level (_root_.dvd_lcm_right _ _) (teichmuller_character_mod_p_inv p R)).conductor ∣ d * p^m :=
 (dvd_trans (conductor.dvd_lev _) (by { rw helper_4 m, }))
 
 /-- The p-adic L- function, as defined in Thm 12.2, absorbing the (1 - χ(c)<c>^(-n)) term
@@ -115,7 +115,7 @@ noncomputable def p_adic_L_function [normed_algebra ℚ_[p] R] [nontrivial R] [c
   [norm_one_class R] [fact (0 < d)] [fact (0 < m)] : R :=
 (@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure R hc hc' hd na)
 ⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd
-(change_level (helper_change_level_conductor m χ) (χ.mul ((teichmuller_character_mod_p' p R))))) *
+(change_level (helper_change_level_conductor m χ) (χ.mul ((teichmuller_character_mod_p_inv p R))))) *
 w.to_monoid_hom, cont_paLf m hd _ w⟩) 
 -- check variable match
 

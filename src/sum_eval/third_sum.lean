@@ -46,7 +46,7 @@ lemma W [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.coprime 
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) :
   filter.tendsto (λ j : ℕ, ∑ (x : (zmod (d * p ^ j))ˣ),
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R^n)) x : R) *
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R^n)) x : R) *
   ((((x : zmod (d * p^j))).val)^(n - 1) : R)) • (algebra_map ℚ R) ((↑c - 1) / 2)) filter.at_top (nhds 0) :=
 begin
   simp_rw [smul_eq_mul, ← finset.sum_mul],

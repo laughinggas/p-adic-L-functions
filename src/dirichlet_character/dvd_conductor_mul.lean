@@ -74,7 +74,7 @@ begin
         prod.mul_def, mul_one, one_mul],
       congr, rw units.ext_iff, rw is_unit.unit_spec, rw units.coe_map,
       rw mul_equiv.coe_to_monoid_hom,
-      rw chinese_remainder_comp_prod_units S χ hcop h1 h2, },
+      rw chinese_remainder_comp_prod_units S hcop h1 h2, },
     { rw asso_dirichlet_character_eq_zero _ h',
       -- make this a separate lemma
       have : ¬ is_unit (x : zmod m) ∨ ¬ is_unit (x : zmod n) := zmod.not_is_unit_of_not_is_unit_mul h',
@@ -190,19 +190,19 @@ heq.trans (cast_eq_iff_heq.1 (cast_change_level χ (dvd_refl a) (show a ∣ b, f
 
 variables (p : ℕ) [fact p.prime] (d : ℕ) [fact (0 < d)] (R : Type*) [normed_comm_ring R] [algebra ℚ_[p] R] (m : ℕ) [fact (0 < m)] (χ : dirichlet_character R (d * p^m))
 lemma mul_conductor_eq_mul_conductor (n : ℕ) :
-  (χ.mul (teichmuller_character_mod_p' p R ^ n)).conductor =
-  (χ * change_level (dvd_mul_of_dvd_right (dvd_pow_self p (nat.ne_zero_of_lt' 0)) d) (teichmuller_character_mod_p' p R ^ n)).conductor :=
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ n)).conductor =
+  (χ * change_level (dvd_mul_of_dvd_right (dvd_pow_self p (nat.ne_zero_of_lt' 0)) d) (teichmuller_character_mod_p_inv p R ^ n)).conductor :=
 begin
   rw (is_primitive_def _).1 (is_primitive.mul _ _),
   have : lcm (d * p^m) p = d * p^m := helper_4 m,
   have h2 : d * p^m ∣ lcm (d * p^m) p, { rw this, }, 
-  rw change_level.trans (teichmuller_character_mod_p' p R ^ n) (dvd_mul_of_dvd_right (dvd_pow_self p (nat.ne_zero_of_lt' 0)) d) h2,
+  rw change_level.trans (teichmuller_character_mod_p_inv p R ^ n) (dvd_mul_of_dvd_right (dvd_pow_self p (nat.ne_zero_of_lt' 0)) d) h2,
   rw ←monoid_hom.map_mul, congr',
   apply change_level_heq _ this.symm,
 end
 
 lemma exists_mul_of_dvd' (n : ℕ) (hd : d.coprime p) :
-  ∃ (x y : ℕ), x ∣ d ∧ y ∣ p^m ∧ (χ.mul (teichmuller_character_mod_p' p R ^ n)).conductor = x * y :=
+  ∃ (x y : ℕ), x ∣ d ∧ y ∣ p^m ∧ (χ.mul (teichmuller_character_mod_p_inv p R ^ n)).conductor = x * y :=
 begin
   simp_rw mul_conductor_eq_mul_conductor p d R m χ n,
   obtain ⟨χ₁, χ₂, h⟩ := eq_mul_of_coprime_lev' R χ (nat.coprime.pow_right m hd),
@@ -311,7 +311,7 @@ begin
 end
 
 lemma dvd_mul_of_dvd_conductor (n : ℕ) (hd : d.coprime p) (hχ : d ∣ χ.conductor) :
-  d ∣ (χ.mul (teichmuller_character_mod_p' p R ^ n)).conductor :=
+  d ∣ (χ.mul (teichmuller_character_mod_p_inv p R ^ n)).conductor :=
 begin
   have hm : m ≠ 0,
   { apply ne_zero_of_lt (fact.out _), exact 0, apply_instance, apply_instance, },

@@ -89,7 +89,7 @@ end teichmuller_character
 variables {R : Type*} [normed_comm_ring R] {m : ℕ}
 variables (p R)
 /-- Returns ω⁻¹ : ℤ/pℤ* →* R*. -/
-noncomputable abbreviation teichmuller_character_mod_p' [algebra ℚ_[p] R] :
+noncomputable abbreviation teichmuller_character_mod_p_inv [algebra ℚ_[p] R] :
   dirichlet_character R p :=
 ((units.map ((algebra_map ℚ_[p] R).comp (padic_int.coe.ring_hom)).to_monoid_hom).comp
 (teichmuller_character_mod_p p) : dirichlet_character R p)⁻¹
@@ -99,9 +99,9 @@ lemma char_zero_of_nontrivial_of_normed_algebra [nontrivial R] [algebra ℚ_[p] 
 
 variables {p R}
 lemma change_level_eval_neg_one' [no_zero_divisors R] [algebra ℚ_[p] R] [nontrivial R]
-  (hp : 2 < p) : (teichmuller_character_mod_p' p R) (-1 : (zmod p)ˣ) = (-1 : units R) :=
+  (hp : 2 < p) : (teichmuller_character_mod_p_inv p R) (-1 : (zmod p)ˣ) = (-1 : units R) :=
 begin
-  cases dirichlet_character.is_odd_or_is_even (teichmuller_character_mod_p' p R),
+  cases dirichlet_character.is_odd_or_is_even (teichmuller_character_mod_p_inv p R),
   { exact h, },
   { exfalso,
     suffices : ((units.map ((algebra_map ℚ_[p] R).comp padic_int.coe.ring_hom).to_monoid_hom).comp
@@ -117,7 +117,7 @@ end
 -- maybe can be simplified
 
 lemma change_level_pow_eval_neg_one' [algebra ℚ_[p] R] [nontrivial R] [no_zero_divisors R] (k : ℕ)
-  (hp : 2 < p) : ((teichmuller_character_mod_p' p R ^ k) is_unit_one.neg.unit) = (-1) ^ k :=
+  (hp : 2 < p) : ((teichmuller_character_mod_p_inv p R ^ k) is_unit_one.neg.unit) = (-1) ^ k :=
 begin
   have : (is_unit_one.neg.unit : (zmod p)ˣ) = -1,
   { rw [←units.eq_iff, is_unit.unit_spec, units.coe_neg_one], },

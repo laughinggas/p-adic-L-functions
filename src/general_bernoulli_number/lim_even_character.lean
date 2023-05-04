@@ -42,18 +42,18 @@ variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} [fact (0 < d)] {R : Type*} [n
 lemma helper_13 [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < m)]
   {k : ℕ} (hk : 1 < k) : (λ (n : ℕ), (1 / ((d * p ^ n : ℕ) : ℚ_[p])) •
   ∑ (i : ℕ) in finset.range (d * p ^ n), (asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p' p R^k))) ↑i * ↑i ^ k - general_bernoulli_number
-  (χ.mul (teichmuller_character_mod_p' p R ^ k)) k) =ᶠ[filter.at_top]
+  (teichmuller_character_mod_p_inv p R^k))) ↑i * ↑i ^ k - general_bernoulli_number
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k) =ᶠ[filter.at_top]
   λ (x : ℕ), -((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ) *
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
   ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ x) * ↑(1 + x_1) ^ (k - 1)) +
   (1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ) *
+  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
   (↑(d * p ^ x) * ∑ (x_2 : ℕ) in finset.range (k - 1),
   (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
   (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
   (1 / (d * p ^ x : ℕ) : ℚ_[p]) •
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).reduction)
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).reduction)
   ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) *
   (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k))))) :=
 begin
@@ -66,11 +66,11 @@ begin
   have coe_sub : (k : ℤ) - 1 = ((k - 1 : ℕ) : ℤ),
   { change int.of_nat k - 1 = int.of_nat (k - 1),
     rw [int.of_nat_sub (le_of_lt hk), int.of_nat_one], },
-  have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)).reduction x =
-    asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k)) x :=
+  have : ∀ x : ℕ, asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).reduction x =
+    asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) x :=
   asso_dirichlet_character.reduction _ (is_primitive.mul _ _),
-  have f1 : (χ.mul (teichmuller_character_mod_p' p R ^ k)).reduction.conductor =
-    (χ.mul (teichmuller_character_mod_p' p R ^ k)).conductor,
+  have f1 : (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).reduction.conductor =
+    (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).conductor,
   { rw asso_primitive_conductor_eq, },
   rw general_bernoulli_number.eq_sum_bernoulli_of_conductor_dvd _ k (dvd_trans (conductor.dvd_lev _)
     (dvd_trans (conductor.dvd_lev _) h1)),
@@ -161,9 +161,9 @@ lemma lim_even_character' [nontrivial R] [no_zero_divisors R] [normed_algebra �
   (hχ : χ.is_even) (hp : 2 < p)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   filter.tendsto (λ n, (1/((d * p^n : ℕ) : ℚ_[p])) • ∑ i in finset.range (d * p^n),
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p' p R ^ k))) i * i^k) )
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) i * i^k) )
   (@filter.at_top ℕ _) (nhds (general_bernoulli_number
-  (χ.mul (teichmuller_character_mod_p' p R ^ k)) k)) :=
+  (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k)) :=
 begin
   refine tendsto_sub_nhds_zero_iff.1 ((filter.tendsto_congr' (helper_13 m _ hk)).2 _),
   conv { congr, skip, skip, rw ←neg_zero, rw ←add_zero (0 : R),
@@ -184,7 +184,7 @@ begin
     have poss : 0 < d * p^x := fact.out _,
     simp_rw [add_comm 1 _, nat.succ_eq_add_one],
     rw [finset.range_eq_Ico, finset.sum_Ico_add' (λ x : ℕ, (asso_dirichlet_character (χ.mul
-      (teichmuller_character_mod_p' p R ^ k))) ↑x * ↑x ^ (k - 1)) 0 (d * p^x).pred 1,
+      (teichmuller_character_mod_p_inv p R ^ k))) ↑x * ↑x ^ (k - 1)) 0 (d * p^x).pred 1,
       finset.sum_eq_sum_Ico_succ_bot poss, @nat.cast_zero R _ _, zero_pow (nat.sub_pos_of_lt hk),
       mul_zero, zero_add, zero_add, nat.pred_add_one_eq_self poss], },
   { rw metric.tendsto_at_top,
@@ -192,14 +192,14 @@ begin
     obtain ⟨N, h⟩ := metric.tendsto_at_top.1 (tendsto.const_mul ((⨆ (x_1 : zmod (k.sub 0).pred),
       ∥(algebra_map ℚ R) (bernoulli ((k.sub 0).pred.succ - x_1.val) *
       ↑((k.sub 0).pred.succ.choose x_1.val))∥) *
-      (χ.mul (teichmuller_character_mod_p' p R ^ k)).bound) (tendsto_iff_norm_tendsto_zero.1
+      (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).bound) (tendsto_iff_norm_tendsto_zero.1
       (nat_cast_mul_prime_pow_tendsto_zero p d R))) (ε/2) (half_pos hε),
     simp_rw [sub_zero, mul_zero _, dist_zero_right _, real.norm_eq_abs] at h,
     refine ⟨N, λ  x hx, _⟩,
     rw dist_eq_norm, rw sub_zero,
     conv { congr, congr, conv { congr, skip,
       conv { apply_congr, skip, rw [←mul_assoc, mul_comm ((asso_dirichlet_character (χ.mul
-        (teichmuller_character_mod_p' p R ^ k))) ↑(x_1.succ)) _, mul_assoc, add_comm 1 x_1], },
+        (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ)) _, mul_assoc, add_comm 1 x_1], },
       rw ←finset.mul_sum, },
       rw [←smul_mul_assoc, ←div_smul_eq_div_smul p R (d * p ^ x) _, one_div_smul_self R
         (@nat.ne_zero_of_lt' 0 (d * p^x) _), one_mul], },
@@ -216,7 +216,7 @@ begin
   { have nz : ∀ x : ℕ, ((d * p^x : ℕ) : ℚ) ≠ 0 := λ x, nat.cast_ne_zero.2 (nat.ne_zero_of_lt' 0),
     simp_rw [div_self (nz _)],
     conv { congr, funext, rw [mul_comm ((asso_dirichlet_character (χ.mul
-      (teichmuller_character_mod_p' p R ^ k)).reduction) ↑(d * p ^ x))
+      (teichmuller_character_mod_p_inv p R ^ k)).reduction) ↑(d * p ^ x))
       ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) * (algebra_map ℚ R)
       (polynomial.eval 1 (polynomial.bernoulli k))), mul_assoc, ← smul_mul_assoc,
       ← nat.succ_pred_eq_of_pos (pos_of_gt hk), pow_succ, (algebra_map ℚ R).map_mul,
@@ -230,7 +230,7 @@ begin
       intros ε hε,
       obtain ⟨N, hN⟩ := metric.tendsto_at_top.1 (norm_pow_lim_eq_zero p d R 1 (nat.pred_lt_pred
         nat.one_ne_zero hk)) (ε/((χ.mul
-        (teichmuller_character_mod_p' p R ^ k.pred.succ)).reduction.bound))
+        (teichmuller_character_mod_p_inv p R ^ k.pred.succ)).reduction.bound))
         (div_pos hε (bound_pos _)),
       refine ⟨N, λ x hx, _⟩,
       rw dist_eq_norm, rw sub_zero, rw mul_comm,
