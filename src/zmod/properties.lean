@@ -274,7 +274,7 @@ lemma fract_eq_of_zmod_eq {n a b : ℕ} [fact (0 < n)] (h : (a : zmod n) = (b : 
   int.fract (a / n : ℚ) = int.fract (b / n : ℚ) :=
 begin
   rw [int.fract_eq_fract, div_sub_div_same],
-  obtain ⟨z, hz⟩ := dvd_sub_comm _ _ _ (modeq_iff_dvd.1 ((eq_iff_modeq_nat _).1 h)),
+  obtain ⟨z, hz⟩ := dvd_sub_symm _ _ _ (modeq_iff_dvd.1 ((eq_iff_modeq_nat _).1 h)),
   refine ⟨z, _⟩,
   have h : ∀ z : ℕ, (z : ℚ) = ((z : ℤ) : ℚ),
   { intro z, norm_cast, },

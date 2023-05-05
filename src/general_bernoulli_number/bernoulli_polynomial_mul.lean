@@ -36,10 +36,7 @@ lemma exp_sub_one_ne_zero : exp ℚ - 1 ≠ 0 :=
 begin
   intro this,
   rw power_series.ext_iff at this, specialize this 1,
-  simp only [map_sub, coeff_exp, algebra_map_rat_rat, factorial_one, cast_one, div_self, ne.def,
-    one_ne_zero, not_false_iff, ring_hom.id_apply, power_series.coeff_one, if_false, sub_zero,
-    map_zero] at this,
-  assumption,
+  simpa,
 end
 
 lemma function.smul {R : Type*} [semiring R] (f : ℕ → R) (a : R) :
@@ -69,7 +66,7 @@ theorem bernoulli_eval_mul' (m : ℕ) {k : ℕ} (hk : k ≠ 0) (x : ℚ) :
   k^(m - 1 : ℤ) * ∑ i in range k, (bernoulli m).eval (x + i / k) :=
 begin
   have coe_hk : (k : ℚ) ≠ 0,
-  { simp only [hk, cast_eq_zero, ne.def, not_false_iff], },
+  { assumption_mod_cast, },
   suffices : (∑ i in range k, (power_series.mk (λ n, (k^(n - 1 : ℤ) : ℚ) *
     (polynomial.eval (x + i / k) ((1 / n! : ℚ) • (bernoulli n))) ))) * ((exp ℚ - 1)  *
     (rescale (k : ℚ) (exp ℚ - 1))) = (power_series.mk (λ n, polynomial.eval ((k : ℚ) * x)

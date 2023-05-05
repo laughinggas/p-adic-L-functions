@@ -18,7 +18,7 @@ Naturals
 -/
 
 namespace nat
-lemma dvd_sub_comm (a b n : ℤ) (h : (n : ℤ) ∣ (a : ℤ) - (b : ℤ)) : (n : ℤ) ∣ (b : ℤ) - (a : ℤ) :=
+lemma dvd_sub_symm (a b n : ℤ) (h : n ∣ a - b) : n ∣ b - a :=
 (dvd_neg _ _).mp (by simp [h])
 
 lemma coprime_sub {n m : ℕ} (h : n.coprime m) (hn : m ≤ n) : (n - m).coprime n :=
