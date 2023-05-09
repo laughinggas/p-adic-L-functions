@@ -662,11 +662,9 @@ end
 theorem p_adic_L_function_eval_neg_int [algebra ℚ R] [norm_one_class R] [no_zero_divisors R]
   [is_scalar_tower ℚ ℚ_[p] R]
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
-  (hp : 2 < p) (hχ : χ.is_even) (hχ1 : d ∣ χ.conductor)
-  --(hχ2 : p ∣ (χ.mul (((teichmuller_character_mod_p_inv p R)^n))).conductor)
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
+  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) 
+  (hχ1 : d ∣ χ.conductor)
+  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥) :
   (p_adic_L_function m hd χ c hc hc' na (mul_inv_pow p d R (n - 1))) = (algebra_map ℚ R) (1 / n : ℚ) *
    (1 - (χ (zmod.unit_of_coprime c (nat.coprime_mul_iff_right.2 ⟨hc', nat.coprime.pow_right m hc⟩))
    * (mul_inv_pow p d R n (zmod.unit_of_coprime c hc', is_unit.unit (padic_int.nat_is_unit_of_not_dvd
