@@ -23,11 +23,10 @@ p-adic, L-function, Bernoulli measure
 
 local attribute [instance] zmod.topological_space
 
-variables (p : ℕ) [fact p.prime] (d : ℕ) (R : Type*) [normed_comm_ring R] (m : ℕ) (c : ℕ)
-open zmod
+variables (p : ℕ) [fact p.prime] (d : ℕ) (c : ℕ)
 
 /-- A Bernoulli measure, as defined by Washington. -/
-noncomputable def bernoulli_distribution := λ (n : ℕ) (a : (zmod (d * (p^n)))), (algebra_map ℚ ℚ_[p])
+noncomputable def bernoulli_distribution (n : ℕ) (a : (zmod (d * (p^n)))) := (algebra_map ℚ ℚ_[p])
   (int.fract ((a.val : ℚ) / (d*p^n)) -
   c * int.fract (((((((c : zmod (d * p^(2 * n)))⁻¹).val : ℚ) * (a : ℚ))) : ℚ) / (d * p^n)) +
   (c - 1)/2)

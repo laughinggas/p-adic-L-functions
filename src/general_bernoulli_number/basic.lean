@@ -31,7 +31,7 @@ open dirichlet_character
 open_locale big_operators
 
 /-- The generalized Bernoulli number
-  `B_{m, ψ} = f^{m - 1} * ∑_{a = 0}^{f - 1} ψ(a) * B_m(a+1/f)`,
+  `B_{m, ψ} = f^{m - 1} * ∑_{a = 0}^{f - 1} ψ(a + 1) * B_m((a+1) / f)`,
   where `f` is the conductor of the Dirichlet character `ψ`. -/
 noncomputable def general_bernoulli_number (m : ℕ) : S :=
   (algebra_map ℚ S ((ψ.conductor)^(m - 1 : ℤ))) * (∑ a in finset.range ψ.conductor,
@@ -62,18 +62,7 @@ end
 
 lemma general_bernoulli_number_one_eval_one :
 general_bernoulli_number (1 : dirichlet_character S 1) 1 = algebra_map ℚ S (1/2 : ℚ) :=
-begin
-  rw general_bernoulli_number_def, simp_rw [conductor.one nat.one_pos],
-  simp only [one_div, one_pow, one_mul, bernoulli'_one, nat.cast_zero,
-    polynomial.bernoulli_eval_one, nat.cast_one, div_one, finset.sum_singleton,
-    finset.range_one, monoid_hom.coe_mk],
-  rw extend_eq_char _ is_unit_one,
-  rw reduction_one nat.one_pos,
-  convert one_mul _,
-  { simp only [one_zpow, ring_hom.map_one], },
-  { convert (one_mul _).symm, },
-end
---revise proof using above lemma
+by { rw [general_bernoulli_number_one_eval, bernoulli'_one], }
 
 /-- `∑_{a = 0}^{m*n - 1} f a = ∑_{i = 0}^{n - 1} (∑_{a = m*i}^{m*(i + 1)} fa)`. -/
 lemma finset.sum_range_mul_eq_sum_Ico {m n : ℕ} (f : ℕ → S) :
@@ -96,10 +85,7 @@ lemma eq_sum_bernoulli_of_conductor_dvd {F : ℕ} [hF : fact (0 < F)] (m : ℕ) 
 begin
   cases h with k h, rw h,
   rw finset.sum_range_mul_eq_sum_Ico,
-  simp_rw [finset.sum_Ico_eq_sum_range],
-  simp_rw [←nat.mul_sub_left_distrib],
-  simp_rw [norm_num.sub_nat_pos (nat.succ _) _ 1 rfl],
-  simp_rw [mul_one],
+  simp_rw [finset.sum_Ico_eq_sum_range, ←nat.mul_sub_left_distrib, norm_num.sub_nat_pos (nat.succ _) _ 1 rfl, mul_one],
   rw general_bernoulli_number_def,
   have hF : F ≠ 0 := ne_of_gt (fact_iff.1 hF),
   have hk1 : k ≠ 0,
@@ -111,7 +97,7 @@ begin
     mul_comm ((asso_dirichlet_character ψ.reduction) ↑(x.succ)) _, mul_assoc,
     finset.mul_sum], },
   rw [←finset.mul_sum, ←mul_assoc],
-  apply congr_arg2,
+  apply congr_arg2 _ _ _,
   { rw [nat.cast_mul, mul_zpow, ring_hom.map_mul], },
   { rw finset.sum_comm,
     apply finset.sum_congr rfl (λ i hi, _),

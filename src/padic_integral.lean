@@ -12,15 +12,12 @@ import topology.continuous_function.locally_constant
 
 This file defines p-adic distributions and measure on the space of locally constant functions
 from a profinite space to a normed ring. We then use the measure to construct the p-adic integral.
-In fact, we prove that this integral is linearly and continuously extended on `C(X, A`.
+In fact, we prove that this integral is linearly and continuously extended on `C(X, A)`.
 
 ## Main definitions and theorems
  * `exists_finset_clopen`
  * `measures`
  * `integral`
-
-## Implementation notes
-TODO (optional)
 
 ## References
 Introduction to Cyclotomic Fields, Washington (Chapter 12)
@@ -65,13 +62,8 @@ lemma is_closed_sUnion {H : Type*} [topological_space H]
 by { simpa only [← is_open_compl_iff, set.compl_sUnion, set.sInter_image] using is_open_bInter
     (finset.finite_to_set s) (λ i hi, _), apply is_open_compl_iff.2 (hs i hi), }
 
-lemma is_clopen_sUnion {H : Type*} [topological_space H]
-  (s : finset(set H)) (hs : ∀ x ∈ s, is_clopen x) :
-  is_clopen ⋃₀ (s : set(set H)) :=
-⟨is_open_sUnion (λ t ht, (hs t ht).1), is_closed_sUnion (λ t ht, (hs t ht).2) ⟩
-
 /-- The finite union of clopen sets is clopen. -/
-lemma clopen_finite_Union {H : Type*} [topological_space H]
+lemma is_clopen_sUnion {H : Type*} [topological_space H]
   (s : finset(set H)) (hs : ∀ x ∈ s, is_clopen x) :
   is_clopen ⋃₀ (s : set(set H)) :=
   by { rw set.sUnion_eq_bUnion, apply is_clopen_bUnion hs, }
@@ -96,7 +88,7 @@ begin
     { rintros x hx,
       simp only [finset.coe_insert, set.mem_insert_iff, finset.mem_coe] at hx,
       cases hx,
-      { rw hx, apply is_clopen.diff (hs a h's) (clopen_finite_Union _ (λ y hy, (hs y (hS hy)))), },
+      { rw hx, apply is_clopen.diff (hs a h's) (is_clopen_sUnion _ (λ y hy, (hs y (hS hy)))), },
       { apply clo x hx, }, },
     { simp only [finset.coe_insert, set.sUnion_insert], rw [←union, set.diff_union_self], },
     { simp only [finset.mem_insert] at hx, cases hx,
@@ -263,7 +255,7 @@ begin
 end
 
 /-- If there is a finite set of sets from `S` whose preimage forms a cover for `X`,
-  then there is a finset of `sets X` containing clopen sets, with the image of each set being
+  then there is a finset of `set X` containing clopen sets, with the image of each set being
   contained in an element of `S`. We use `s'` to get a finite disjoint clopen cover of `X`;
   note : it is not a partition -/
 noncomputable def finset_clopen : finset (set X) :=
@@ -464,7 +456,7 @@ end locally_constant.density
 variables (X) (A)
 
 /-- Given a profinite space `X` and a normed commutative ring `A`, a `p-adic measure` is a
-  "bounded" linear map from the locally constant functions from `X` to `A` to `A` -/
+  bounded linear map from the locally constant functions from `X` to `A` to `A` -/
 def measures :=
   {φ : (locally_constant X A) →ₗ[A] A //
     ∃ K : ℝ, 0 < K ∧ ∀ f : (locally_constant X A), ∥φ f∥ ≤ K * ∥inclusion X A f∥ }
@@ -473,7 +465,7 @@ instance : has_zero (measures X A) :=
 { zero := ⟨0, ⟨1, ⟨zero_lt_one,
   λ f, by { simp only [norm_zero, one_mul, norm_nonneg, linear_map.zero_apply], } ⟩ ⟩ ⟩, }
 
-noncomputable instance : inhabited (measures X A) := classical.inhabited_of_nonempty'
+instance : inhabited (measures X A) := ⟨0⟩
 
 /-- Giving `locally_constant` the normed group structure induced from `C(X, A)` -/
 noncomputable instance : normed_group (locally_constant X A) :=
@@ -501,8 +493,7 @@ begin
   rw [dist_eq_norm, ← linear_map.map_sub],
 end
 
-lemma integral_cont (φ : measures X A) : continuous ⇑φ :=
-  uniform_continuous.continuous (uniform_continuous _)
+lemma integral_cont (φ : measures X A) : continuous ⇑φ := uniform_continuous.continuous (uniform_continuous _)
 
 variables (X) (A)
 
@@ -512,8 +503,7 @@ lemma uni_ind : uniform_inducing (inclusion X A) := ⟨rfl⟩
 variables [t2_space X] [totally_disconnected_space X]
 
 /-- The inclusion map from `locally_constant X A` to `C(X, A)` is dense inducing -/
-lemma dense_ind_inclusion : dense_inducing (inclusion X A) :=
-  ⟨⟨rfl⟩, loc_const_dense X⟩
+lemma dense_ind_inclusion : dense_inducing (inclusion X A) := ⟨⟨rfl⟩, loc_const_dense X⟩
 
 variables {X} {A}
 

@@ -19,7 +19,7 @@ This file defines eventually constant sequences and their properties.
 /-- A sequence has the `is_eventually_constant` predicate if all the elements of the sequence
   are eventually the same. -/
 def is_eventually_constant {α : Type*} (a : ℕ → α) : Prop :=
- { n | ∀ m, n ≤ m → a (nat.succ m) = a m }.nonempty
+{ n | ∀ m, n ≤ m → a (nat.succ m) = a m }.nonempty
 
 /-- An eventually constant sequence is a sequence which has the `is_eventually_constant`
   predicate. -/

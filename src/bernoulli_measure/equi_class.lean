@@ -79,14 +79,14 @@ begin
   { rw [finset.sum_range_succ, int.cast_add, hd _],
     { simp only [int.cast_coe_nat, cast_succ, add_tsub_cancel_right],
       rw div_add',
-      { rw [mul_comm _ (d : ℚ), ←mul_add], ring, },
-      { simp only [ne.def, bit0_eq_zero, one_ne_zero, not_false_iff], }, },
-    { simp only [_root_.coe_coe, eq_self_iff_true, implies_true_iff], }, },
+      { ring, },
+      { linarith, }, },
+    { intros, norm_cast, }, },
 end
 
 namespace equi_class
 lemma mem {n m : ℕ} (a : zmod (d * p^n)) (b : zmod (d * p^m)) :
-  b ∈ equi_class m a ↔ (b : zmod (d * p^n)) = a := ⟨λ hb, hb, λ hb, hb⟩
+  b ∈ equi_class m a ↔ (b : zmod (d * p^n)) = a := iff.rfl 
 
 variable [fact (0 < d)]
 
@@ -381,7 +381,7 @@ open equi_class
 lemma bernoulli_distribution_sum' (x : zmod (d * p^m)) (hc : c.coprime p) (hc' : c.coprime d) :
   ∑ (y : equi_class m.succ x), (bernoulli_distribution p d c m.succ y) = (bernoulli_distribution p d c m x) :=
 begin
-  rw [bernoulli_distribution, ← ring_hom.map_sum],
+  simp_rw [bernoulli_distribution, ← ring_hom.map_sum],
   apply congr_arg,
   rw [finset.sum_add_distrib, finset.sum_sub_distrib, equi_class.sum_fract, ←finset.mul_sum],
   have h2 : ∀ z : ℕ, d * p ^ z ∣ d * p ^ (2 * z),

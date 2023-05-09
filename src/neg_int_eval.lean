@@ -696,7 +696,7 @@ begin
     delta U_def, delta V_def, rw linear_map.map_sum, simp_rw linear_map.map_smul,
     convert finset.sum_congr rfl _,
     swap 3, { intros z hz, rw bernoulli_measure_eval_char_fn, apply hx, },
-    rw bernoulli_distribution, simp only,
+    simp_rw bernoulli_distribution, --simp only,
     simp_rw [helper_269, ring_hom.map_add, ring_hom.map_sub, zmod.nat_cast_val, smul_add, smul_sub],
     rw finset.sum_add_distrib, rw finset.sum_sub_distrib,
     simp_rw is_scalar_tower.algebra_map_apply ℚ ℚ_[p] R,
