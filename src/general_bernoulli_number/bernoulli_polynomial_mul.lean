@@ -64,47 +64,51 @@ end
 theorem bernoulli_eval_mul' (m : ℕ) {k : ℕ} (hk : k ≠ 0) (x : ℚ) :
   (bernoulli m).eval ((k : ℚ) * x) =
   k^(m - 1 : ℤ) * ∑ i in range k, (bernoulli m).eval (x + i / k) :=
-begin
-  have coe_hk : (k : ℚ) ≠ 0,
-  { assumption_mod_cast, },
+begin 
+  have coe_hk : (k : ℚ) ≠ 0 := by assumption_mod_cast,
+  -- ∑ i in range k, (∑ n, k^(n - 1) * B_n (x + i / k) / n!) * ((e^Y - 1) * (e^(kY) - 1)) = 
+  -- ∑ n, B_n (k * x) / n! * ((e^Y - 1) * (e^(kY) - 1))
   suffices : (∑ i in range k, (power_series.mk (λ n, (k^(n - 1 : ℤ) : ℚ) *
     (polynomial.eval (x + i / k) ((1 / n! : ℚ) • (bernoulli n))) ))) * ((exp ℚ - 1)  *
     (rescale (k : ℚ) (exp ℚ - 1))) = (power_series.mk (λ n, polynomial.eval ((k : ℚ) * x)
     ((1 / n! : ℚ) • bernoulli n))) * ((exp ℚ - 1) * (rescale (k : ℚ) (exp ℚ - 1))),
-  { rw mul_eq_mul_right_iff at this, cases this,
-    { rw power_series.ext_iff at this,
+  { rw mul_eq_mul_right_iff at this, cases this, 
+  -- breaking up into cases of the multiplication factor ((e^Y - 1) * (e^(kY) - 1)) 
+  -- being nonzero or zero 
+    { -- equate coefficients of every level; our goal comes from the m^th coefficient of the power series
+      rw power_series.ext_iff at this,
       simp only [one_div, coeff_mk, polynomial.eval_smul, factorial, linear_map.map_sum] at this,
-      specialize this m,
-      have symm := this.symm,
-      rw inv_smul_eq_iff₀ _ at symm,
-      { rw [symm, ←mul_sum, ←smul_mul_assoc, ←smul_sum, smul_eq_mul, smul_eq_mul, ←mul_assoc,
-          mul_comm _ (m! : ℚ)⁻¹, ←mul_assoc, inv_mul_cancel _, one_mul],
-        { norm_cast, apply factorial_ne_zero _, }, },
+      rw [(inv_smul_eq_iff₀ _).1 (this m).symm, ←mul_sum, ←smul_mul_assoc, ←smul_sum, smul_eq_mul, smul_eq_mul, ←mul_assoc,
+        mul_comm _ (m! : ℚ)⁻¹, ←mul_assoc, inv_mul_cancel _, one_mul];
       { norm_cast, apply factorial_ne_zero _, }, },
-    { exfalso, rw mul_eq_zero at this, cases this,
+    { -- ((e^Y - 1) * (e^(kY) - 1)) = 0 is false
+      exfalso, rw mul_eq_zero at this, cases this,
       { apply exp_sub_one_ne_zero this, },
       { apply exp_sub_one_ne_zero,
         rw ←(rescale (k : ℚ)).map_zero at this,
         apply rescale_injective coe_hk this, }, }, },
   { symmetry, rw [←mul_assoc, bernoulli_generating_function'],
+    -- to prove that : Y * e^((k * x) Y) * (e^(kY) - 1) = 
+    -- ∑ i in range k, (∑ n, k^(n - 1) * B_n (x + i / k) / n!) * ((e^Y - 1) * (e^(kY) - 1))
     have : ∀ n : ℕ, (k : ℚ)^(n - 1 : ℤ) = 1 / k * k^n,
     { intro n, rw [zpow_sub_one₀ coe_hk, inv_eq_one_div, mul_comm, zpow_coe_nat], },
-    conv_rhs { congr, apply_congr, skip, conv { congr, funext, rw [this, mul_assoc], }, },
-    conv_rhs { congr, apply_congr, skip, rw [function.smul, power_series.mk_smul, ←rescale_mk], },
+    conv_rhs { congr, apply_congr, skip, conv { congr, funext, rw [this, mul_assoc], }, 
+      rw [function.smul, power_series.mk_smul, ←rescale_mk], },
     rw [mul_comm (exp ℚ - 1) _, ←mul_assoc, sum_mul],
+    -- simplify RHS using `bernoulli_generating_function'`, `exp_pow_eq_rescale_exp` and `geom_sum_mul`
     conv_rhs { congr, apply_congr, skip, rw [smul_mul_assoc, ←ring_hom.map_mul,
       bernoulli_generating_function', ring_hom.map_mul, rescale_comp_eq_mul,
       add_div_eq_mul_add_div _ _ coe_hk, div_mul_cancel _ coe_hk, ←exp_mul_exp_eq_exp_add,
       ←mul_assoc, ←smul_mul_assoc, ←exp_pow_eq_rescale_exp], },
     rw [←mul_sum, mul_assoc _ _ (exp ℚ - 1), geom_sum_mul, ←smul_mul_assoc],
-    apply congr_arg2, apply congr_arg2,
-    { apply power_series.ext (λ n, _), { apply_instance, },
-      rw [power_series.coeff_smul, coeff_rescale, power_series.coeff_X],
-      rw smul_eq_mul,
+    -- almost there, just cancelling out comon divisors and using commutativity
+    refine congr_arg2 _ (congr_arg2 _ (power_series.ext (λ n, _)) _) _, --apply congr_arg2,
+    { rw [power_series.coeff_smul, coeff_rescale, power_series.coeff_X, smul_eq_mul],
       by_cases n = 1,
       { rw [if_pos h, h, mul_one, pow_one, div_mul_cancel _ coe_hk], },
       { rw [if_neg h, mul_zero, mul_zero], }, },
     { rw mul_comm, },
-    { rw [ring_hom.map_sub, exp_pow_eq_rescale_exp], congr, apply (rescale (k : ℚ)).map_one', }, },
+    { rw [ring_hom.map_sub, exp_pow_eq_rescale_exp], 
+      congr, apply (rescale (k : ℚ)).map_one', }, },
 end
 end polynomial

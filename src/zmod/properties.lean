@@ -41,9 +41,9 @@ lemma proj_fst' {m n : ℕ} (h : m.coprime n) (a : zmod m) (b : zmod n) :
   zmod.cast_hom (show m ∣ m * n, from dvd.intro n rfl) (zmod m)
     ((zmod.chinese_remainder h).symm (a,b)) = a :=
 begin
-  have h2 : zmod.cast_hom (show m.lcm n ∣ m * n, by simp [nat.lcm_dvd_iff]) (zmod m × zmod n) _ = _,
-    exact (zmod.chinese_remainder h).right_inv (a,b),
   change _ = prod.fst (a, b),
+  have h2 : zmod.cast_hom (show m.lcm n ∣ m * n, by simp [nat.lcm_dvd_iff]) (zmod m × zmod n) _ = _ :=
+    (zmod.chinese_remainder h).right_inv (a,b),
   conv_rhs { rw ←h2, },
   convert_to _ = (ring_hom.comp (ring_hom.fst (zmod m) (zmod n))
     (zmod.cast_hom _ (zmod m × zmod n))) ((zmod.chinese_remainder h).inv_fun (a, b)) using 1,
