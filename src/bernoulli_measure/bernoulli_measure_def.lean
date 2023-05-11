@@ -122,7 +122,7 @@ begin
   { rw [linear_map.coe_mk, sequence_limit_eq _ _ (seq_lim_from_loc_const_char_fn R a hc hc' h'),
       from_loc_const_to_seq], },
   obtain ⟨z, hz⟩ := helper_meas_bernoulli_distribution a hc' hc,
-  rw [bernoulli_distribution], simp only,
+  simp_rw [bernoulli_distribution], 
   rw [ring_hom.map_add, norm_algebra_map'],
   apply le_trans (norm_add_le _ _) (add_le_add_right _ _),
   rw [hz, ring_hom.map_int_cast],
