@@ -105,17 +105,15 @@ end
 
 lemma finset.neg_sum {α β : Type*} [ring β] (s : finset α) (f : α → β) :
   ∑ x in s, - (f x) = - ∑ x in s, f x :=
-begin
-  conv_lhs { apply_congr, skip, rw neg_eq_neg_one_mul, },
-  rw ← finset.mul_sum, rw ← neg_eq_neg_one_mul,
-end
+by { rw finset.sum_neg_distrib }
 
 lemma inv_smul_self [algebra ℚ R] {n : ℕ} (hn : n ≠ 0) :
   (n : ℚ)⁻¹ • (n : R) = 1 :=
 begin
-  rw ← one_mul (n : R), rw ← smul_mul_assoc, rw ← algebra.algebra_map_eq_smul_one,
+  rw [←one_mul (n : R), ←smul_mul_assoc, ←algebra.algebra_map_eq_smul_one],
   have : (algebra_map ℚ R) (n : ℚ) = (n : R), simp only [map_nat_cast],
-  conv_lhs { congr, skip, rw ← this, }, rw ← (algebra_map ℚ R).map_mul, rw inv_mul_cancel _,
+  conv_lhs { congr, skip, rw ← this, }, 
+  rw [←(algebra_map ℚ R).map_mul, inv_mul_cancel _],
   simp only [ring_hom.map_one],
   { norm_cast, apply hn, },
 end

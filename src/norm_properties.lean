@@ -20,18 +20,19 @@ begin
 end
 
 variables {p R χ}
+/-- Using this in the proof of Lemma 7.11 of Washington. -/
 lemma norm_sum_le_smul {k : ℕ} [normed_algebra ℚ_[p] R] [norm_one_class R] (hk : 1 < k) {x : ℕ}
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
   ∥∑ (y : ℕ) in finset.range (d * p ^ x + 1), (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ((-1) * ↑y) *
-  ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y) ^ (k - 1 - (x_1 + 1)) *
-  ↑((k - 1).choose (x_1 + 1))∥ ≤ (dirichlet_character.bound
+  ∑ (z : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ z * ((-1) * ↑y) ^ (k - 1 - (z + 1)) *
+  ↑((k - 1).choose (z + 1))∥ ≤ (dirichlet_character.bound
   (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) * (k - 1)) :=
 begin
   have : ∀ y ∈ finset.range (d * p ^ x + 1), ∥(asso_dirichlet_character
     (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ((-1) * ↑y) *
-    ∑ (x_1 : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ x_1 * ((-1) * ↑y)^(k - 1 - (x_1 + 1)) *
-    ↑((k - 1).choose (x_1 + 1)) ∥ ≤ (dirichlet_character.bound (χ.mul
+    ∑ (z : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ z * ((-1) * ↑y)^(k - 1 - (z + 1)) *
+    ↑((k - 1).choose (z + 1)) ∥ ≤ (dirichlet_character.bound (χ.mul
     (teichmuller_character_mod_p_inv p R ^ k))) * (k - 1),
   { intros l hl,
     refine le_trans (norm_mul_le _ _) (mul_le_mul (le_of_lt (dirichlet_character.lt_bound _ _)) _
@@ -77,12 +78,12 @@ begin
 end
 
 variables {p d R}
--- `norm_mul_two_le_one` replaced with `hlper_7`
+-- `norm_mul_two_le_one` replaced with `helper_7`
 lemma helper_7 [normed_algebra ℚ_[p] R] [norm_one_class R] (k : ℕ) (y : ℕ) :
   ∥((d * p ^ y : ℕ) : R) ^ (k - 2) * (1 + 1)∥ ≤ 1 :=
 begin
-  rw [←nat.cast_pow, ←@nat.cast_one R _ _, ←nat.cast_add, ←nat.cast_mul,
-    norm_coe_nat_eq_norm_ring_hom_map p],
+  norm_cast,
+  rw [norm_coe_nat_eq_norm_ring_hom_map p],
   apply padic_int.norm_le_one _,
 end
 
@@ -93,7 +94,7 @@ begin
   apply add_nonneg _ (norm_nonneg _),
   rw [le_sub_iff_add_le, zero_add],
   norm_cast,
-  apply le_of_lt hk,
+  exact hk.le,
 end
 
 -- `norm_two_mul_le` replaced with `helper_9`
@@ -107,8 +108,7 @@ begin
     rw [←this, ←rat.cast_coe_nat, padic_norm_e.eq_padic_norm,
       padic_norm.padic_norm_of_prime_of_ne (λ h, ne_of_lt hp h.symm), rat.cast_one], },
   { rw one_mul,
-    apply le_trans (add_le_add le_rfl (helper_7 k _)) _,
-    any_goals { apply_instance, }, --why is this a problem?
+    refine le_trans (add_le_add le_rfl (helper_7 k _)) _,
     rw sub_add_cancel, },
   { rw one_mul,
     convert helper_8 hk _, },
@@ -227,9 +227,9 @@ norm_pos_iff.2 ((@nat.cast_ne_zero _ _ _ (char_zero_of_nontrivial_of_normed_alge
 variables {p d R}
 --`helper_W_4` replaced with `helper_17`
 lemma helper_17 [normed_algebra ℚ_[p] R] [norm_one_class R] {k : ℕ} {x : ℕ} (y : (zmod (d * p^x))ˣ) : 
-  ∥(d : R) * ∑ (x_1 : ℕ) in finset.range (k - 1),
-  (((p ^ x : ℕ) : R) * ↑d) ^ x_1 * ((-1) * ↑((y : zmod (d * p^x)).val)) ^ (k - 1 - (x_1 + 1)) *
-  ↑((k - 1).choose (x_1 + 1))∥ ≤ 1 :=
+  ∥(d : R) * ∑ (z : ℕ) in finset.range (k - 1),
+  (((p ^ x : ℕ) : R) * ↑d) ^ z * ((-1) * ↑((y : zmod (d * p^x)).val)) ^ (k - 1 - (z + 1)) *
+  ↑((k - 1).choose (z + 1))∥ ≤ 1 :=
 begin
   have h1 : (-1 : R) = ((-1 : ℤ) : R), norm_cast,
   conv { congr, congr, congr, skip, apply_congr, skip, rw h1, },

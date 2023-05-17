@@ -66,7 +66,7 @@ begin
 end dirichlet_char_extend
 
 variables (p d R)
-/-- Given a natural number s, defines the monoid homomorphism <a>^s taking a ∈ ℤ/dℤ* × ℤₚ* to
+/-- Given a natural number s, defines the monoid homomorphism `<a>^s` taking a ∈ ℤ/dℤ* × ℤₚ* to
   (a * ω⁻¹ (a.2 (mod p)))^s in R. -/
 noncomputable abbreviation mul_inv_pow_hom [algebra ℚ_[p] R] (s : ℕ) : (zmod d)ˣ × ℤ_[p]ˣ →* R :=
 ((algebra_map ℚ_[p] R).to_monoid_hom).comp (coe.ring_hom.to_monoid_hom.comp
@@ -99,7 +99,7 @@ continuous_monoid_hom.mk' (mul_inv_pow_hom p d R s) (mul_inv_pow_hom_continuous 
 
 variables {p d R} (w : continuous_monoid_hom ((zmod d)ˣ × ℤ_[p]ˣ) R)
 
-theorem cont_paLf : _root_.continuous ((units.coe_hom R).comp (dirichlet_char_extend p d R m hd χ) * w.to_monoid_hom) :=
+theorem cont_paLf : continuous ((units.coe_hom R).comp (dirichlet_char_extend p d R m hd χ) * w.to_monoid_hom) :=
 continuous.mul (units.continuous_coe.comp (dirichlet_char_extend.continuous p d R m hd _))
   w.continuous_to_fun
 
@@ -113,7 +113,7 @@ lemma helper_change_level_conductor [algebra ℚ_[p] R] [fact(0 < m)] : (change_
   (since it appears as it is in the Iwasawa Main Conjecture). -/
 noncomputable def p_adic_L_function [normed_algebra ℚ_[p] R] [nontrivial R] [complete_space R]
   [norm_one_class R] [fact (0 < d)] [fact (0 < m)] : R :=
-(@measure.integral _ _ _ _ _ _ _ _ (bernoulli_measure R hc hc' hd na)
+(measure.integral (bernoulli_measure R hc hc' hd na)
 ⟨(units.coe_hom R).comp (dirichlet_char_extend p d R m hd
 (change_level (helper_change_level_conductor m χ) (χ.mul ((teichmuller_character_mod_p_inv p R))))) *
 w.to_monoid_hom, cont_paLf m hd _ w⟩) 

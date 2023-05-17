@@ -258,17 +258,19 @@ begin
   ext,
   simp only [finset.mem_range, finset.mem_union, set.finite.mem_to_finset, set.mem_inter_eq,
     finset.mem_coe, set.mem_set_of_eq],
-  split, -- better way to do this?
+  tauto,
+/-  split, -- better way to do this?
   { intro h,
     by_cases h' : a.coprime d ∧ a.coprime p, { right, right, refine ⟨h, h'⟩, },
     { rw not_and_distrib at h', cases h',
       { left, refine ⟨h, h'⟩, },
       { right, left, refine ⟨h, h'⟩, }, }, },
   { intro h, cases h, apply h.1,
-    cases h, apply h.1, apply h.1, },
+    cases h, apply h.1, apply h.1, }, -/
 end
 
 open zmod
+/-- Same as Lemma 7.11 of Washington. -/
 lemma U [algebra ℚ R] [norm_one_class R] [no_zero_divisors R] [is_scalar_tower ℚ ℚ_[p] R]
   (hd : d.coprime p) (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hχ' : d ∣ χ.conductor) (hp : 2 < p)
   (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :

@@ -84,7 +84,6 @@ namespace zmod
 lemma embedding_coe {n : ℕ} : embedding (coe : (zmod n)ˣ → zmod n) :=
 { induced := (top_eq_iff_cont_inv.2 (begin convert continuous_of_discrete_topology,
     apply discrete_topology_induced,
-    change function.injective coe,
     exact units.ext, end)).symm,
   inj := units.ext, }
 

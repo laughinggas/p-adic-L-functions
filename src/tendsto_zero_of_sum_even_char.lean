@@ -9,7 +9,7 @@ import misc
 import number_theory.bernoulli_polynomials
 /-!
 # Theorems regarding sums of even characters
-This file describes theorems of convergence properties of certain sums twisted 
+This file describes theorems about convergence properties of certain sums twisted 
 by even Dirichlet characters. These are proved separately over `zmod (d * p^n)` 
 and `(zmod (d * p^n))ˣ`, for `d` coprime to the prime `p`. 
 
@@ -75,6 +75,7 @@ begin
 end
 
 -- `sum_odd_char` replaced with `helper_11`
+/-- 5 lines up from the bottom of Lemma 7.11 in Washington's book -/
 lemma helper_11 [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  [norm_one_class R]
  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
  [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) {x : ℕ} (hx : m ≤ x) :

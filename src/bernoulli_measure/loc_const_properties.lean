@@ -46,7 +46,7 @@ begin
 end
 
 lemma smul_eq_mul' {α β : Type*} [topological_space α] [ring β] (f : locally_constant α β)
-  (b : β) : b • f = (locally_constant.const α b) * f := by { ext, simp }
+  (b : β) : b • f = (locally_constant.const α b) * f := rfl
 
 open discrete_quotient_of_to_zmod_pow clopen_from
 

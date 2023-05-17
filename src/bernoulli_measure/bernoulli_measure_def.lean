@@ -45,7 +45,7 @@ end clopen_from
 open clopen_from
 
 lemma helper_3 (f : locally_constant ((zmod d) × ℤ_[p]) R) {n : ℕ} (i : zmod (d * p^n)) :
-  (f (i.val)) • _root_.char_fn R (clopen_from.is_clopen (i.val : zmod (d * p^n))) =
+  (f i.val) • _root_.char_fn R (clopen_from.is_clopen (i.val : zmod (d * p^n))) =
   f i • _root_.char_fn R (clopen_from.is_clopen i) := by { rw [nat_cast_val, char_fn_eq], }
 
 lemma s_nonempty [normed_algebra ℚ_[p] R] (hc : c.coprime p) (hc' : c.coprime d)
@@ -184,8 +184,5 @@ lemma integral_loc_const_eval [nontrivial R] [complete_space R] [normed_algebra 
 begin
   delta measure.integral, 
   simp only [continuous_linear_map.coe_mk', linear_map.coe_mk, subtype.val_eq_coe],
-  convert dense_inducing.extend_eq (measure.dense_ind_inclusion _ _) (measure.integral_cont _) _,
-  apply_instance,
-  apply_instance,
-  apply_instance,
+  exact dense_inducing.extend_eq (measure.dense_ind_inclusion _ _) (measure.integral_cont _) _,
 end

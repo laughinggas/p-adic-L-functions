@@ -14,7 +14,8 @@ import topology.algebra.continuous_monoid_hom
 
 /-!
 # A convergence property regarding (ℤ/dp^n ℤ)
-This file proves Proposition 7.11 in Introduction to Cyclotomic Fields, Washington. 
+This file proves a part of the proof of Proposition 7.11 in Introduction to Cyclotomic Fields, Washington. 
+In particular, LateX
 It gives a convergence property relating to generalized Bernoulli numbers.
 
 # Main Theorems
@@ -156,6 +157,7 @@ open eventually_constant_seq clopen_from
 open dirichlet_character
 variable (hd)
 
+/-- Last line before last calculation in 7.11 of Washington; proof is same -/
 lemma lim_even_character' [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
   [fact (0 < m)] {k : ℕ} [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [norm_one_class R] (hk : 1 < k)
   (hχ : χ.is_even) (hp : 2 < p)

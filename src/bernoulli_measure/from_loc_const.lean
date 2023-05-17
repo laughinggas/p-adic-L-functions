@@ -10,10 +10,10 @@ This file defines an eventually constant sequence constructed from a locally con
 Its limit is related to the Bernoulli distribution on `zmod d × ℤ_[p]`.
 
 ## Main definitions
- * `from_loc_const`
+ * `from_loc_const` -- what is the definition?
  * `loc_const_to_seq_limit`
 
-## Implementation notes
+## Change log
  * `coprime_pow_spl` replaced with `coprime.pow_right`
  * `val_le_val'` replaced with `val_coe_val_le_val'`
  * `imp` replaced with `apply_instance`
@@ -40,8 +40,8 @@ namespace set
 lemma inter_nonempty_of_not_disjoint {α : Type*} {s t : set α} (h : ¬disjoint s t) :
   ∃ x, x ∈ s ∧ x ∈ t :=
 begin
-  contrapose h, push_neg at h,
-  rw [not_not, disjoint_iff],
+  contrapose! h,
+  rw [disjoint_iff],
   ext,
   refine ⟨λ h', (h x ((set.mem_inter_iff _ _ _).1 h').1) ((set.mem_inter_iff _ _ _).1 h').2, _⟩,
   simp,
@@ -55,8 +55,8 @@ lemma inter_nonempty_of_not_disjoint {α : Type*} {s t : finset α} [decidable_e
 begin
   obtain ⟨x, hx⟩ : finset.nonempty (s ⊓ t),
   { rw [finset.inf_eq_inter, finset.nonempty_iff_ne_empty],
-    contrapose h, push_neg at h,
-    rw [not_not, disjoint],
+    contrapose! h,
+    rw [disjoint],
     simp only [inf_eq_inter, bot_eq_empty, le_eq_subset], -- simp does not work without rw disjoint
     rw [finset.subset_empty, h], },
   refine ⟨x, finset.mem_inter.1 hx⟩,
@@ -66,9 +66,11 @@ end finset
 
 open discrete_quotient_of_to_zmod_pow
 namespace eventually_constant_seq
-/-- An eventually constant sequence constructed from a locally constant function. -/
+
+/-- An eventually constant sequence constructed from a locally constant function f, 
+  ∑_{a : zmod' (d * p^n)} f(a) • E_c(χ_{n, a}) -/
 noncomputable abbreviation from_loc_const (hc : c.coprime p) (hc' : c.coprime d)
-  (f : locally_constant (zmod d × ℤ_[p]) R) (hd' : d.coprime p) : @eventually_constant_seq R :=
+  (f : locally_constant (zmod d × ℤ_[p]) R) (hd' : d.coprime p) : eventually_constant_seq R :=
 { to_seq := λ (n : ℕ), ∑ a in (zmod' (d * p^n) (mul_prime_pow_pos n)),
     f(a) • ((algebra_map ℚ_[p] R) (bernoulli_distribution p d c n a)),
   is_eventually_const := ⟨classical.some (le hd' f) + 1,

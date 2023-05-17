@@ -300,7 +300,7 @@ begin
     ⟨(w : zmod d), set.singleton_monoid_hom_apply _⟩, ⟨n, (w : zmod (p^n)), rfl⟩,
     by { rw h, }⟩, λ hy, _⟩,
   { rcases hy with ⟨x', y', ⟨x, hx⟩, ⟨n, y, hy⟩, h⟩,
-    set U' : set (zmod d × ℤ_[p]) := ({x} : set (zmod d)) ×ˢ ((padic_int.to_zmod_pow n)⁻¹' {y})
+    set U' : set (zmod d × ℤ_[p]) := ({x} : set (zmod d)) ×ˢ ((@padic_int.to_zmod_pow p _ n)⁻¹' {y})
       with hU',
     have hU : U' ∈ clopen_basis' p d,
     { refine ⟨n, ((zmod.chinese_remainder (coprime.pow_right n hd)).inv_fun (x, y)), _⟩,
