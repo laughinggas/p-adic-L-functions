@@ -49,8 +49,7 @@ begin
   convert filter.tendsto.comp (continuous.tendsto (continuous_linear_map.continuous (measure.integral
      (bernoulli_measure R hc hc' hd na) )) f) hf,
   ext,
-  simp,
-  rw integral_loc_const_eval, simp,
+  simp [integral_loc_const_eval],
 end
 
 open ind_fn eventually_constant_seq zmod clopen_from

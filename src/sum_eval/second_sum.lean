@@ -116,7 +116,7 @@ begin
   apply zmod.unit_ne_zero,
 end
 
-lemma sq_mul (a b : ℚ) : (a * b)^2 = a * b^2 * a := by linarith
+lemma sq_mul (a b : ℚ) : (a * b)^2 = a * b^2 * a := by ring
 
 lemma exists_V_h1_5 [algebra ℚ R] [norm_one_class R] (n k : ℕ) (hn : n ≠ 0) (x : (zmod (d * p^k))ˣ) :
   ∃ z : ℤ, ((((c : zmod (d * p^(2 * k))))⁻¹.val *
@@ -434,7 +434,7 @@ begin
   apply tendsto.add, apply tendsto.add,
   { convert tendsto.congr' (helper_301 p d R m χ c hd hc' hc n hn).symm _,
       -- why was any of this needed?
-    { ext, congr, ext, congr' 1, apply congr_arg,
+    { ext, congr, ext, congr' 2, --apply congr_arg,
       -- this is causing the problem, is it needed?
       --make this a separate lemma
       rw coe_coe,
