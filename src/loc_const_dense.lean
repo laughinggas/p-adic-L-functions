@@ -27,15 +27,13 @@ p-adic L-function, p-adic integral, measure, totally disconnected, locally const
 Hausdorff
 -/
 
-variables (X : Type*) [topological_space X]
-variables (A : Type*) [comm_semiring A] [uniform_space A] [topological_semiring A]
+variables (X : Type*) [topological_space X] (A : Type*) [comm_semiring A] [uniform_space A] [topological_semiring A]
 
 /-- The A-linear injective map from `locally_constant X A` to `C(X, A)` -/
 abbreviation inclusion : locally_constant X A →ₗ[A] C(X, A) :=
 locally_constant.to_continuous_map_linear_map A
 
-variable {X}
-variables [compact_space X]
+variables {X} [compact_space X]
 
 namespace set
 lemma diff_inter_eq_empty {α : Type*} (a : set α) {b c : set α} (h : c ⊆ b) :
@@ -111,15 +109,16 @@ end
 end is_clopen
 
 namespace locally_constant.density
-variables {X} [compact_space X] [t2_space X] 
-  [totally_disconnected_space X] {B : Type*} [comm_semiring B] [uniform_space B] 
+variables {X} [t2_space X] [totally_disconnected_space X] {B : Type*} [comm_semiring B] [uniform_space B] 
   [topological_semiring B] {f' : C(X, B)} {s: set (set C(X, B))} (hf' : ∀ x ∈ s, f' ∈ x) [fintype s]
   (h2 : ∀ (x : set C(X, B)), x ∈ s → (∃ (s : set X), is_compact s ∧ ∃ (a : set B), is_open a ∧ x = {f : C(X, B) | s ⊆ ⇑f ⁻¹' a}))
 
+/-- The compact sets coming from hypothesis `h2`. -/
 abbreviation com := λ (x : set C(X, B)) (hx : x ∈ s), ((h2 x hx).some : set X)
 
 lemma com_spec {x : set C(X, B)} (hx : x ∈ s) : is_compact (com h2 x hx) := (h2 x hx).some_spec.1
 
+/-- The open sets coming from hypothesis `h2`. -/
 abbreviation ope := λ (x : set C(X, B)) (hx : x ∈ s), (((h2 x hx).some_spec).2.some : set B)
 
 lemma ope_spec {x : set C(X, B)} (hx : x ∈ s) : is_open (ope h2 x hx) := (h2 x hx).some_spec.2.some_spec.1 
@@ -159,8 +158,7 @@ lemma exists_finset_univ_sub' {U : set X} (hU : is_open U) : ∃ (t : finset (se
 begin
   have g : (⋃ (U : set B) (hU : is_open U), U) = (set.univ : set B),
   { rw set.Union_eq_univ_iff,
-    rintros, 
-    refine ⟨set.univ, _⟩,
+    refine λ x, ⟨set.univ, _⟩,
     simp only [is_open_univ, set.Union_true], },
   have g' : f'⁻¹' (⋃ (U : set B) (hU : is_open U), U) = set.univ,
   { rw g, exact set.preimage_univ, },
@@ -171,8 +169,7 @@ end
 lemma open_eq_sUnion_finset_clopen' {U s : set X} (hU : is_open U) (hs : is_compact s) (sub_U : s ⊆ U) : 
   ∃ (t : finset (set X)) (sub : (t : set (set X)) ⊆ set_clopen' hU), s ⊆ ⋃₀ t ∧ ⋃₀ (t : set (set X)) ⊆ U := 
 begin
-  rw open_eq_sUnion_set_clopen' hU at sub_U,
-  rw set.sUnion_eq_bUnion at sub_U,
+  rw [open_eq_sUnion_set_clopen' hU, set.sUnion_eq_bUnion] at sub_U,
   obtain ⟨t, ht1, ht2, ht3⟩ := is_compact.elim_finite_subcover_image hs (λ i hi, (set_clopen_sub_clopen_set' hU hi).1) sub_U,
   rw ← set.sUnion_eq_bUnion at ht3, 
   refine ⟨ht2.to_finset, _, _, _⟩,
@@ -193,6 +190,7 @@ begin
   any_goals { rwa ← ht2', }, 
 end
 
+/-- Given an `x ∈ s`, this gives a finite disjoint clopen cover of `x`. -/
 noncomputable abbreviation com_ope_finset' := 
   λ (x : s), (open_eq_sUnion_finset_clopen'_disjoint (continuous_def.1 f'.2 _ (ope_spec h2 x.2)) (com_spec h2 x.2) (com_sub_ope hf' h2 x.2)).some
 
@@ -207,24 +205,26 @@ end
 
 open_locale classical
 
+/-- The finite set which is the union of `com_ope_finset'` for all `x ∈ s`. -/
 noncomputable def middle_cover {f' : C(X, B)} {s: set (set C(X, B))} (hf' : ∀ x ∈ s, f' ∈ x) [fintype s]
   (h2 : ∀ (x : set C(X, B)), x ∈ s → (∃ (s : set X), is_compact s ∧ ∃ (a : set B), is_open a ∧ x = {f : C(X, B) | s ⊆ ⇑f ⁻¹' a})) : finset (set X) := 
 finset.sup finset.univ (com_ope_finset' hf' h2)
 
 lemma middle_cover_spec {t : set C(X, B)} (ht : t ∈ s) : com h2 t ht ⊆ ⋃₀ middle_cover hf' h2 := 
 set.subset.trans (com_ope_finset'_spec hf' h2 ⟨t, ht⟩).2.2.1 (set.sUnion_subset_sUnion 
-  (begin
-    rw middle_cover, simp only [finset.coe_subset], 
-    refine finset.subset_iff.mpr (λ x hx, finset.mem_sup.2 ⟨⟨t, ht⟩, finset.mem_univ _, hx⟩),
-  end))
+  (finset.subset_iff.mpr (λ x hx, finset.mem_sup.2 ⟨⟨t, ht⟩, finset.mem_univ _, hx⟩)))
 
 lemma middle_cover_clopen (x : set X) (hx : x ∈ middle_cover hf' h2) : is_clopen x := 
 begin
-  rw middle_cover at hx, rw finset.mem_sup at hx,
+  rw [middle_cover, finset.mem_sup] at hx,
   rcases hx with ⟨v, hv, hx⟩,
   apply (com_ope_finset'_spec hf' h2 v).1 x hx,
 end
 
+-- dont know how to golf this
+/-- Given any set of sets, one can obtain a "finer" set of sets which is disjoint, with each set being contained in the 
+  smallest intersection possible of the original sets. We retranslate this condition for a finite set of sets, 
+  and also add clopenness of the underlying sets. -/
 lemma understand {t : finset (set X)} (ht : ∀ x (hx : x ∈ t), is_clopen x) : ∃ t' : finset (set X), (t' : set (set X)).pairwise_disjoint id ∧ 
   (∀ (x ∈ t), ∃ t'' ⊆ t', x = ⋃₀ t'') ∧ ⋃₀ (t' : set (set X)) = ⋃₀ (t : set (set X)) ∧ ∀ x (hx : x ∈ t'), is_clopen x := 
 begin
@@ -237,24 +237,19 @@ begin
     set g2 := λ (s : t'), s.1\a with hg2,
     have fin_g1 : set.finite (set.range g1), exact set.finite_range g1,
     have fin_g2 : set.finite (set.range g2), exact set.finite_range g2,
---    set g' : finset (set X) := finset.bUnion g t' with hg',
     set b := a \ ⋃₀ S with hb,
-    refine ⟨insert b ((set.finite.to_finset fin_g1) ∪ (set.finite.to_finset fin_g2)), _, _, _, _⟩,
+    refine ⟨insert b ((set.finite.to_finset fin_g1) ∪ (set.finite.to_finset fin_g2)), _, λ x hx, _, _, λ x hx, _⟩,
     { simp only [finset.coe_insert, finset.coe_union, set.finite.coe_to_finset],
-      apply set.pairwise_disjoint.insert _ (λj hj bj, _),
-      { intros y hy z hz y_ne_z,
-        rcases hy with ⟨y', hy'⟩, 
+      refine set.pairwise_disjoint.insert (λ y hy z hz y_ne_z, _) (λ j hj bj, _),
+      { rcases hy with ⟨y', hy'⟩, 
         { rw hg1 at hy',
           simp only at hy',
           rw ← hy',
-          --change disjoint (y'.val ∩ a) z,
           rcases hz with ⟨z', hz'⟩,
           { rw hg1 at hz',
             simp only at hz',
             rw ← hz',
-            apply disjoint.inter_left,
-            apply disjoint.inter_right,
-            apply disj y'.2 z'.2 (λ h, y_ne_z _),
+            apply disjoint.inter_left _ (disjoint.inter_right _ (disj y'.2 z'.2 (λ h, y_ne_z _))),
             rw [← hy', ← hz', h], },
           { rcases hz with ⟨z', hz'⟩,
             rw hg2 at hz',
@@ -266,7 +261,6 @@ begin
           rw hg2 at hy',
           simp only at hy',
           rw ← hy',
-          --change disjoint (y'.val ∩ a) z,
           rcases hz with ⟨z', hz'⟩,
           { rw hg1 at hz',
             simp only at hz',
@@ -277,9 +271,7 @@ begin
             rw hg2 at hz',
             simp only at hz',
             rw ← hz',
-            apply disjoint.inter_left,
-            apply disjoint.inter_right,
-            apply disj y'.2 z'.2 (λ h, y_ne_z _),
+            apply disjoint.inter_left _ (disjoint.inter_right _ (disj y'.2 z'.2 (λ h, y_ne_z _))),
             rw [← hy', ← hz', h], }, }, },
       simp only [id.def],
       rw hb,  
@@ -299,43 +291,40 @@ begin
         obtain ⟨x', hx', mem_x'⟩ := this ((set.ext_iff.1 hj' _).2 hy.2).1,
         exfalso,
         apply hy.1.2 _ hx' mem_x', }, },
-    { intros x hx,
-      set t'' : set (set X) := {s | s ∈ insert b (fin_g1.to_finset ∪ fin_g2.to_finset) ∧ s ⊆ x} with ht'',
+    { set t'' : set (set X) := {s | s ∈ insert b (fin_g1.to_finset ∪ fin_g2.to_finset) ∧ s ⊆ x} with ht'',
       have fin_t'' : set.finite t'', 
       { rw ht'', 
         refine set.finite.subset (finset.finite_to_set (insert b (fin_g1.to_finset ∪ fin_g2.to_finset))) (λz hz, hz.1), },
-      refine ⟨set.finite.to_finset fin_t'', λ z hz, _, _⟩,
+      refine ⟨set.finite.to_finset fin_t'', λ z hz, _, subset_antisymm (λ z hz, _) (set.sUnion_subset (λ z hz, _))⟩,
       { simp only [set.finite.mem_to_finset] at hz,
         apply hz.1, },
-      { refine subset_antisymm (λ z hz, _) (set.sUnion_subset (λ z hz, _)),
-        { simp only [finset.mem_insert] at hx,
-          simp only [hg1, hg2, set.finite.coe_to_finset, set.mem_set_of_eq, subtype.val_eq_coe, finset.mem_insert, finset.mem_union,
-            set.finite.mem_to_finset, set.mem_range, exists_prop],
-          cases hx,
-          { rw hx at hz,
-            rw ← set.diff_union_inter a (⋃₀ S) at hz,
-            cases hz,
-            { refine ⟨b, ⟨or.inl rfl, _⟩, hz⟩,
-              rw hx, apply set.diff_subset a _, },
-            { rcases hz.2 with ⟨c, hc, h5⟩,
-              obtain ⟨l, hl, cl⟩ := ex c hc,
-              obtain ⟨x', hx', mem_x'⟩ := ((set.ext_iff.1 cl _).1 h5),
-              rw ← set.diff_union_inter x' a at mem_x',
-              cases mem_x',
-              { exfalso,
-                apply ((set.mem_diff _).1 mem_x').2 hz.1, },
-              { refine ⟨x' ∩ a, ⟨or.inr (or.inl ⟨⟨_, hl hx'⟩, rfl⟩), _⟩, mem_x'⟩,
-                rw hx, apply set.inter_subset_right, }, }, },
-          { obtain ⟨l, hl, cl⟩ := ex x hx,
-            obtain ⟨x', hx', mem_x'⟩ := ((set.ext_iff.1 cl _).1 hz),
+      { simp only [finset.mem_insert] at hx,
+        simp only [hg1, hg2, set.finite.coe_to_finset, set.mem_set_of_eq, subtype.val_eq_coe, finset.mem_insert, finset.mem_union,
+          set.finite.mem_to_finset, set.mem_range, exists_prop],
+        cases hx,
+        { rw [hx, ←set.diff_union_inter a (⋃₀ S)] at hz,
+          cases hz,
+          { refine ⟨b, ⟨or.inl rfl, _⟩, hz⟩,
+            rw hx, apply set.diff_subset a _, },
+          { rcases hz.2 with ⟨c, hc, h5⟩,
+            obtain ⟨l, hl, cl⟩ := ex c hc,
+            obtain ⟨x', hx', mem_x'⟩ := ((set.ext_iff.1 cl _).1 h5),
             rw ← set.diff_union_inter x' a at mem_x',
             cases mem_x',
-            { refine ⟨x'\a, ⟨or.inr (or.inr ⟨⟨_, hl hx'⟩, rfl⟩), _⟩, mem_x'⟩,
-              rw cl, apply set.subset_sUnion_of_subset _ _ (set.diff_subset _ _) hx', },
+            { exfalso,
+              apply ((set.mem_diff _).1 mem_x').2 hz.1, },
             { refine ⟨x' ∩ a, ⟨or.inr (or.inl ⟨⟨_, hl hx'⟩, rfl⟩), _⟩, mem_x'⟩,
-              rw cl, apply set.subset_sUnion_of_subset _ _ (set.inter_subset_left _ _) hx', }, }, },
-        { simp only [finset.mem_coe, set.finite.mem_to_finset] at hz,
-          apply hz.2, }, }, },
+              rw hx, apply set.inter_subset_right, }, }, },
+        { obtain ⟨l, hl, cl⟩ := ex x hx,
+          obtain ⟨x', hx', mem_x'⟩ := ((set.ext_iff.1 cl _).1 hz),
+          rw ← set.diff_union_inter x' a at mem_x',
+          cases mem_x',
+          { refine ⟨x'\a, ⟨or.inr (or.inr ⟨⟨_, hl hx'⟩, rfl⟩), _⟩, mem_x'⟩,
+            rw cl, apply set.subset_sUnion_of_subset _ _ (set.diff_subset _ _) hx', },
+          { refine ⟨x' ∩ a, ⟨or.inr (or.inl ⟨⟨_, hl hx'⟩, rfl⟩), _⟩, mem_x'⟩,
+            rw cl, apply set.subset_sUnion_of_subset _ _ (set.inter_subset_left _ _) hx', }, }, },
+      { simp only [finset.mem_coe, set.finite.mem_to_finset] at hz,
+        apply hz.2, },  },
     { rw hb, 
       simp only [finset.coe_insert, finset.coe_union, set.finite.coe_to_finset, set.sUnion_insert],
       conv_rhs { rw ← set.diff_union_inter a (⋃₀ S), },
@@ -368,16 +357,21 @@ begin
           by_cases h' : y ∈ a,
           { refine or.inl ⟨⟨⟨l, hl⟩, yl⟩, h'⟩, },
           { refine or.inr ⟨⟨⟨l, hl⟩, yl⟩, h'⟩, }, }, }, },
-    { intros x hx,
-      simp only [finset.mem_insert, finset.mem_union, set.finite.mem_to_finset, set.mem_range] at hx,
+    { simp only [finset.mem_insert, finset.mem_union, set.finite.mem_to_finset, set.mem_range] at hx,
       cases hx,
-      { rw hx, rw hb, apply is_clopen.diff (ht a h't) (is_clopen.is_clopen_sUnion _ (λ y hy, (ht _ (hS hy)))), },
+      { rw [hx, hb], 
+        apply is_clopen.diff (ht a h't) (is_clopen.is_clopen_sUnion _ (λ y hy, (ht _ (hS hy)))), },
       { rcases hx with ⟨y, hy⟩,
-        { rw ← hy, rw hg1, simp only, apply is_clopen.inter (union.2 _ y.2) (ht a h't), },
+        { rw [← hy, hg1], 
+          apply is_clopen.inter (union.2 _ y.2) (ht a h't), },
         { rcases hx with ⟨y, hy⟩,
-          rw ← hy, rw hg2, simp only, apply is_clopen.diff (union.2 _ y.2) (ht a h't), }, }, }, },
+          rw [← hy, hg2], 
+          apply is_clopen.diff (union.2 _ y.2) (ht a h't), }, }, }, },
 end
 .
+/-- The final clopen disjoint clopen cover of all the compact sets `com hf' h2` in `s`. 
+  We need something finer than `middle_cover` which is disjoint and contained in the max intersection of all `com_ope_finset'`, 
+  so that the set on which our locally constant function is constant is well-defined. -/
 noncomputable def fc : finset (set X) := (understand (middle_cover_clopen hf' h2)).some
 
 lemma fc_spec : (fc hf' h2 : set (set X)).pairwise_disjoint id ∧ 
@@ -385,9 +379,10 @@ lemma fc_spec : (fc hf' h2 : set (set X)).pairwise_disjoint id ∧
   ⋃₀ (fc hf' h2 : set (set X)) = ⋃₀ ((middle_cover hf' h2) : set (set X)) ∧ 
   ∀ x (hx : x ∈ fc hf' h2), is_clopen x := (understand (middle_cover_clopen hf' h2)).some_spec
 
+/-- Adding in the complement of the union of sets in `fc`, which gives us a finite disjoint clopen cover of `X`. -/
 noncomputable def fc_univ : finset (set X) := fc hf' h2 ∪ {(⋃₀ fc hf' h2)ᶜ}
 
-/-- Takes a nonempty `s` in `finset_clopen` and returns an element of it. -/
+/-- Takes a nonempty `s` in `fc_univ` and returns an arbitrary element of it. -/
 noncomputable def cfc'' := λ (s : set X) (H : s ∈ (fc_univ hf' h2) ∧ nonempty s), classical.choice (H.2)
 
 lemma finset_clopen_prop_fc (a : X) : ∃! (b ∈ fc_univ hf' h2), a ∈ b := 
@@ -398,39 +393,34 @@ begin
     simp only [set.mem_compl_eq, set.mem_set_of_eq, finset.mem_coe, exists_prop, not_exists, not_and, exists_unique_iff_exists,
       and_imp],
     refine ⟨⟨finset.mem_union_left _ ht, mem_t⟩, λ y hy mem_y, _⟩, 
-    rw fc_univ at hy,
-    rw finset.mem_union at hy,
+    rw [fc_univ, finset.mem_union] at hy,
     cases hy,
     { by_contra h',
       apply (fc_spec hf' h2).1 hy ht h' ⟨mem_y, mem_t⟩, },
     { exfalso,
-      rw finset.mem_singleton at hy, rw hy at mem_y, rw set.mem_compl_iff at mem_y,
-      apply mem_y,
-      refine ⟨t, ht, mem_t⟩, }, },
+      rw finset.mem_singleton at hy, 
+      rw [hy, set.mem_compl_iff] at mem_y,
+      refine mem_y ⟨t, ht, mem_t⟩, }, },
   { refine ⟨(⋃₀ (fc hf' h2))ᶜ, _⟩,
     simp only [set.mem_compl_eq, set.mem_set_of_eq, finset.mem_coe, exists_prop, not_exists, not_and, exists_unique_iff_exists,
       and_imp],
     refine ⟨⟨finset.mem_union_right _ (finset.mem_singleton_self _), λ x hx, set.not_mem_of_not_mem_sUnion h hx⟩, λ y hy mem_y, _⟩,
-    { rw fc_univ at hy,
-      rw finset.mem_union at hy,
+    { rw [fc_univ, finset.mem_union] at hy,
       cases hy,
       { exfalso,
-        apply h,
-        rw set.mem_sUnion,
-        refine ⟨y, hy, mem_y⟩, },
+        refine h ⟨y, hy, mem_y⟩, },
       { rw finset.mem_singleton at hy, rw hy, }, }, },
 end
 
+/-- This is the required locally constant function which is "close enough" to our continuous function `f'`. 
+  Given `x ∈ X`, `x` must lie in a unique element of our cover `fc_univ`, given by `cfc'' x`. We pick an arbitrary element `y` of `cfc'' x`. 
+  `cfc x` is then `f' y`. -/
 noncomputable def cfc : X → B :=
 λ x, f' (cfc'' hf' h2 (classical.some (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 x)) )
-begin
-  have := (exists_prop.1 (exists_of_exists_unique (classical.some_spec
-    (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 x))))),
-  split,
-  refine finset.mem_coe.1 (this).1,
-  apply set.nonempty.to_subtype,
-  refine ⟨x, this.2⟩,
-end)
+⟨finset.mem_coe.1 ((exists_prop.1 (exists_of_exists_unique (classical.some_spec
+  (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 x)))))).1, 
+  set.nonempty.to_subtype (⟨x, ((exists_prop.1 (exists_of_exists_unique (classical.some_spec
+  (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 x)))))).2⟩)⟩)
 
 /-- Any element of `finset_clopen` is open. -/
 lemma mem_finset_clopen_is_open'' {U : set X} (hU : U ∈ fc_univ hf' h2) : is_open U := 
@@ -481,7 +471,6 @@ lemma mem_s_eq {t : set C(X, B)} (ht : t ∈ s) : t = {f : C(X, B) | com h2 t ht
 lemma mem_s_fc {t : set C(X, B)} (ht : t ∈ s) : (inclusion X B) (⟨cfc hf' h2, loc_const_cfc hf' h2⟩) ∈ t := 
 begin
   simp only [locally_constant.to_continuous_map_linear_map_apply],
-  --obtain ⟨s, hs, u, hu, h⟩ := h2 t ht,
   rw mem_s_eq h2 ht,
   simp only [set.mem_set_of_eq, locally_constant.coe_continuous_map, locally_constant.coe_mk],
   rw ← set.image_subset_iff,
@@ -491,7 +480,6 @@ begin
   simp only at hx,
   rw ←hx,
   set w := (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 y)).some with hw,
-  change f' ↑(cfc'' hf' h2 w _) ∈ ope h2 t ht,
   have spe := (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 y)).some_spec,
   simp only [exists_unique_iff_exists, exists_prop] at spe,
   have w1 : w ∈ fc_univ hf' h2, 
@@ -528,8 +516,7 @@ begin
     simp only [set.mem_compl_eq, set.mem_set_of_eq, finset.mem_coe, exists_prop, not_exists, not_and] at w1,
     specialize w1 y,
     have := middle_cover_spec hf' h2 ht hy,
-    rw ← (fc_spec hf' h2).2.2.1 at this,
-    rw set.mem_sUnion at this,
+    rw [← (fc_spec hf' h2).2.2.1, set.mem_sUnion] at this,
     rcases this with ⟨z, hz, yz⟩,
     apply w1.1 w2 z hz yz, },
 end
@@ -557,3 +544,4 @@ theorem loc_const_dense : dense (set.range (inclusion X B)) :=
   refine ⟨λ t ht, mem_s_fc hf h2 ht, by simp⟩, 
 end
 end locally_constant.density
+-- need help with linter
