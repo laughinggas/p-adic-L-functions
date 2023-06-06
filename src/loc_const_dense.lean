@@ -27,7 +27,7 @@ p-adic L-function, p-adic integral, measure, totally disconnected, locally const
 Hausdorff
 -/
 
-variables (X : Type*) [topological_space X] (A : Type*) [comm_semiring A] [uniform_space A] [topological_semiring A]
+variables (X : Type*) [topological_space X] (A : Type*) [comm_semiring A] [topological_space A] [topological_semiring A] 
 
 /-- The A-linear injective map from `locally_constant X A` to `C(X, A)` -/
 abbreviation inclusion : locally_constant X A →ₗ[A] C(X, A) :=
@@ -109,7 +109,7 @@ end
 end is_clopen
 
 namespace locally_constant.density
-variables {X} [t2_space X] [totally_disconnected_space X] {B : Type*} [comm_semiring B] [uniform_space B] 
+variables {X} [t2_space X] [totally_disconnected_space X] {B : Type*} [comm_semiring B] [topological_space B] 
   [topological_semiring B] {f' : C(X, B)} {s: set (set C(X, B))} (hf' : ∀ x ∈ s, f' ∈ x) [fintype s]
   (h2 : ∀ (x : set C(X, B)), x ∈ s → (∃ (s : set X), is_compact s ∧ ∃ (a : set B), is_open a ∧ x = {f : C(X, B) | s ⊆ ⇑f ⁻¹' a}))
 
@@ -524,7 +524,7 @@ end locally_constant.density
 
 namespace locally_constant.density
 variables (X) [compact_space X] [t2_space X] 
-  [totally_disconnected_space X] {B: Type*} [comm_semiring B] [uniform_space B] 
+  [totally_disconnected_space X] {B: Type*} [comm_semiring B] [topological_space B] 
   [topological_semiring B]
 
 theorem loc_const_dense : dense (set.range (inclusion X B)) :=
