@@ -661,8 +661,7 @@ theorem p_adic_L_function_eval_neg_int [algebra ℚ R] [norm_one_class R] [no_ze
   [is_scalar_tower ℚ ℚ_[p] R]
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hp : 2 < p)
   (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) 
-  (hχ1 : d ∣ χ.conductor)
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥) :
+  (hχ1 : d ∣ χ.conductor) :
   (p_adic_L_function m hd χ c hc hc' na (mul_inv_pow p d R (n - 1))) = (algebra_map ℚ R) (1 / n : ℚ) *
    (1 - (χ (zmod.unit_of_coprime c (nat.coprime_mul_iff_right.2 ⟨hc', nat.coprime.pow_right m hc⟩))
    * (mul_inv_pow p d R n (zmod.unit_of_coprime c hc', is_unit.unit (padic_int.nat_is_unit_of_not_dvd
@@ -721,4 +720,4 @@ example {ψ : dirichlet_character ℚ_[p] (d * p^m)} (hψ : ψ.is_even) {n : ℕ
      ((teichmuller_character_mod_p_inv p ℚ_[p])^n))) p * p^(n - 1)) ) *
    (general_bernoulli_number (dirichlet_character.mul ψ
      ((teichmuller_character_mod_p_inv p ℚ_[p])^n)) n) := 
-p_adic_L_function_eval_neg_int p d ℚ_[p] m hd ψ c hc hc' n hn hψ hp padic_norm_e.nonarchimedean hψ' (norm_sum_zmod_units_le_cSup_norm_zmod_units_of_nonarch padic_norm_e.nonarchimedean)
+p_adic_L_function_eval_neg_int p d ℚ_[p] m hd ψ c hc hc' n hn hψ hp padic_norm_e.nonarchimedean hψ'
