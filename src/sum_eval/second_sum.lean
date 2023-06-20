@@ -26,8 +26,7 @@ open_locale big_operators
 
 variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} [fact (0 < d)] {R : Type*} [normed_comm_ring R] (m : ℕ)
 (hd : d.gcd p = 1) (χ : dirichlet_character R (d*(p^m))) {c : ℕ} (hc : c.gcd p = 1)
-(hc' : c.gcd d = 1) (na : ∀ (n : ℕ) (f : ℕ → R),
-  ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+(hc' : c.gcd d = 1) (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
 (w : continuous_monoid_hom (units (zmod d) × units ℤ_[p]) R)
 variables (p d R) [complete_space R] [char_zero R]
 open continuous_map
@@ -267,11 +266,11 @@ end
 
 --`helps` replaced with `norm_sum_le_of_norm_le_forall`
 lemma norm_sum_le_of_norm_le_forall (f : Π (n : ℕ), (zmod (d * p^n))ˣ → R)
-  (na : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥) (k : ℕ → ℝ)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) (k : ℕ → ℝ)
   (h : ∀ (n : ℕ) (i : (zmod (d * p^n))ˣ), ∥f n i∥ ≤ k n) (n : ℕ) :
   ∥∑ i : (zmod (d * p^n))ˣ, f n i∥ ≤ k n :=
 begin
-  apply le_trans (na (d * p^n) (f n)) _,
+  apply le_trans (norm_sum_zmod_units_le_cSup_norm_zmod_units_of_nonarch na (d * p^n) (f n)) _,
   apply cSup_le _ _,
   { exact set.range_nonempty (λ (i : (zmod (d * p ^ n))ˣ), ∥f n i∥), },
   { intros b hb,
@@ -416,7 +415,7 @@ end
 
 lemma V_h1 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p)
   (hc' : c.coprime d) (hc : c.coprime p)
-  (na : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
+  (na :∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) :
   filter.tendsto (λ (x : ℕ), V_def p d R m χ c n x -
   (↑((χ.mul (teichmuller_character_mod_p_inv p R ^ n)) (zmod.unit_of_coprime c
@@ -497,7 +496,7 @@ by { convert tendsto.mul hf hg, rw mul_one, }
 
 lemma V_h2_1 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
   (hc : c.coprime p) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) :
   (λ (x : ℕ), ∑ (x_1 : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑x_1 * (↑(n - 1 : ℕ) * ↑(c ^ n : ℕ) *
@@ -648,8 +647,7 @@ lemma helper_13' (a b c d e f : R) : a + b + c + (d - e - f) = a + b + (c - f) +
 
 lemma V_h2_2 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
   (hc : c.coprime p) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) : tendsto (λ (x : ℕ), (algebra_map ℚ R) ↑(n - 1 : ℕ) * U_def p d R m χ n x -
   ∑ (x_1 : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑x_1 * (↑(n - 1 : ℕ) * ↑(c ^ n : ℕ) *
@@ -673,7 +671,7 @@ begin
     rw [zero_mul] at hbp,
     apply squeeze_zero_norm _ hbp,
     simp only [sub_zero], intro z,
-    convert norm_sum_le_of_norm_le_forall p d R _ na' _ _ z,
+    convert norm_sum_le_of_norm_le_forall p d R _ na _ _ z,
     intros e x,
     rw [← ring_hom.map_add, nat.cast_mul, ← neg_mul, ← mul_div, ← mul_assoc, ← mul_div,
       nat.cast_mul _ (p ^ (2 * e)), nat.cast_pow p, ← add_mul],
@@ -738,8 +736,7 @@ end
 
 lemma V_h2 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R]
   (hd : d.coprime p) (hc' : c.coprime d) (hc : c.coprime p) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hχ' : d ∣ χ.conductor) :
   tendsto (λ (x : ℕ), ((algebra_map ℚ R) n) * V_h_def p d R m χ c n x) at_top (𝓝 ((algebra_map ℚ R) ((↑n - 1)) *
   (1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑c *
@@ -768,7 +765,7 @@ begin
         add_comm, ← sub_sub, ← sub_add, add_sub_assoc, map_nat_cast, sub_self, zero_add], },
       apply (tendsto_congr' _).2 (tendsto_const_nhds),
       apply V_h2_1 p d R m χ c hd hc' hc hp na n hn hχ, },
-    apply V_h2_2 p d R m χ c hd hc' hc hp na na' n hn, },
+    apply V_h2_2 p d R m χ c hd hc' hc hp na n hn, },
   { convert (tendsto.const_mul ((algebra_map ℚ R) (↑n - 1) *
       (1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n)))
       ↑c * ↑c ^ n)) (U p d R m χ  hd n hn hχ hχ' hp na)),
@@ -779,8 +776,7 @@ end
 
 lemma V_h3 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.coprime p)
   (hc' : c.coprime d) (hc : c.coprime p) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hχ' : d ∣ χ.conductor) :
   filter.tendsto (λ (x : ℕ), ↑((χ.mul (teichmuller_character_mod_p_inv p R ^ n))
   (zmod.unit_of_coprime c (helper_19 p d R m χ c hn hd hc' hc))) *
@@ -818,7 +814,7 @@ begin
         skip, skip, rw div_eq_mul_one_div, rw mul_assoc, rw ring_hom.map_mul,
         rw mul_comm _ ((algebra_map ℚ R) (1 / ↑n)), rw mul_assoc, },
       apply tendsto.const_mul,
-      have := V_h2 p d R m χ c hd hc' hc hp na na' n hn hχ hχ',
+      have := V_h2 p d R m χ c hd hc' hc hp na n hn hχ hχ',
       conv at this { congr, skip, skip, congr, rw mul_assoc ((algebra_map ℚ R) (↑n - 1)) _ _, },
       apply this, },
     { norm_cast, apply ne_zero_of_lt hn, }, },
@@ -826,8 +822,7 @@ end
 
 lemma V [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
   (hc : c.coprime p) (hp : 2 < p) (hχ : χ.is_even) (hχ' : d ∣ χ.conductor)
-  (na : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
-  (na' : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) :
   filter.tendsto (λ j : ℕ, V_def p d R m χ c n j)
   filter.at_top (nhds (( algebra_map ℚ R ((n - 1) / n) + (algebra_map ℚ R (1 / n)) *
@@ -848,5 +843,5 @@ begin
     ↑p ^ (n - 1)) * general_bernoulli_number (χ.mul (teichmuller_character_mod_p_inv p R ^ n)) n)), },
   apply filter.tendsto.add,
   { apply V_h1 p d R m χ c hd hc' hc na n hn, },
-  { apply V_h3 p d R m χ c hd hc' hc hp na' na n hn hχ hχ', },
+  { apply V_h3 p d R m χ c hd hc' hc hp na n hn hχ hχ', },
 end

@@ -1,5 +1,5 @@
 /-
-Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
+Copyright (c) 2023 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
@@ -27,11 +27,11 @@ p-adic L-function, p-adic integral, measure, totally disconnected, locally const
 Hausdorff
 -/
 
-variables (X : Type*) [topological_space X] (A : Type*) [comm_semiring A] [topological_space A] [topological_semiring A] 
+variables (X : Type*) [topological_space X] (A : Type*) [topological_space A]  
 
 /-- The A-linear injective map from `locally_constant X A` to `C(X, A)` -/
-abbreviation inclusion : locally_constant X A →ₗ[A] C(X, A) :=
-locally_constant.to_continuous_map_linear_map A
+abbreviation inclusion : locally_constant X A → C(X, A) :=
+locally_constant.to_continuous_map
 
 variables {X} [compact_space X]
 
@@ -67,7 +67,7 @@ lemma is_clopen_sUnion {H : Type*} [topological_space H]
   by { rw set.sUnion_eq_bUnion, apply is_clopen_bUnion hs, }
 
 /-- Given a finite set of clopens, one can find a finite disjoint set of clopens contained in
-  it. -/
+  it which covers it. -/
 lemma clopen_Union_disjoint {H : Type*} [topological_space H]
   (s : finset(set H)) (hs : ∀ x ∈ s, is_clopen x) :
   ∃ (t : finset (set H)),
@@ -109,8 +109,8 @@ end
 end is_clopen
 
 namespace locally_constant.density
-variables {X} [t2_space X] [totally_disconnected_space X] {B : Type*} [comm_semiring B] [topological_space B] 
-  [topological_semiring B] {f' : C(X, B)} {s: set (set C(X, B))} (hf' : ∀ x ∈ s, f' ∈ x) [fintype s]
+variables {X} [t2_space X] [totally_disconnected_space X] {B : Type*} [topological_space B] 
+  {f' : C(X, B)} {s: set (set C(X, B))} (hf' : ∀ x ∈ s, f' ∈ x) [fintype s]
   (h2 : ∀ (x : set C(X, B)), x ∈ s → (∃ (s : set X), is_compact s ∧ ∃ (a : set B), is_open a ∧ x = {f : C(X, B) | s ⊆ ⇑f ⁻¹' a}))
 
 /-- The compact sets coming from hypothesis `h2`. -/
@@ -225,7 +225,7 @@ end
 /-- Given any set of sets, one can obtain a "finer" set of sets which is disjoint, with each set being contained in the 
   smallest intersection possible of the original sets. We retranslate this condition for a finite set of sets, 
   and also add clopenness of the underlying sets. -/
-lemma understand {t : finset (set X)} (ht : ∀ x (hx : x ∈ t), is_clopen x) : ∃ t' : finset (set X), (t' : set (set X)).pairwise_disjoint id ∧ 
+lemma exists_finset_disjoint_clopen {t : finset (set X)} (ht : ∀ x (hx : x ∈ t), is_clopen x) : ∃ t' : finset (set X), (t' : set (set X)).pairwise_disjoint id ∧ 
   (∀ (x ∈ t), ∃ t'' ⊆ t', x = ⋃₀ t'') ∧ ⋃₀ (t' : set (set X)) = ⋃₀ (t : set (set X)) ∧ ∀ x (hx : x ∈ t'), is_clopen x := 
 begin
   apply finset.induction_on' t,
@@ -372,12 +372,12 @@ end
 /-- The final clopen disjoint clopen cover of all the compact sets `com hf' h2` in `s`. 
   We need something finer than `middle_cover` which is disjoint and contained in the max intersection of all `com_ope_finset'`, 
   so that the set on which our locally constant function is constant is well-defined. -/
-noncomputable def fc : finset (set X) := (understand (middle_cover_clopen hf' h2)).some
-
+noncomputable def fc : finset (set X) := (exists_finset_disjoint_clopen (middle_cover_clopen hf' h2)).some
+ 
 lemma fc_spec : (fc hf' h2 : set (set X)).pairwise_disjoint id ∧ 
   (∀ (x ∈ middle_cover hf' h2), ∃ t'' ⊆ fc hf' h2, x = ⋃₀ t'') ∧ 
   ⋃₀ (fc hf' h2 : set (set X)) = ⋃₀ ((middle_cover hf' h2) : set (set X)) ∧ 
-  ∀ x (hx : x ∈ fc hf' h2), is_clopen x := (understand (middle_cover_clopen hf' h2)).some_spec
+  ∀ x (hx : x ∈ fc hf' h2), is_clopen x := (exists_finset_disjoint_clopen (middle_cover_clopen hf' h2)).some_spec
 
 /-- Adding in the complement of the union of sets in `fc`, which gives us a finite disjoint clopen cover of `X`. -/
 noncomputable def fc_univ : finset (set X) := fc hf' h2 ∪ {(⋃₀ fc hf' h2)ᶜ}
@@ -470,14 +470,14 @@ lemma mem_s_eq {t : set C(X, B)} (ht : t ∈ s) : t = {f : C(X, B) | com h2 t ht
 
 lemma mem_s_fc {t : set C(X, B)} (ht : t ∈ s) : (inclusion X B) (⟨cfc hf' h2, loc_const_cfc hf' h2⟩) ∈ t := 
 begin
-  simp only [locally_constant.to_continuous_map_linear_map_apply],
+  --simp only [locally_constant.to_continuous_map_linear_map_apply],
   rw mem_s_eq h2 ht,
   simp only [set.mem_set_of_eq, locally_constant.coe_continuous_map, locally_constant.coe_mk],
   rw ← set.image_subset_iff,
   delta cfc,
   intros x hx,
   rcases hx with ⟨y, hy, hx⟩, 
-  simp only at hx,
+  --simp only at hx,
   rw ←hx,
   set w := (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 y)).some with hw,
   have spe := (exists_of_exists_unique (finset_clopen_prop_fc hf' h2 y)).some_spec,
@@ -524,8 +524,7 @@ end locally_constant.density
 
 namespace locally_constant.density
 variables (X) [compact_space X] [t2_space X] 
-  [totally_disconnected_space X] {B: Type*} [comm_semiring B] [topological_space B] 
-  [topological_semiring B]
+  [totally_disconnected_space X] {B: Type*} [topological_space B] 
 
 theorem loc_const_dense : dense (set.range (inclusion X B)) :=
   begin

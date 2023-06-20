@@ -35,8 +35,7 @@ open_locale big_operators
 
 variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} [fact (0 < d)] {R : Type*} [normed_comm_ring R] (m : ℕ)
 (hd : d.gcd p = 1) (χ : dirichlet_character R (d*(p^m))) {c : ℕ} (hc : c.gcd p = 1)
-(hc' : c.gcd d = 1) (na : ∀ (n : ℕ) (f : ℕ → R),
-  ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+(hc' : c.gcd d = 1) (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
 (w : continuous_monoid_hom (units (zmod d) × units ℤ_[p]) R)
 
 -- note that this works for any dirichlet character which is primitive and whose conductor divides d * p^m
@@ -160,8 +159,8 @@ variable (hd)
 /-- Last line before last calculation in 7.11 of Washington; proof is same -/
 lemma lim_even_character' [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
   [fact (0 < m)] {k : ℕ} [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [norm_one_class R] (hk : 1 < k)
-  (hχ : χ.is_even) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
+  (hχ : χ.is_even) (hp : 2 < p) 
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) :
   filter.tendsto (λ n, (1/((d * p^n : ℕ) : ℚ_[p])) • ∑ i in finset.range (d * p^n),
   ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) i * i^k) )
   (@filter.at_top ℕ _) (nhds (general_bernoulli_number
@@ -205,7 +204,7 @@ begin
       rw ←finset.mul_sum, },
       rw [←smul_mul_assoc, ←div_smul_eq_div_smul p R (d * p ^ x) _, one_div_smul_self R
         (@nat.ne_zero_of_lt' 0 (d * p^x) _), one_mul], },
-    refine lt_of_le_of_lt (na _ _) (lt_of_le_of_lt (cSup_le (set.range_nonempty _) (λ b hb, _))
+    refine lt_of_le_of_lt (norm_sum_finset_range_le_cSup_norm_zmod_of_nonarch na _ _) (lt_of_le_of_lt (cSup_le (set.range_nonempty _) (λ b hb, _))
       (half_lt_self hε)),
     cases hb with y hy,
     rw ←hy,

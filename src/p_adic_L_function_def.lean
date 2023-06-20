@@ -37,8 +37,7 @@ local attribute [instance] zmod.topological_space
 open padic_int
 variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} {R : Type*} [normed_comm_ring R] (m : ℕ)
 (hd : d.coprime p) (χ : dirichlet_character R (d*(p^m))) {c : ℕ} (hc : c.coprime p)
-(hc' : c.coprime d) (na : ∀ (n : ℕ) (f : ℕ → R),
-  ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+(hc' : c.coprime d) (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
 
 variables (p d R c)
 open locally_constant zmod nat

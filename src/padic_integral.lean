@@ -68,7 +68,7 @@ begin
   rw [dist_eq_norm, ←linear_map.map_sub],
   specialize hK (a - b), apply lt_of_le_of_lt hK _, rw [mul_comm, ←lt_div_iff hKpos],
   convert dab,
-  change ∥inclusion X A (a - b)∥ = dist (inclusion X A a) (inclusion X A b),
+  change ∥locally_constant.to_continuous_map_linear_map A (a - b)∥ = dist (locally_constant.to_continuous_map_linear_map A a) (locally_constant.to_continuous_map_linear_map A b),
   rw [dist_eq_norm, ← linear_map.map_sub],
 end
 
@@ -98,6 +98,9 @@ lemma cont [complete_space A] (φ : measures X A) :
   continuous ((dense_ind_inclusion X A).extend ⇑φ) :=
   uniform_continuous.continuous (uniform_continuous_extend φ)
 
+lemma inclusion_linear_of_linear : inclusion X A = locally_constant.to_continuous_map_linear_map A := 
+by { ext, refl, }
+
 /-- The extended map is additive -/
 lemma map_add_extend [complete_space A] (φ : measures X A) (x y : C(X, A)) :
   (dense_ind_inclusion X A).extend ⇑⇑φ (x + y) =
@@ -109,6 +112,7 @@ begin
   refine dense_range.induction_on₂ di.dense
     (is_closed_eq (cont.comp continuous_add)
       ((cont.comp continuous_fst).add (cont.comp continuous_snd))) (λ a b, _) x y,
+  simp_rw inclusion_linear_of_linear at *,
 --   restricting to `inclusion`
     rw [← linear_map.map_add, dense_inducing.extend_eq di (integral_cont φ)],
     simp only [dense_inducing.extend_eq di (integral_cont φ), linear_map.map_add _ a b],
@@ -126,6 +130,7 @@ begin
     (is_closed_eq (cont.comp (continuous_const.smul continuous_id))
       ((continuous_const.smul continuous_id).comp cont)) (λ a, _),
 --   restricting to `inclusion`
+    simp_rw inclusion_linear_of_linear at *,
     rw [← linear_map.map_smul, dense_inducing.extend_eq di (integral_cont φ)],
     simp only [dense_inducing.extend_eq di (integral_cont φ), linear_map.map_smul _ m a],
 end

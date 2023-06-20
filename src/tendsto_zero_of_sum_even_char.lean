@@ -77,7 +77,7 @@ end
 -- `sum_odd_char` replaced with `helper_11`
 /-- 5 lines up from the bottom of Lemma 7.11 in Washington's book -/
 lemma helper_11 [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  [norm_one_class R]
- (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+ (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
  [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) {x : ℕ} (hx : m ≤ x) :
  ∃ y, (2 : R) * ∑ i in finset.range (d * p^x), ((asso_dirichlet_character (χ.mul
   (teichmuller_character_mod_p_inv p R ^ k))) i * i^(k - 1)) = ↑(d * p^x) * y ∧ ∥y∥ ≤ ((χ.mul
@@ -130,7 +130,7 @@ end
 -- `sum_even_character` replaced with `sum_even_character_tendsto_zero`
 lemma sum_even_character_tendsto_zero [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
   [norm_one_class R] [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) :
   filter.tendsto (λ n : nat, ∑ i in finset.range (d * p^n), ((asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) i * i^(k - 1)) ) filter.at_top (nhds 0) :=
 begin
@@ -200,7 +200,7 @@ end
 variables {p d R}
 variables {p d R}
 lemma helper_15 [nontrivial R] [algebra ℚ R] [normed_algebra ℚ_[p] R] [norm_one_class R]
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   {k : ℕ} (hk : 1 < k) (x y : ℕ) : ∥(∑ (x_1 : ℕ) in finset.range k.pred,
   (algebra_map ℚ R) (bernoulli (k.pred.succ - x_1) * ↑(k.pred.succ.choose x_1) *
   (((y + 1 : ℕ) : ℚ) ^ x_1 / ↑(d * p ^ x) ^ x_1) * ↑(d * p ^ x) ^ k.pred))∥ ≤
@@ -210,7 +210,7 @@ begin
   have le : k.pred = k.pred - 1 + 1,
   { rw [nat.sub_add_cancel _, nat.pred_eq_sub_one], apply nat.le_pred_of_lt hk, },
   haveI : fact (0 < k.pred) := fact_iff.2 (nat.lt_pred_iff.2 hk),
-  refine le_trans (na _ _) (csupr_le (λ z, _)),
+  refine le_trans (norm_sum_finset_range_le_cSup_norm_zmod_of_nonarch na _ _) (csupr_le (λ z, _)),
   conv { congr, congr, find (↑(d * p ^ x) ^ k.pred) { rw [le, pow_add, pow_one], },
     rw [←mul_assoc, (algebra_map ℚ R).map_mul, mul_assoc _ _ (↑(d * p ^ x) ^ (k.pred - 1)),
       div_mul_comm], },
@@ -340,7 +340,7 @@ end
 --`sum_even_character'` replaced with `sum_even_character_tendsto_zero_of_units`
 lemma sum_even_character_tendsto_zero_of_units [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]  [norm_one_class R]
  --(n : ℕ) --[fact (0 < n)]
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   [fact (0 < m)] {k : ℕ} (hk : 1 < k) (hχ : χ.is_even) (hp : 2 < p) :
   filter.tendsto (λ n, ∑ (i : (zmod (d * p^n))ˣ), ((asso_dirichlet_character
   (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^k)))
@@ -369,7 +369,7 @@ begin
       obtain ⟨z, hz⟩ := padic_int.exists_pow_neg_lt p h4,
       refine ⟨max z 1, λ x hx, _⟩,
       rw dist_zero_right,
-      apply lt_of_le_of_lt (na' _ _),
+      apply lt_of_le_of_lt (norm_sum_zmod_units_le_cSup_norm_zmod_units_of_nonarch na _ _),
       have h2 : ε / 2 < ε, linarith,
       apply lt_of_le_of_lt _ h2,
       apply cSup_le _ _,

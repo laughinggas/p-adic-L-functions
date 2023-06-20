@@ -35,8 +35,7 @@ local attribute [instance] zmod.topological_space
 
 variables (p : ℕ) [fact (nat.prime p)] (d : ℕ) (R : Type*) [normed_comm_ring R] (m : ℕ)
 (hd : d.gcd p = 1) (χ : dirichlet_character R (d*(p^m))) {c : ℕ} (hc : c.gcd p = 1)
-(hc' : c.gcd d = 1) (na : ∀ (n : ℕ) (f : ℕ → R),
-  ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+(hc' : c.gcd d = 1) (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
 (w : continuous_monoid_hom (units (zmod d) × units ℤ_[p]) R)
 variables [fact (0 < d)] [complete_space R] [char_zero R]
 
@@ -661,7 +660,7 @@ end
 theorem p_adic_L_function_eval_neg_int [algebra ℚ R] [norm_one_class R] [no_zero_divisors R]
   [is_scalar_tower ℚ ℚ_[p] R]
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) (hp : 2 < p)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) 
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) 
   (hχ1 : d ∣ χ.conductor)
   (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥) :
   (p_adic_L_function m hd χ c hc hc' na (mul_inv_pow p d R (n - 1))) = (algebra_map ℚ R) (1 / n : ℚ) *
@@ -675,8 +674,8 @@ theorem p_adic_L_function_eval_neg_int [algebra ℚ R] [norm_one_class R] [no_ze
 begin
   delta p_adic_L_function,
   have h1 := filter.tendsto.add (filter.tendsto.sub (U p d R m χ hd n hn hχ hχ1 hp na)
-    (V p d R m χ c hd hc' hc hp hχ hχ1 na' na n hn))
-    (W p d R m χ c hd hp na' na n hn hχ),
+    (V p d R m χ c hd hc' hc hp hχ hχ1 na n hn))
+    (W p d R m χ c hd hp na n hn hχ),
   conv at h1 { congr, skip, skip, rw ← helper_254 p d R m χ c hc hc' n (ne_zero_of_lt hn), },
   symmetry, apply helpful_much h1, clear h1,
   swap 3, { apply filter.at_top_ne_bot, },
@@ -712,3 +711,14 @@ begin
       { apply helper_260, },
       { apply tendsto_const_nhds, }, }, },
 end
+.
+example {ψ : dirichlet_character ℚ_[p] (d * p^m)} (hψ : ψ.is_even) {n : ℕ} (hn : 1 < n) (hp : 2 < p) (hψ' : d ∣ ψ.conductor) : 
+  (p_adic_L_function m hd ψ c hc hc' padic_norm_e.nonarchimedean (mul_inv_pow p d ℚ_[p] (n - 1))) = (algebra_map ℚ ℚ_[p]) (1 / n : ℚ) *
+   (1 - (ψ (zmod.unit_of_coprime c (nat.coprime_mul_iff_right.2 ⟨hc', nat.coprime.pow_right m hc⟩))
+   * (mul_inv_pow p d ℚ_[p] n (zmod.unit_of_coprime c hc', is_unit.unit (padic_int.nat_is_unit_of_not_dvd
+   ((fact.out (nat.prime p)).coprime_iff_not_dvd.mp (nat.coprime.symm hc))
+     )) ))) * (1 - ((asso_dirichlet_character (dirichlet_character.mul ψ
+     ((teichmuller_character_mod_p_inv p ℚ_[p])^n))) p * p^(n - 1)) ) *
+   (general_bernoulli_number (dirichlet_character.mul ψ
+     ((teichmuller_character_mod_p_inv p ℚ_[p])^n)) n) := 
+p_adic_L_function_eval_neg_int p d ℚ_[p] m hd ψ c hc hc' n hn hψ hp padic_norm_e.nonarchimedean hψ' (norm_sum_zmod_units_le_cSup_norm_zmod_units_of_nonarch padic_norm_e.nonarchimedean)

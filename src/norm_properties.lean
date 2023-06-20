@@ -3,7 +3,10 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
+
 import dirichlet_character.teichmuller_character
+import nonarch
+
 /-!
 # Properties of norm
 This file describes some properties of norm that are used in proofs of theorems such as `sum_even_character_tendsto_zero`. 
@@ -22,7 +25,7 @@ end
 variables {p R χ}
 /-- Using this in the proof of Lemma 7.11 of Washington. -/
 lemma norm_sum_le_smul {k : ℕ} [normed_algebra ℚ_[p] R] [norm_one_class R] (hk : 1 < k) {x : ℕ}
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥) :
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) :
   ∥∑ (y : ℕ) in finset.range (d * p ^ x + 1), (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ((-1) * ↑y) *
   ∑ (z : ℕ) in finset.range (k - 1), ↑(d * p ^ x) ^ z * ((-1) * ↑y) ^ (k - 1 - (z + 1)) *
@@ -48,7 +51,7 @@ begin
     refine le_trans (finset.sum_le_sum this) _,
     rw [finset.sum_const, finset.card_range, nat.smul_one_eq_coe, nat.cast_sub (le_of_lt hk),
       nat.cast_one], },
-  refine le_trans (na _ _) (cSup_le (set.range_nonempty _)
+  refine le_trans (norm_sum_finset_range_le_cSup_norm_zmod_of_nonarch na _ _) (cSup_le (set.range_nonempty _)
     (λ b ⟨y, hy⟩, hy ▸ this y.val (finset.mem_range.2 (zmod.val_lt _)))),
 end
 

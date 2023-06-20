@@ -29,7 +29,7 @@ open_locale big_operators
 
 variables {p : ℕ} [fact (nat.prime p)] {d : ℕ} [fact (0 < d)] {R : Type*} [normed_comm_ring R] (m : ℕ)
 (hd : d.gcd p = 1) (χ : dirichlet_character R (d*(p^m))) {c : ℕ} (hc : c.gcd p = 1)
-(hc' : c.gcd d = 1) (na : ∀ (n : ℕ) (f : ℕ → R), ∥ ∑ (i : ℕ) in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+(hc' : c.gcd d = 1) (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
 variables (p d R) [complete_space R] [char_zero R]
 open continuous_map
 
@@ -42,8 +42,7 @@ variable (c)
 variables (hc) (hc')
 
 lemma W [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hp : 2 < p)
-  (na' : ∀ (n : ℕ) (f : (zmod n)ˣ → R), ∥∑ i : (zmod n)ˣ, f i∥ ≤ ⨆ (i : (zmod n)ˣ), ∥f i∥)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f i.val∥)
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) :
   filter.tendsto (λ j : ℕ, ∑ (x : (zmod (d * p ^ j))ˣ),
   ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R^n)) x : R) *
@@ -53,7 +52,7 @@ begin
   conv { congr, skip, skip, congr, rw ← zero_mul ((algebra_map ℚ R) ((↑c - 1) / 2)), },
   apply tendsto.mul_const,
   simp_rw zmod.nat_cast_val, simp_rw ← coe_coe,
-  convert (tendsto_congr' _).1 (sum_even_character_tendsto_zero_of_units na' hn hχ hp),
+  convert (tendsto_congr' _).1 (sum_even_character_tendsto_zero_of_units na hn hχ hp),
   rw eventually_eq, rw eventually_at_top,
   refine ⟨m, λ y hy, _⟩,
   apply finset.sum_congr rfl,

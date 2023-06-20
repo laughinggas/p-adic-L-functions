@@ -6,6 +6,7 @@ Authors: Ashvni Narayanan
 import bernoulli_measure.ind_fn
 import bernoulli_measure.loc_const_properties
 import bernoulli_measure.from_loc_const
+import nonarch
 
 /-!
 # Bernoulli measure and the p-adic L-function
@@ -135,7 +136,7 @@ open loc_const_ind_fn
 -- we choose to work with `val` and `nat` because it gives common ground without having to use CRT
 noncomputable def bernoulli_measure [normed_algebra ℚ_[p] R] [norm_one_class R] [nontrivial R]
   (hc : c.gcd p = 1) (hc' : c.gcd d = 1) (h' : d.gcd p = 1)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f (i.val)∥) :
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) :
   measures (units (zmod d) × units ℤ_[p]) R :=
 ⟨ { to_fun := λ f, loc_const_to_seq_limit R hc hc' h' (loc_const_ind_fn f),
     map_add' := λ f1 f2, by { rw [add, linear_map.map_add], },
@@ -149,7 +150,7 @@ noncomputable def bernoulli_measure [normed_algebra ℚ_[p] R] [norm_one_class R
     obtain ⟨n, hn⟩ := loc_const_eq_sum_char_fn R (loc_const_ind_fn f) h',
     change ∥loc_const_to_seq_limit R hc hc' h' (loc_const_ind_fn f)∥ ≤ _,
     rw [hn, linear_map.map_sum],
-    apply le_trans (na (d * p^n) _) _,
+    apply le_trans (norm_sum_finset_range_le_cSup_norm_zmod_of_nonarch na (d * p^n) _) _,
     simp_rw [helper_3],
     set i := (s_nonempty R hc hc' h' n (loc_const_ind_fn f)).some with hi,
     have hi' := (s_nonempty R hc hc' h' n (loc_const_ind_fn f)).some_spec,
@@ -178,7 +179,7 @@ noncomputable def bernoulli_measure [normed_algebra ℚ_[p] R] [norm_one_class R
 
 lemma integral_loc_const_eval [nontrivial R] [complete_space R] [normed_algebra ℚ_[p] R] [norm_one_class R] 
   (hc : c.gcd p = 1) (hc' : c.gcd d = 1) (hd : d.gcd p = 1)
-  (na : ∀ (n : ℕ) (f : ℕ → R), ∥∑ i in finset.range n, f i∥ ≤ ⨆ (i : zmod n), ∥f (i.val)∥) 
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) 
   (f : locally_constant ((zmod d)ˣ × ℤ_[p]ˣ) R) :
   measure.integral (bernoulli_measure R hc hc' hd na) f = (bernoulli_measure R hc hc' hd na).val f :=
 begin
