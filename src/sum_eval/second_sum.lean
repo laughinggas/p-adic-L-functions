@@ -497,7 +497,7 @@ by { convert tendsto.mul hf hg, rw mul_one, }
 lemma V_h2_1 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
   (hc : c.coprime p) (hp : 2 < p)
   (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
-  (n : ℕ) (hn : 1 < n) (hχ : χ.is_even) :
+  (n : ℕ) (hn : 1 < n) :
   (λ (x : ℕ), ∑ (x_1 : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑x_1 * (↑(n - 1 : ℕ) * ↑(c ^ n : ℕ) *
   (algebra_map ℚ R) (↑d * ↑p ^ x * int.fract (↑((c : zmod (d * p^(2 * x)))⁻¹ : zmod (d * p^(2 * x))) *
@@ -764,7 +764,7 @@ begin
     { conv { congr, funext, rw [mul_sub, mul_one, sub_mul ((algebra_map ℚ R) ↑(n - 1)) _ _, sub_sub,
         add_comm, ← sub_sub, ← sub_add, add_sub_assoc, map_nat_cast, sub_self, zero_add], },
       apply (tendsto_congr' _).2 (tendsto_const_nhds),
-      apply V_h2_1 p d R m χ c hd hc' hc hp na n hn hχ, },
+      apply V_h2_1 p d R m χ c hd hc' hc hp na n hn, },
     apply V_h2_2 p d R m χ c hd hc' hc hp na n hn, },
   { convert (tendsto.const_mul ((algebra_map ℚ R) (↑n - 1) *
       (1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n)))
