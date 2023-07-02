@@ -16,13 +16,13 @@ lemma bf21 : 1 * p^1 = p := by simp
 
 lemma p_adic_zeta_eval_neg_one [algebra ℚ R] [norm_one_class R] 
   [no_zero_divisors R] [char_zero R] -- figure out the char_zero thing
-  [is_scalar_tower ℚ ℚ_[p] R] (hp : 2 < p) 
+  [is_scalar_tower ℚ ℚ_[p] R] --(hp : 2 < p) 
   (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) :
   (p_adic_L_function 1 (nat.gcd_one_left p) (change_level (by { rw bf21 }) (((teichmuller_character_mod_p_inv p R)^2)⁻¹)) --((dirichlet_character.equiv bf21.symm) ((teichmuller_character_mod_p_inv p R)^2)⁻¹ : dirichlet_character R (1 * p^1)) 
     c hc (nat.gcd_one_right c) na (mul_inv_pow p 1 R 1)) = (algebra_map ℚ R) (1 / 12 : ℚ) *
    (1 - (↑c ^ 2)) * (1 - p) := 
 begin
-  convert bf1 1 _ hc (nat.gcd_one_right c) one_lt_two hp (nat.gcd_one_left p) na (one_dvd _) using 1,
+  convert bf1 1 _ hc (nat.gcd_one_right c) one_lt_two (nat.gcd_one_left p) na (one_dvd _) using 1,
   have h3 : lcm (1 * p^1) p = p,
   { rw bf21, rw lcm_same, rw normalize_eq, },
   have h1 : (change_level (by { rw bf21 }) (((teichmuller_character_mod_p_inv p R)^2)⁻¹) : dirichlet_character R (1 * p^1)).mul ((teichmuller_character_mod_p_inv p R)^2) = 1, 
@@ -49,6 +49,6 @@ begin
   norm_num,
 end
 .
-lemma padic_zeta_eval_neg_one_padic_rat (hp : 2 < p) : (p_adic_L_function 1 (nat.gcd_one_left p) (change_level (by { rw bf21 }) (((teichmuller_character_mod_p_inv p ℚ_[p])^2)⁻¹)) 
+lemma padic_zeta_eval_neg_one_padic_rat : (p_adic_L_function 1 (nat.gcd_one_left p) (change_level (by { rw bf21 }) (((teichmuller_character_mod_p_inv p ℚ_[p])^2)⁻¹)) 
     c hc (nat.gcd_one_right c) padic_norm_e.nonarchimedean (mul_inv_pow p 1 ℚ_[p] 1)) = (algebra_map ℚ ℚ_[p]) (1 / 12 : ℚ) *
-   (1 - (↑c ^ 2)) * (1 - p) := p_adic_zeta_eval_neg_one hc hp padic_norm_e.nonarchimedean
+   (1 - (↑c ^ 2)) * (1 - p) := p_adic_zeta_eval_neg_one hc padic_norm_e.nonarchimedean

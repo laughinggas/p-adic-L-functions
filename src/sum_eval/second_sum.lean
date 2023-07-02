@@ -495,7 +495,7 @@ lemma filter.tendsto.one_mul_one {α M : Type*} [topological_space M] [monoid M]
 by { convert tendsto.mul hf hg, rw mul_one, }
 
 lemma V_h2_1 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
-  (hc : c.coprime p) (hp : 2 < p)
+  (hc : c.coprime p) --(hp : 2 < p)
   (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) :
   (λ (x : ℕ), ∑ (x_1 : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character
@@ -602,7 +602,8 @@ begin
 end
 
 lemma helper_V_h2_2 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
-  (hc : c.coprime p) (hp : 2 < p)  (n : ℕ) (hn : 1 < n) :
+  (hc : c.coprime p) --(hp : 2 < p) 
+  (n : ℕ) (hn : 1 < n) :
   (λ x : ℕ, (algebra_map ℚ R) ↑(n - 1 : ℕ) * (U_def p d R m χ n x)) =ᶠ[at_top]
   (λ k : ℕ, ∑ (x : (zmod (d * p ^ k))ˣ), (algebra_map ℚ R) ↑(n - 1 : ℕ) *
   (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n)) x) *
@@ -646,7 +647,7 @@ end
 lemma helper_13' (a b c d e f : R) : a + b + c + (d - e - f) = a + b + (c - f) + (d - e) := by ring
 
 lemma V_h2_2 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.coprime d)
-  (hc : c.coprime p) (hp : 2 < p)
+  (hc : c.coprime p) --(hp : 2 < p)
   (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥))
   (n : ℕ) (hn : 1 < n) : tendsto (λ (x : ℕ), (algebra_map ℚ R) ↑(n - 1 : ℕ) * U_def p d R m χ n x -
   ∑ (x_1 : (zmod (d * p ^ x))ˣ), (asso_dirichlet_character
@@ -656,7 +657,7 @@ lemma V_h2_2 [algebra ℚ R] [norm_one_class R] (hd : d.coprime p) (hc' : c.copr
   (algebra_map ℚ R) ↑n * V_h_def p d R m χ c n x) at_top (𝓝 0) :=
 begin
   simp_rw sub_sub,
-  apply (tendsto_congr' (eventually_eq.sub (helper_V_h2_2 p d R m χ c hd hc' hc hp n hn)
+  apply (tendsto_congr' (eventually_eq.sub (helper_V_h2_2 p d R m χ c hd hc' hc n hn)
     eventually_eq.rfl)).2,
   simp_rw [← sub_sub, mul_add, add_div, ring_hom.map_add, mul_add, finset.sum_add_distrib, ← add_assoc,
     ← add_sub, helper_13'],
@@ -764,8 +765,8 @@ begin
     { conv { congr, funext, rw [mul_sub, mul_one, sub_mul ((algebra_map ℚ R) ↑(n - 1)) _ _, sub_sub,
         add_comm, ← sub_sub, ← sub_add, add_sub_assoc, map_nat_cast, sub_self, zero_add], },
       apply (tendsto_congr' _).2 (tendsto_const_nhds),
-      apply V_h2_1 p d R m χ c hd hc' hc hp na n hn, },
-    apply V_h2_2 p d R m χ c hd hc' hc hp na n hn, },
+      apply V_h2_1 p d R m χ c hd hc' hc na n hn, },
+    apply V_h2_2 p d R m χ c hd hc' hc na n hn, },
   { convert (tendsto.const_mul ((algebra_map ℚ R) (↑n - 1) *
       (1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n)))
       ↑c * ↑c ^ n)) (U p d R m χ  hd n hn hχ hχ' hp na)),
