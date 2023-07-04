@@ -1,4 +1,5 @@
-import better
+import neg_int_eval
+
 open_locale big_operators
 local attribute [instance] zmod.topological_space
 
@@ -22,7 +23,7 @@ lemma p_adic_zeta_eval_neg_one [algebra ℚ R] [norm_one_class R]
     c hc (nat.gcd_one_right c) na (mul_inv_pow p 1 R 1)) = (algebra_map ℚ R) (1 / 12 : ℚ) *
    (1 - (↑c ^ 2)) * (1 - p) := 
 begin
-  convert bf1 1 _ hc (nat.gcd_one_right c) one_lt_two (nat.gcd_one_left p) na (one_dvd _) using 1,
+  convert p_adic_L_function_eval_neg_int 1 _ hc (nat.gcd_one_right c) one_lt_two (nat.gcd_one_left p) na (one_dvd _) using 1,
   have h3 : lcm (1 * p^1) p = p,
   { rw bf21, rw lcm_same, rw normalize_eq, },
   have h1 : (change_level (by { rw bf21 }) (((teichmuller_character_mod_p_inv p R)^2)⁻¹) : dirichlet_character R (1 * p^1)).mul ((teichmuller_character_mod_p_inv p R)^2) = 1, 
