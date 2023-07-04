@@ -3,8 +3,7 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import sum_eval.second_sum
-import sum_eval.third_sum
+import second_sum
 import p_adic_L_function_def
 
 /-!
