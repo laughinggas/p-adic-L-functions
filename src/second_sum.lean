@@ -3,7 +3,7 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import general_bernoulli_number.lim_even_character_of_units
+import general_bernoulli_number.lim_character_of_units
 
 /-!
 # A convergence property regarding (ℤ/dp^n ℤ)ˣ

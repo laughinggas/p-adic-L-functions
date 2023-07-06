@@ -711,5 +711,5 @@ begin
     ← mul_add, mul_assoc ((algebra_map ℚ R) (1 / n)) _ _, mul_left_comm ((algebra_map ℚ R) (1 / n)) _ _, mul_assoc (1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑c *
     (↑c ^ n)) _ _],
   apply tendsto.const_mul (1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑c *
-    (↑c ^ n)) (bf6 m χ n hn hd na hχ1),
+    (↑c ^ n)) (bf6 m χ hn hd na hχ1),
 end

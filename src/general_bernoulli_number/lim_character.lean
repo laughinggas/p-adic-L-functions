@@ -3,7 +3,7 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import tendsto_zero_of_sum_odd_char
+import tendsto_zero_of_sum_char
 import p_adic_L_function_def
 import general_bernoulli_number.basic
 import zmod.chinese_remainder_units
@@ -98,100 +98,6 @@ begin
   simp_rw mul_add, rw finset.sum_add_distrib,
   congr,
 end
-.
-example (f g : ℕ → R) : (λ x, f x + g x) = (λ x, f x) + (λ x, g x) := by { change f + g = f + g, refl, }
-
--- note that this works for any dirichlet character which is primitive and whose conductor divides d * p^m
-lemma helper_13_odd [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < m)]
-  {k : ℕ} (hk : 1 < k) : ((λ (n : ℕ), ((1 / ((d * p ^ n : ℕ) : ℚ_[p])) •
-  ∑ (i : ℕ) in finset.range (d * p ^ n), (asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p_inv p R^k))) ↑i * ↑i ^ k) + 
-  ((1 / (d * p ^ n : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ n).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
-  ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ n) * ↑(1 + x_1) ^ (k - 1)) - 
-  general_bernoulli_number
-  (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k)) =ᶠ[filter.at_top]
-  λ (x : ℕ), -((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
-  (↑(d * p ^ x) * ∑ (x_2 : ℕ) in finset.range (k - 1),
-  (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
-  (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
-  (1 / (d * p ^ x : ℕ) : ℚ_[p]) •
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).reduction)
-  ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) *
-  (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k)))))) :=
-begin
-  have := helper_13 m χ hk,
-  rw eventually_eq_iff_sub at this,
-  conv at this { congr, congr, congr, skip, 
-    conv { funext, erw add_assoc, erw neg_add, }, },
-  change ((λ (n : ℕ), (1 / ((d * p ^ n : ℕ) : ℚ_[p])) • ∑ (i : ℕ) in finset.range (d * p ^ n),
-    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ k -
-    general_bernoulli_number (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k) -
-    ((-λ (x : ℕ), ((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
-    ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ x) * ↑(1 + x_1) ^ (k - 1)))) +
-    (λ (x : ℕ), -((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
-    (↑(d * p ^ x) * ∑ (x_2 : ℕ) in finset.range (k - 1),
-    (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
-    (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
-    (1 / (d * p ^ x : ℕ) : ℚ_[p]) • ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).reduction)
-    ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) * 
-    (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k)))))))) =ᶠ[at_top] 0 at this,
-  rw ←sub_sub at this,
-  rw [sub_neg_eq_add] at this,
-  rw ← eventually_eq_iff_sub at this,
-  convert this,
---  convert this using 1,
-  ext n, 
-  change _ = (((1 / ((d * p ^ n : ℕ) : ℚ_[p])) • ∑ (i : ℕ) in finset.range (d * p ^ n),
-    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑i * ↑i ^ k -
-    general_bernoulli_number (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k) +
-    (1 / ((d * p ^ n : ℕ) : ℚ_[p])) • ∑ (x_1 : ℕ) in finset.range (d * p ^ n).pred,
-    (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
-    ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ n) * ↑(1 + x_1) ^ (k - 1))),
-  ring,
-end
-
-lemma helper_13_hbf [normed_algebra ℚ_[p] R] [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < m)]
-  {k : ℕ} (hk : 1 < k) : ((λ (n : ℕ), ((1 / ((d * p ^ n : ℕ) : ℚ_[p])) •
-  ∑ (i : ℕ) in finset.range (d * p ^ n), (asso_dirichlet_character (χ.mul
-  (teichmuller_character_mod_p_inv p R^k))) ↑i * ↑i ^ k) + 
-  ((1 / (d * p ^ n : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ n),
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1) *
-  ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ n) * ↑(x_1) ^ (k - 1)) - 
-  general_bernoulli_number
-  (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k)) =ᶠ[filter.at_top]
-  λ (x : ℕ), -((1 / (d * p ^ x : ℕ) : ℚ_[p]) • ∑ (x_1 : ℕ) in finset.range (d * p ^ x).pred,
-  (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(x_1.succ) *
-  (↑(d * p ^ x) * ∑ (x_2 : ℕ) in finset.range (k - 1),
-  (algebra_map ℚ R) (bernoulli ((k - 1).succ - x_2) * ↑((k - 1).succ.choose x_2) *
-  (↑(1 + x_1) ^ x_2 / ↑(d * p ^ x) ^ x_2) * ↑(d * p ^ x) ^ (k - 1))) +
-  (1 / (d * p ^ x : ℕ) : ℚ_[p]) •
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k)).reduction)
-  ↑(d * p ^ x) * ((algebra_map ℚ R) (↑(d * p ^ x) ^ k) *
-  (algebra_map ℚ R) (polynomial.eval (↑(d * p ^ x) / ↑(d * p ^ x)) (polynomial.bernoulli k)))))) :=
-begin
-  convert helper_13_odd m χ hk,
-  ext n, congr' 3,
-  --rw finset.range_eq_Ico,
-  rw nat.pred_eq_sub_one,
-  simp_rw nat.succ_eq_one_add,
-  have := finset.sum_Ico_eq_sum_range (λ x, (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑(1 + x) *
-    ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ n) * ↑(1 + x) ^ (k - 1))) 1 (d * p^n),
-  simp only at this,
-  simp_rw [← finset.sum_Ico_eq_sum_range (λ x, (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) ↑x *
-    ((algebra_map ℚ R) (bernoulli 1 * ↑k) * ↑(d * p ^ n) * ↑x ^ (k - 1))) 1 (d * p^n)],
-  rw finset.range_eq_Ico,
-  rw ←finset.sum_Ico_sub_bot,
-  convert (sub_zero _).symm,
-  apply mul_eq_zero_of_right _, apply mul_eq_zero_of_right _,
-  norm_cast,
-  simp_rw zero_pow (nat.sub_pos_of_lt hk), --_ zero_le_one _,
-  { refl, },
-  { refine nat.mul_prime_pow_pos _, },
-end
 
 variables (p d R) [complete_space R] [char_zero R]
 open continuous_map
@@ -251,20 +157,16 @@ open dirichlet_character
 variable (hd)
 
 /-- Last line before last calculation in 7.11 of Washington; proof is same -/
-lemma lim_odd_character' [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
+lemma lim_even_character' [nontrivial R] [no_zero_divisors R] [normed_algebra ℚ_[p] R]
   [fact (0 < m)] {k : ℕ} [algebra ℚ R] [is_scalar_tower ℚ ℚ_[p] R] [norm_one_class R] (hk : 1 < k)
-  (hχ : χ.is_odd) (hp : 2 < p) 
+  (hχ : χ.is_even) (hp : 2 < p) 
   (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) :
   filter.tendsto (λ n, (1/((d * p^n : ℕ) : ℚ_[p])) • ∑ i in finset.range (d * p^n),
-  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) i * i^(k - 1)) )
+  ((asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ k))) i * i^k) )
   (@filter.at_top ℕ _) (nhds (general_bernoulli_number
   (χ.mul (teichmuller_character_mod_p_inv p R ^ k)) k)) :=
 begin
-  have := helper_13 m χ hk,
-  rw eventually_eq_iff_sub at this,
-  
-  --refine tendsto_sub_nhds_zero_iff.1 ((filter.tendsto_congr' (helper_13 m _ hk)).2 _),
-  sorry,
+  refine tendsto_sub_nhds_zero_iff.1 ((filter.tendsto_congr' (helper_13 m _ hk)).2 _),
   conv { congr, skip, skip, rw ←neg_zero, rw ←add_zero (0 : R),
     conv { congr, congr, congr, rw ←add_zero (0 : R), }, },
   refine tendsto.neg (tendsto.add (tendsto.add _ _) _),
@@ -277,19 +179,15 @@ begin
        algebra_map_smul, helper_14 p R], skip, skip,
        rw ←@smul_zero ℚ_[p] R _ _ _ ((algebra_map ℚ ℚ_[p]) (bernoulli 1 * ↑k)), },
     refine tendsto.const_smul _ _,
-    convert (tendsto_congr' _).2 (sum_odd_character_tendsto_zero hk hχ hp na),
+    convert (tendsto_congr' _).2 (sum_even_character_tendsto_zero hk hχ hp na),
     rw [eventually_eq, eventually_at_top],
     refine ⟨m, λ x hx, _⟩,
     have poss : 0 < d * p^x := fact.out _,
     simp_rw [add_comm 1 _, nat.succ_eq_add_one],
     rw [finset.range_eq_Ico, finset.sum_Ico_add' (λ x : ℕ, (asso_dirichlet_character (χ.mul
       (teichmuller_character_mod_p_inv p R ^ k))) ↑x * ↑x ^ (k - 1)) 0 (d * p^x).pred 1,
-      finset.sum_eq_sum_Ico_succ_bot poss, @nat.cast_zero R _ _, zero_pow (lt_trans zero_lt_one hk),
-      mul_zero, zero_add, zero_add, nat.pred_add_one_eq_self poss],
-    simp, },
-  sorry,
-  
-  
+      finset.sum_eq_sum_Ico_succ_bot poss, @nat.cast_zero R _ _, zero_pow (nat.sub_pos_of_lt hk),
+      mul_zero, zero_add, zero_add, nat.pred_add_one_eq_self poss], },
   { rw metric.tendsto_at_top,
     intros ε hε,
     obtain ⟨N, h⟩ := metric.tendsto_at_top.1 (tendsto.const_mul ((⨆ (x_1 : zmod (k.sub 0).pred),

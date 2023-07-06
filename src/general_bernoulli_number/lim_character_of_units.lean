@@ -3,7 +3,7 @@ Copyright (c) 2021 Ashvni Narayanan. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ashvni Narayanan
 -/
-import general_bernoulli_number.lim_even_character
+import general_bernoulli_number.lim_character
 import dirichlet_character.dvd_conductor_mul
 
 /-!
@@ -432,7 +432,8 @@ end
 
 lemma bf12 [algebra ℚ R] [norm_one_class R] [no_zero_divisors R] [char_zero R] -- figure out the char_zero thing
   [is_scalar_tower ℚ ℚ_[p] R] {n : ℕ} (hn : 1 < n) --(hp : 2 < p)
-  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) (hχ1 : d ∣ χ.conductor) : tendsto (λ (k : ℕ), ∑ y in finset.range (d * p ^ k), ((algebra_map ℚ R) (1 / ↑n) *
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) : --(hχ1 : d ∣ χ.conductor) : 
+  tendsto (λ (k : ℕ), ∑ y in finset.range (d * p ^ k), ((algebra_map ℚ R) (1 / ↑n) *
     (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y *
     ↑y ^ (n - 1)) • (algebra_map ℚ R) (↑y / (↑d * ↑p ^ k)) + (algebra_map ℚ R) (bernoulli 1) * 
   ∑ y in finset.range (d * p ^ k), (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑y ^ (n - 1))
@@ -524,8 +525,7 @@ begin
 end
 
 lemma bf18 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] (n : ℕ) (hn : 1 < n)
-  --(hp : 2 < p) 
-  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) (hχ1 : d ∣ χ.conductor) :
+  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) : --(hχ1 : d ∣ χ.conductor) :
   tendsto (λ x : ℕ, ∑ y in set.finite.to_finset (set.finite_of_finite_inter
   (finset.range (d * p^x.succ)) ({x | ¬ x.coprime p})), ((algebra_map ℚ R) (1 / ↑n) * (asso_dirichlet_character
   (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * (y : R) ^ (n - 1) •
@@ -538,7 +538,7 @@ begin
   conv { congr, funext, rw ← bf19 m χ hn, },
   apply (tendsto_congr _).1 (tendsto.const_mul ((asso_dirichlet_character
     (dirichlet_character.mul χ (teichmuller_character_mod_p_inv p R^n)) (p) * p^(n - 1)))
-    (bf12 m χ hn na hχ1)),
+    (bf12 m χ hn na)),
   intro x, simp_rw mul_smul_comm, rw finset.mul_sum, simp_rw finset.smul_sum,
   rw ←finset.sum_add_distrib, rw finset.mul_sum,
   apply finset.sum_congr rfl,
@@ -568,7 +568,7 @@ lemma bf14 [no_zero_divisors R] [algebra ℚ R] [norm_one_class R] {n : ℕ} (hn
     ((algebra_map ℚ R) (1 / ↑n) * (general_bernoulli_number (dirichlet_character.mul χ
     (teichmuller_character_mod_p_inv p R^n)) n)))) := 
 begin
-  have h1 := bf18 m χ n hn na hχ1,
+  have h1 := bf18 m χ n hn na,
   have h2 : tendsto nat.pred at_top at_top,
   { rw tendsto_at_top, intro b, simp, refine ⟨b.succ, λ c hc, _⟩,
     rw nat.pred_eq_sub_one,
@@ -643,15 +643,15 @@ begin
 end
 
 lemma bf6 [algebra ℚ R] [norm_one_class R] [no_zero_divisors R] [char_zero R] -- figure out the char_zero thing
-  [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < d)] (n : ℕ) (hn : 1 < n) --(hp : 2 < p) 
-  (hd : d.coprime p)
-  (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) (hχ1 : d ∣ χ.conductor) : tendsto (λ (k : ℕ), (algebra_map ℚ R) (1 / ↑n) * U_def m χ n k + (algebra_map ℚ R) (bernoulli 1) * 
+  [is_scalar_tower ℚ ℚ_[p] R] [fact (0 < d)] {n : ℕ} (hn : 1 < n) 
+  (hd : d.coprime p) (na : ∀ a b : R, ∥(a + b)∥ ≤ max (∥a∥) (∥b∥)) (hχ1 : d ∣ χ.conductor) : 
+  tendsto (λ (k : ℕ), (algebra_map ℚ R) (1 / ↑n) * U_def m χ n k + (algebra_map ℚ R) (bernoulli 1) * 
   ∑ (y : (zmod (d * p ^ k))ˣ), (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑y * ↑((y : (zmod (d * p ^ k))).val) ^ (n - 1))
   at_top (𝓝 ((1 - (asso_dirichlet_character (χ.mul (teichmuller_character_mod_p_inv p R ^ n))) ↑p * ↑p ^ (n - 1)) *
   ((algebra_map ℚ R) (1 / ↑n) * general_bernoulli_number (χ.mul (teichmuller_character_mod_p_inv p R ^ n)) n))) :=
 begin
   convert (tendsto_congr' _).2 (filter.tendsto.sub (filter.tendsto.sub
-    (bf12 m χ hn na hχ1) (bf13 m χ n hd hχ1)) (bf14 m χ hn na hχ1)), -- might need a tendsto_congr' here
+    (bf12 m χ hn na) (bf13 m χ n hd hχ1)) (bf14 m χ hn na hχ1)), -- might need a tendsto_congr' here
   { rw sub_zero, rw ← one_sub_mul, },
   { rw eventually_eq, rw eventually_at_top,
     refine ⟨m, λ x hx, _⟩,
